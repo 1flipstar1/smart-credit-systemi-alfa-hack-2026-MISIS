@@ -1,0 +1,2 @@
+declare const styles = ":root {\n    --color-light-superapp-component-bg-secondary: var(\n        --color-dark-superapp-component-bg-secondary\n    );\n    --color-light-superapp-component-bg-secondary-press: var(\n        --color-dark-superapp-component-bg-secondary-press\n    );\n    --color-light-superapp-surface-bg-primary: var(--color-dark-superapp-surface-bg-primary);\n    --color-light-superapp-surface-bg-secondary: var(--color-dark-superapp-surface-bg-secondary);\n}\n";
+export default styles;

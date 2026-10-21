@@ -1,0 +1,90 @@
+[
+  {
+    "file": "01-business-briefcase.png",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "bytes": 1252662
+  },
+  {
+    "file": "02-business-bank.png",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "bytes": 1515488
+  },
+  {
+    "file": "03-business-savings.png",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "bytes": 1279070
+  },
+  {
+    "file": "04-merchant-terminal.png",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "bytes": 1148840
+  },
+  {
+    "file": "05-secure-account.png",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "bytes": 1541055
+  },
+  {
+    "file": "06-business-growth.png",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "bytes": 1157002
+  },
+  {
+    "file": "07-global-payments.png",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "bytes": 1365498
+  },
+  {
+    "file": "08-startup-financing.png",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "bytes": 1142763
+  }
+]

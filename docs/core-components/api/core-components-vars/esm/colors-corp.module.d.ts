@@ -1,0 +1,14 @@
+export declare const colorStaticCorpGrapeSoda = "#7a63f1";
+export declare const colorStaticCorpGrapeSodaTransparent = "rgba(122, 99, 241, 0)";
+export declare const colorStaticCorpGrenadine = "#ff1418";
+export declare const colorStaticCorpGrenadineTransparent = "rgba(255, 20, 24, 0)";
+export declare const colorStaticCorpHibiscusTea = "#ee004b";
+export declare const colorStaticCorpHibiscusTeaTransparent = "rgba(238, 0, 75, 0)";
+export declare const colorStaticCorpRubyWine = "#c41400";
+export declare const colorStaticCorpRubyWineTransparent = "rgba(196, 20, 0, 0)";
+export declare const colorStaticCorpSquidInk = "#000";
+export declare const colorStaticCorpSquidInkTransparent = "rgba(0, 0, 0, 0)";
+export declare const colorStaticCorpUbeJuice = "#8c00f2";
+export declare const colorStaticCorpUbeJuiceTransparent = "rgba(140, 0, 242, 0)";
+export declare const colorStaticCorpWisteriaOuzo = "#a7a7f7";
+export declare const colorStaticCorpWisteriaOuzoTransparent = "rgba(167, 167, 247, 0)";

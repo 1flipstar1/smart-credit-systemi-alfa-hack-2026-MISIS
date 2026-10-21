@@ -1,0 +1,142 @@
+import { type ElementType, type HTMLAttributeAnchorTarget, type MouseEvent, type ReactNode } from 'react';
+import { type Color } from '@alfalab/core-components-typography/moderncssm';
+import { type FileUploadItemStatus } from './status';
+export interface FileUploadItemProps {
+    /**
+     * Дополнительный класс
+     */
+    className?: string;
+    /**
+     * Идентификатор элемента
+     */
+    id?: string;
+    /**
+     * Имя файла / заголовок
+     */
+    title?: string;
+    /**
+     * Подзаголовок файла
+     */
+    subtitle?: string;
+    /**
+     * Цвет подзаголовка (Typography Color)
+     * @default secondary
+     */
+    subtitleColor?: Color;
+    /**
+     * Размер файла
+     */
+    size?: string | number;
+    /**
+     * Дата загрузки файла
+     */
+    uploadDate?: string;
+    /**
+     * Ссылка на файл.
+     * Если передан `downloadLink` или `onDownload`, отображается кнопка скачивания.
+     * По клику на кнопку браузер переходит по ссылке (или скачивает файл, если передан `download`).
+     * Если вместе с `downloadLink` передан `onDownload`, переход по ссылке отменяется и вызывается только `onDownload`.
+     */
+    downloadLink?: string;
+    /**
+     * Рекомендует браузеру скачивать контент по ссылке.
+     * В проп может быть передано рекомендуемое название скачиваемого файла.
+     */
+    download?: string | true;
+    /**
+     * Отображение кнопки удаления
+     */
+    showDelete?: boolean;
+    /**
+     * Отображение кнопки восстановления
+     */
+    showRestore?: boolean;
+    /**
+     * Отображает кнопку повторной загрузки.
+     * Принимает `true` или объект с обработчиком клика.
+     */
+    reupload?: boolean | {
+        onClick?: (id: string) => void;
+    };
+    /**
+     * Статус загрузки файла
+     */
+    uploadStatus?: FileUploadItemStatus;
+    /**
+     * Сообщение об ошибке
+     */
+    error?: string | string[];
+    /**
+     * Дочерние элементы
+     */
+    children?: ReactNode;
+    /**
+     * Обработчик клика по кнопке скачивания файла.
+     * Если передан `onDownload` или `downloadLink`, отображается кнопка скачивания.
+     * Если вместе с `onDownload` передан `downloadLink`, переход по ссылке отменяется и вызывается только `onDownload`.
+     */
+    onDownload?: (id: string) => void;
+    /**
+     * Обработчик удаления файла
+     */
+    onDelete?: (id: string, event?: MouseEvent<HTMLElement>) => void;
+    /**
+     * Обработчик восстановления файла
+     */
+    onRestore?: (id: string) => void;
+    /**
+     * Управление активностью кнопок
+     */
+    disableButtons?: boolean;
+    /**
+     * Управление отображением кликабельности элемента Content
+     */
+    isClickable?: boolean;
+    /**
+     * Указывает, где открыть скачиваемый документ
+     */
+    target?: HTMLAttributeAnchorTarget;
+    /**
+     * Идентификатор для систем автоматизированного тестирования
+     */
+    dataTestId?: string;
+    /**
+     * Цвет заполнения иконки
+     * @default gray
+     */
+    iconStyle?: 'gray' | 'colored';
+    /**
+     * Кастомная иконка
+     */
+    customIcon?: ElementType<{
+        className?: string;
+    }>;
+    /**
+     * Шкала прогресса
+     * от 0 до 100
+     * @default 0
+     */
+    progressBar?: number;
+    /**
+     * Шкала прогресса
+     * @default true
+     */
+    progressBarAvailable?: boolean;
+    /**
+     * Кастомный контент
+     */
+    customContent?: ElementType;
+    /**
+     * Отсечение контента
+     * @default false
+     */
+    truncate?: boolean;
+    /**
+     * Фоновое изображение. Имеет приоритет над иконкой и заливкой
+     */
+    imageUrl?: string;
+    /**
+     * Цвет заливки `StatusControl`
+     */
+    backgroundColor?: string;
+}

@@ -1,0 +1,75 @@
+import { type ChangeEvent, type FC, type ReactNode } from 'react';
+import { type BaseSelectProps, type OptionShape } from '@alfalab/core-components-select/cssm/shared';
+import { type TagProps as TagPropsBase } from '@alfalab/core-components-tag/cssm';
+export type OptionMatcher = (option: OptionShape, inputValue: string) => boolean;
+export type TagProps = {
+    option: OptionShape;
+    handleDeleteTag?: (key: string) => void;
+} & Omit<TagPropsBase, 'breakpoint'>;
+export type TagComponent = FC<TagProps>;
+export type SelectWithTagsProps = Omit<BaseSelectProps, 'Field' | 'nativeSelect' | 'multiple' | 'autocomplete' | 'selected' | 'onChange'> & {
+    /**
+     * Значение поля ввода
+     */
+    value?: string;
+    /**
+     * Обработчик ввода
+     */
+    onInput?: (event: ChangeEvent<HTMLInputElement>) => void;
+    /**
+     * Список выбранных пунктов (controlled-селект)
+     */
+    selected?: Array<OptionShape | string>;
+    /**
+     * Обработчик выбора
+     */
+    onChange?: (payload: {
+        selectedMultiple: Array<OptionShape | string>;
+        initiator?: OptionShape | null;
+        name?: string;
+    }) => void;
+    /**
+     * Режим автокомплита
+     */
+    autocomplete?: boolean;
+    /**
+     * Функция сравнения при поиске
+     */
+    match?: OptionMatcher;
+    /**
+     * Компонент Тэг
+     */
+    Tag?: TagComponent;
+    /**
+     * Показывать тэги только в одном ряду, а если не помещаются в один ряд - схлопнуть в одну кнопку
+     */
+    collapseTagList?: boolean;
+    /**
+     * Если текст не помещается в инпут, то нужно перенести инпут на новую строку.
+     */
+    moveInputToNewLine?: boolean;
+    /**
+     * Трансформировать текст компонента Тэг который отображает общее количество выбранных элементов
+     */
+    transformCollapsedTagText?: (collapsedCount: number) => string;
+    /**
+     * Трансформировать текст компонента Тэг
+     */
+    transformTagText?: (tagText?: ReactNode) => ReactNode;
+    /**
+     * Контрольная точка, с нее начинается desktop версия
+     * @default 1024
+     */
+    breakpoint?: number;
+    /**
+     * Версия, которая будет использоваться при серверном рендеринге
+     */
+    client?: 'desktop' | 'mobile';
+    /**
+     * Значение по-умолчанию для хука useMatchMedia
+     * @deprecated Используйте client
+     */
+    defaultMatchMediaValue?: boolean | (() => boolean);
+};
+export type SelectWithTagsDesktopProps = Omit<SelectWithTagsProps, 'breakpoint' | 'defaultMatchMediaValue'>;
+export type SelectWithTagsMobileProps = Omit<SelectWithTagsProps, 'breakpoint' | 'defaultMatchMediaValue'>;

@@ -1,0 +1,1 @@
+export declare const MAX_PROGRESS_BAR_VALUE = 100;

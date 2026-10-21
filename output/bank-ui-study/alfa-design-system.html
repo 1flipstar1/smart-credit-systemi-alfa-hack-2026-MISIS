@@ -1,0 +1,397 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Альфа-Бизнес · Дизайн-система</title><style>
+:root{--red:#ef3124;--ink:#222224;--dark:#1c1c1e;--muted:#62656c;--surface:#f2f3f5;--blue:#e4f0ff;--line:#d7d9df;--peach:#ffcf99;--radius:28px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:white;font:16px/1.5 Arial,Helvetica,sans-serif}button,input,select{font:inherit}button,a,input,select{ -webkit-tap-highlight-color:transparent}button,a{cursor:pointer}button{border:0}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #3b6fdf;outline-offset:4px}button:disabled{opacity:.45;cursor:default}h1,h2,h3,p{margin:0}h1{font-size:56px;line-height:1.06;letter-spacing:-2px;max-width:760px}h2{font-size:36px;line-height:1.15;letter-spacing:-1px}h3{font-size:22px;line-height:1.25}p{margin-top:14px}small,.small{font-size:13px;line-height:1.5}.muted{color:var(--muted)}.wrap{width:min(1160px,calc(100% - 64px));margin:auto}.top{height:88px;display:flex;align-items:center;gap:30px}.brand{font-size:23px;font-weight:bold;letter-spacing:-.7px;display:flex;align-items:center;gap:12px;white-space:nowrap}.brandmark{font-size:40px;line-height:1;color:var(--red);text-decoration:underline;text-underline-offset:4px}.top nav{display:flex;gap:26px;font-size:14px;flex:1}.top nav a.active{border-bottom:2px solid var(--red);padding-bottom:7px}.top-actions{display:flex;gap:10px;margin-left:auto}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:13px 22px;border-radius:12px;background:var(--red);color:white;font-weight:bold;line-height:1.3}.btn:hover{filter:brightness(.94)}.btn.secondary{background:#e7e8eb;color:var(--ink)}.btn.black{background:var(--ink)}.btn.ghost{background:transparent;color:inherit;border:1px solid #bfc1c7}.eyebrow{text-transform:uppercase;letter-spacing:1.6px;font-size:11px;font-weight:bold;margin-bottom:18px}.crumb{font-size:12px;color:var(--muted);padding-top:22px;margin-bottom:28px}.hero{padding-block:40px 64px}.hero p.lead{font-size:20px;max-width:570px;line-height:1.45;margin-top:24px}.dark{background:var(--dark);color:white}.dark .muted{color:#b8bac2}.dark .crumb{color:#b8bac2}.split{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center}.split.wide-left{grid-template-columns:1.4fr 1fr}.art{width:100%;max-height:380px;object-fit:contain}.art.smallart{max-height:250px}.dark .btn.secondary{background:#343438;color:white}.white-curve{border-radius:48px 48px 0 0;background:white;position:relative;margin-top:-1px;color:var(--ink)}section.section{padding-block:64px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:28px}.section-head p{max-width:550px}.grid2,.grid3,.grid4{display:grid;gap:18px}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid4{grid-template-columns:repeat(4,minmax(0,1fr))}.card{background:var(--surface);border-radius:var(--radius);padding:28px}.card.blue{background:var(--blue)}.card.white{background:white}.card.peach{background:#fff0dd}.card.lime{background:#effcc6}.card.darkcard{background:#2d2d31;color:white}.card p{color:var(--muted);font-size:15px}.darkcard p{color:#c2c4cc}.number{display:inline-flex;width:32px;height:32px;border:1px solid var(--red);border-radius:100%;align-items:center;justify-content:center;font-size:13px;margin-bottom:20px}.tag{display:inline-flex;background:var(--blue);color:#284f82;font-size:12px;line-height:1.4;padding:7px 11px;border-radius:9px}.tag.green{background:#e7f4e8;color:#28623b}.tag.gray{background:#e7e8eb;color:#44474d}.tags{display:flex;gap:8px;flex-wrap:wrap;margin-block:22px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.chip{border-radius:30px;background:#e7e8eb;color:var(--ink);padding:10px 16px;min-height:42px;font-size:14px}.chip.selected{background:var(--ink);color:white}.dark .chip{background:#343438;color:white}.dark .chip.selected{background:white;color:var(--ink)}.field{display:block;background:var(--surface);border-radius:10px;padding:12px 16px;margin-top:18px;border-bottom:1px solid #b3b7bf}.field>span{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}.field input,.field select{display:block;width:100%;border:0;outline-offset:5px;background:transparent;color:var(--ink);font-size:20px;min-height:28px}.field input[type=range]{accent-color:var(--red);margin-top:12px}.field .hint{font-size:12px}.actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:28px}.full{width:100%}.divider{height:1px;background:var(--line);margin-block:24px}.metric{font-size:32px;font-weight:bold;letter-spacing:-1px;margin-top:8px}.bullet{display:flex;gap:12px;align-items:start;margin-top:18px;font-size:15px}.check{color:#28703e;font-weight:bold}.note{margin-top:18px;font-size:12px;color:var(--muted);max-width:760px}.panel{border-radius:var(--radius);background:white;color:var(--ink);padding:32px}.progress{height:4px;background:#e3e5e9;border-radius:4px;margin:18px 0 26px;overflow:hidden}.progress>i{display:block;height:100%;background:var(--red);width:25%;transition:width .2s}.answer{padding:17px 18px;background:var(--surface);border:2px solid transparent;border-radius:12px;display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;min-height:62px}.answer.selected{border-color:var(--red);background:#fff7f5}.answer span{display:block;color:var(--muted);font-size:12px;margin-top:4px}.answer b{font-size:16px}.options{display:grid;gap:10px;margin-top:24px}.mini{font-size:11px;color:#6d7077}.pill-row{display:flex;justify-content:space-between;align-items:center;gap:12px}.footer{background:var(--dark);color:white;border-radius:40px 40px 0 0;padding-block:44px}.footer .muted{color:#babcc5}.footerline{display:flex;justify-content:space-between;gap:20px}.demo-strip{font-size:11px;text-align:center;background:#f2f3f5;color:#555960;padding:8px 16px}.faq{max-width:850px}.faq details{background:var(--surface);border-radius:14px;margin-top:10px;padding:20px 24px}.faq summary{cursor:pointer;font-weight:bold}.faq p{font-size:14px;color:var(--muted)}.comparison{width:100%;border-collapse:separate;border-spacing:0 8px;font-size:14px}.comparison th,.comparison td{background:var(--surface);padding:18px;text-align:left;vertical-align:top}.comparison th:first-child,.comparison td:first-child{border-radius:14px 0 0 14px}.comparison th:last-child,.comparison td:last-child{border-radius:0 14px 14px 0}.result-title{font-size:28px;line-height:1.2;margin-top:14px}.row{display:flex;justify-content:space-between;gap:20px;margin-top:16px}.hidden,[hidden]{display:none!important}.choice-card{text-align:left;position:relative;min-height:218px;border:2px solid transparent;transition:transform .15s;padding:28px;border-radius:26px}.choice-card:hover{transform:translateY(-3px)}.choice-card.selected{border-color:var(--red)}.choice-card .glyph{font-size:32px;font-weight:bold;display:block;margin-bottom:26px;color:#bd271d}.choice-card .arrow{position:absolute;right:22px;bottom:24px;font-size:23px}.chat-shell{display:grid;grid-template-columns:250px 1fr;gap:24px;background:var(--surface);border-radius:28px;padding:18px}.chat-side{padding:24px 14px}.chat-side li{list-style:none;margin:22px 0;color:var(--muted);font-size:14px}.chat-side ul{padding:0}.chat-side li.current{color:var(--ink);font-weight:bold}.chat-main{background:white;border-radius:20px;padding:30px;min-height:470px}.bubble{border-radius:18px 18px 18px 4px;background:var(--surface);padding:18px 20px;max-width:80%;font-size:15px;margin-top:16px}.bubble.user{margin-left:auto;background:var(--blue);border-radius:18px 18px 4px 18px}.chat-author{font-size:12px;color:var(--muted);margin-top:20px}.chat-author b{color:var(--ink)}.dashboard{background:var(--surface)}.dashboard .card.white{border:1px solid #e0e2e7}.recommendation{display:grid;grid-template-columns:1.4fr .85fr;gap:32px;background:white;border:1px solid #dfe2e7;border-radius:28px;padding:32px}.recommendation .side{border-left:1px solid var(--line);padding-left:32px}.why{border-radius:16px;background:var(--blue);padding:18px;margin-top:24px;font-size:14px}.sidebar-layout{display:grid;grid-template-columns:260px 1fr;gap:24px;align-items:start}.sidebar-layout aside{position:sticky;top:24px}.empty{background:var(--surface);border-radius:16px;padding:24px}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:20;background:#222224;color:white;border-radius:14px;padding:18px 24px;box-shadow:0 8px 40px #0003;max-width:calc(100% - 32px);font-size:14px}.outcome{padding:24px;background:var(--blue);border-radius:20px;margin-top:24px}.gallery-card img{width:100%;aspect-ratio:1.5;object-fit:cover;object-position:top;border:1px solid var(--line);border-radius:16px}.gallery-card{display:block}.gallery-card h3{margin-top:18px}.gallery-card p{font-size:14px;color:var(--muted)}.doc{max-width:900px}.doc h2{margin:48px 0 20px;font-size:30px}.doc h3{margin:28px 0 12px}.doc p,.doc li{line-height:1.7}.doc table{width:100%;border-collapse:collapse;font-size:14px;margin:20px 0;display:block;overflow-x:auto}.doc th,.doc td{padding:12px;border:1px solid var(--line);text-align:left;vertical-align:top}.doc th{background:var(--surface)}.doc a{color:#285cab;text-decoration:underline}.doc code{background:var(--surface);padding:2px 5px;border-radius:4px}.doc hr{border:0;border-top:1px solid var(--line);margin:32px 0}.step-info{font-size:13px;color:var(--muted)}
+@media(min-width:1500px){.wrap{width:min(1320px,calc(100% - 120px))}h1{font-size:64px}}
+@media(max-width:1000px){.top nav{gap:14px;font-size:12px}.top{gap:20px}.brand{font-size:18px}.top-actions .btn{min-height:42px;padding:10px 14px;font-size:13px}h1{font-size:46px}.split{gap:28px}.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar-layout{grid-template-columns:220px 1fr}.recommendation{grid-template-columns:1fr}.recommendation .side{border-left:0;border-top:1px solid var(--line);padding:20px 0 0}}
+@media(max-width:720px){body{font-size:15px}.wrap{width:calc(100% - 36px)}.top{height:74px;gap:12px}.top nav{display:none}.brand{font-size:17px}.brandmark{font-size:32px}.top-actions .btn.secondary{display:none}h1{font-size:38px;letter-spacing:-1.3px}h2{font-size:29px}h3{font-size:20px}.hero{padding-block:24px 38px}.hero p.lead{font-size:17px}.split,.split.wide-left,.grid2,.grid3,.grid4,.sidebar-layout,.chat-shell{grid-template-columns:1fr}.split{gap:28px}.art{max-height:240px}.white-curve{border-radius:28px 28px 0 0}section.section{padding-block:38px}.section-head{align-items:start;flex-direction:column;margin-bottom:22px}.card,.panel,.recommendation{padding:24px;border-radius:22px}.metric{font-size:28px}.grid4{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.grid4 .card{padding:18px}.footerline{flex-direction:column}.footer{border-radius:28px 28px 0 0}.chat-side{display:none}.chat-main{padding:20px;min-height:450px}.chat-shell{padding:8px}.bubble{max-width:95%}.sidebar-layout aside{position:static}.comparison{font-size:12px}.comparison th,.comparison td{padding:12px 9px}.choice-card{min-height:185px}.actions .btn{flex-grow:1}.btn{min-height:50px}.row{gap:10px;flex-wrap:wrap}.recommendation{gap:18px}.crumb{margin-bottom:18px}.note{font-size:12px}.gallery-card img{aspect-ratio:1.25}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+.btn{font-size:19px}.top-actions .btn{font-size:14px;background:#ce2a20}.top-actions .btn.secondary{background:#e7e8eb;color:var(--ink)}.dark .top-actions .btn.secondary{background:#343438;color:white}.dark .panel .muted{color:var(--muted)}.dark .panel .btn.secondary{background:#e7e8eb;color:var(--ink)}.white-curve{margin-top:-32px}@media(max-width:720px){.smallart{display:none}.white-curve{margin-top:-22px}}</style><body><div class="demo-strip">Набросок интерфейса · демонстрационные ответы · без отправки данных</div><header><div class="wrap top"><a class="brand" href="alfa-credit-concepts.html"><span class="brandmark" aria-hidden="true">А</span><span>Альфа-Бизнес</span></a><nav aria-label="Основная навигация"><a href="#how">Для бизнеса</a><a class="active" href="#main">Кредиты</a><a href="#questions">Помощь</a></nav><div class="top-actions"><a class="btn secondary" href="alfa-credit-concepts.html">Все наброски</a><button class="btn" data-demo="В рабочем сервисе здесь будет вход в Альфа-Бизнес.">Войти</button></div></div></header><main id="main" class="wrap doc"><section class="section"><h1 style="font-size:42px">Дизайн-система страниц Альфа-Банка по библиотеке UI</h1>
+<p>Исследование от 21 октября 2026 года. Область: все 10 папок верхнего уровня <code>Библиотека ui</code>, включая вложенную <code>generated</code>. Просмотрены <strong>106 изображений</strong>: 68 скриншотов интерфейса, 30 промореференсов и 8 производных иллюстраций. Полный перечень, размеры и идентификаторы — в <code>inventory.json</code>; визуальная опись — в <code>alfa-reference-atlas.html</code>.</p>
+<p>Это <strong>реконструкция визуальных правил по изображениям</strong>, а не официальный брендбук или описание исходных компонентов. Скриншоты показывают внешний вид, но не CSS, используемый шрифт, брейкпоинты и поведение во всех состояниях. Ниже различаются наблюдения, измерения в пикселях и предлагаемые правила реализации. Условия кредитов на референсах рассматриваются только как контент исходных изображений.</p>
+<h2>1. Основной стиль</h2>
+<p><strong>Контрастная банковская оболочка, спокойная карточная структура и яркая предметная 3D-графика.</strong> Большие заголовки и понятные прямые формулировки делают продукт доступным; белые поля и единая сетка упорядочивают информацию; красная кнопка обозначает следующий шаг.</p>
+<p>У системы три визуальных режима:</p>
+<ul>
+<li><strong>Промо и первый экран:</strong> чёрный, персиковый или цветной фон; крупный заголовок слева, объёмный объект справа, заметная основная кнопка.</li>
+<li><strong>Объяснение продукта:</strong> белый фон, светло-серые и голубые карточки, большие интервалы между смысловыми блоками, компактные переключатели.</li>
+<li><strong>Операционный интерфейс приложения:</strong> белый фон, плотнее типографика, строки и поля вместо крупных баннеров; чёрные кнопки действий и красный акцент навигации.</li>
+</ul>
+<p>Общий стиль нельзя сводить к красному интерфейсу. Красный — точечный сигнал бренда и действия. Основную площадь занимают нейтральные поверхности. Разноцветность концентрируется в иллюстрациях и отдельных промокарточках.</p>
+<h2>2. Что показывает каждая папка</h2>
+<table>
+<thead>
+<tr>
+<th>Источник / ID в описи</th>
+<th>Состав и расположение</th>
+<th>Вывод для системы</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>01 · Лендинг Альфа ID</strong>, 3 изображения</td>
+<td>Светло-серый первый экран: текст слева, телефон с идентификацией справа. Ниже широкая вводная карточка, пара преимуществ, три шага, партнёры, документы и тёмный футер.</td>
+<td>Для сервисной темы достаточно одного большого образа и короткой инструкции. Партнёры и документы завершают объяснение, не конкурируют с главным действием.</td>
+</tr>
+<tr>
+<td><strong>02 · Лендинг Альфа Бизнес</strong>, 7</td>
+<td>Чёрный первый экран с телефоном и наградной композицией. Белая область с округлым верхом. Голубые карточки установки, тёмные технологические баннеры, сетка возможностей 2×2, вкладки ролей, безопасность, награды, шаги подключения, форма, FAQ.</td>
+<td>Самый полный пример бизнес-лендинга: чередование эмоциональных и функциональных блоков. Переключатель ролей стоит рядом с заголовком секции, а не образует отдельный экран.</td>
+</tr>
+<tr>
+<td><strong>03 · Лендинг Андроид приложение</strong>, 2</td>
+<td>Приглушённый бирюзовый первый экран, текст слева и телефон справа. Далее иллюстрированная инструкция; горизонтальный ряд карточек возможностей.</td>
+<td>Цвет подстраивается под сюжет. Инструкция строится вокруг скриншота конкретного действия и соседнего текста.</td>
+</tr>
+<tr>
+<td><strong>04 · Лендинг Главный</strong>, 10</td>
+<td>Тёмный первый экран с асимметричной мозаикой промо. Дальше каталог карточек, сегменты аудитории, калькулятор в двух колонках, карусели бонусов, широкие баннеры, сервисная мозаика, инвестиционный блок, экосистема, информация о банке, умный поиск, приложение и футер.</td>
+<td>Главная страница плотнее продуктовой. Применяется модульная мозаика: большой ведущий блок и более мелкие дополнительные. Калькулятор уже задаёт паттерн «параметры слева — результат справа».</td>
+</tr>
+<tr>
+<td><strong>05 · Лендинг Скачать веб приложение ios</strong>, 2</td>
+<td>Фиолетовый горизонтальный баннер с телефоном и QR. Ниже последовательные карточки настройки в три колонки, часть продолжается ниже.</td>
+<td>Длинную настройку делят на короткие нумерованные шаги. Инструкция должна сохранять последовательность при переносе в одну колонку.</td>
+</tr>
+<tr>
+<td><strong>06 · Промо материалы и картинки ассеты</strong>, 38, из них 8 в generated</td>
+<td>30 фрагментов иллюстраций и карточек: кошельки, карты, монеты, калькуляторы, сейфы, диаграммы, интерфейсные панели, стрелки, щиты, документы. В <code>generated</code> — 8 отдельных изображений бизнес-тематики.</td>
+<td>Здесь хранится графический словарь, а не дополнительная система сеток. <code>generated</code> — производные материалы: не использовать их как доказательство официального стиля или корректности знаков бренда.</td>
+</tr>
+<tr>
+<td><strong>07 · Скриншоты мобильное приложение</strong>, 30</td>
+<td>Вход и код, платежи, QR, настройки, профиль, история, фильтры, витрина, карточка товара, заказ наличных, календарь, карта, модальные подтверждения, чат, статистика и поездки.</td>
+<td>Приложение показывает состояния, которых почти нет на лендингах: пустые результаты, ошибки ввода, переключение фильтров, сообщения, подтверждения и детали операций. Это отдельная плотность интерфейса.</td>
+</tr>
+<tr>
+<td><strong>08 · Страница Кредит для бизнеса</strong>, 6</td>
+<td>Тёмный первый экран: заголовок и кнопка слева, крупный портфель с диаграммой справа; под ними четыре условия. Далее 2×2 голубых преимущества, переключатель формата, таблица с двумя вариантами, три шага, форма, информационные вкладки. Отдельно — панель онлайн-заявок.</td>
+<td>Главный источник для новой кредитной страницы. Оболочка уже узнаваема; новый подбор логично поставить раньше таблицы условий. Панель онлайн-заявок — самостоятельная навигационная поверхность.</td>
+</tr>
+<tr>
+<td><strong>09 · Страница Мобильные приложения</strong>, 1</td>
+<td>Заголовок и сегменты аудитории, одна большая розовая карточка приложения, ниже две голубые.</td>
+<td>Каталог строится по значимости: главный вариант шире остальных. По одному скриншоту нельзя восстанавливать всю страницу или её футер.</td>
+</tr>
+<tr>
+<td><strong>10 · Страница Открыть расчётный счёт для ИП</strong>, 7</td>
+<td>Персиковый первый экран, объёмная композиция справа, четыре преимущества снизу; белый корпус со скруглённым верхом. Четыре тарифные карточки разных пастельных цветов, вспомогательные сервисы, бонусы, три шага, форма, тёмные кросс-продуктовые карточки, подробная таблица и FAQ.</td>
+<td>Бизнес-продукт может иметь тёплый фон. Сравнение тарифов раскрывается постепенно: короткая карточка → таблица → ответы на вопросы. Небольшой плавающий промоблок наблюдается на отдельных кадрах.</td>
+</tr>
+</tbody>
+</table>
+<h2>3. Анатомия страницы и расположение элементов</h2>
+<h3>Шапка</h3>
+<p>Слева знак банка. Далее горизонтально идут сегменты клиентов: частным лицам, малому бизнесу и ИП, среднему и крупному бизнесу. Справа — дополнительные сервисные иконки, нейтральная кнопка онлайн-заявок и красная кнопка входа. Шапка использует фон первого экрана; на тёмном варианте текст светлый. Во всех просмотренных веб-референсах это одна визуальная линия.</p>
+<p>В новых набросках шапка намеренно сокращена до бизнес-контекста. Это предложение для концепта, не точная копия общей навигации банка. Буква «А» — текстовый заполнитель места знака: перед реализацией нужен утверждённый SVG-логотип.</p>
+<h3>Первый экран продуктовой страницы</h3>
+<ol>
+<li>Две смысловые колонки: слева короткий заголовок в 2–3 строки, подзаголовок и CTA; справа одна ведущая иллюстрация.</li>
+<li>Кнопка стоит под текстом с ощутимым отступом. Основное действие сформулировано глаголом: оформить, открыть, установить.</li>
+<li>Если важны несколько условий, под основной композицией идёт ряд из четырёх одинаковых карточек. На тёмном фоне они графитовые, на персиковом — чуть темнее фона.</li>
+<li>Следующая белая область начинается крупными округлыми верхними углами и визуально накрывает нижнюю границу первого экрана.</li>
+</ol>
+<p>В кредитном референсе 08-01 при ширине снимка 1917 px контент занимает примерно x=238…1663: около 1425 px, или 74% ширины. Заголовок начинается примерно y=200, карточки условий — около y=676, белая область — около y=964. Это <strong>координаты изображения</strong>, их нельзя напрямую объявлять CSS-размерами: масштаб браузера и DPR неизвестны.</p>
+<h3>Основной корпус</h3>
+<p>Заголовки секций преимущественно выровнены влево. Шаги оформления иногда имеют центрированный заголовок. Переключатель аудитории или типа продукта находится справа от заголовка в одной строке. Сетка карточек чаще 2, 3 или 4 колонки. Соседние элементы выравниваются по верхнему краю, карточки внутри ряда имеют одинаковую высоту.</p>
+<p>Типичная последовательность бизнес-продукта: <strong>ценность → преимущества → выбор/условия → процесс оформления → форма → справочная информация → футер</strong>. Главная страница использует больше промо и перекрёстных переходов. Инструкционные страницы начинают с установки и шагов.</p>
+<h3>Низ страницы</h3>
+<p>Форма часто стоит внутри большой серой области, а сама форма белая и уже контейнера. FAQ состоит из отдельных серых округлых строк. Справочные вкладки и документы располагаются ближе к завершению сценария. Футер тёмный, с крупными округлыми верхними углами и несколькими колонками ссылок. На главной странице баннер приложения частично перекрывает начало футера.</p>
+<h2>4. Цветовая система</h2>
+<p>Значения ниже получены из повторяющихся сплошных областей PNG. Это цвета конкретных изображений, а не подтверждённые официальные токены. В красных кнопках встречается несколько оттенков, поэтому нельзя автоматически объявить один HEX универсальным.</p>
+<table>
+<thead>
+<tr>
+<th>Роль</th>
+<th>Наблюдаемое значение</th>
+<th>Где видно / применение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Основное действие</td>
+<td><code>#EF3124</code></td>
+<td>Форма кредита 08-04 и кнопки РКО 10-01. Основной красный выбран для набросков.</td>
+</tr>
+<tr>
+<td>Красный на первом экране</td>
+<td><code>#F83A2A</code>, также более яркие красные</td>
+<td>В кредитном первом экране 08-01 есть другое цветовое решение кнопки. При переносе сверить с исходными токенами банка.</td>
+</tr>
+<tr>
+<td>Тёмный фон</td>
+<td><code>#1C1C1E</code></td>
+<td>Первый экран кредита 08-01.</td>
+</tr>
+<tr>
+<td>Карточки на тёмном</td>
+<td><code>#2D2D31</code></td>
+<td>Четыре условия на первом экране кредита.</td>
+</tr>
+<tr>
+<td>Дополнительная тёмная поверхность</td>
+<td><code>#3A3A3D</code></td>
+<td>Вложенные подложки пиктограмм в карточках условий.</td>
+</tr>
+<tr>
+<td>Основной текст</td>
+<td>около <code>#222224</code></td>
+<td>Заголовки на светлых экранах.</td>
+</tr>
+<tr>
+<td>Белая поверхность</td>
+<td><code>#FFFFFF</code></td>
+<td>Основной корпус, формы, модальные области.</td>
+</tr>
+<tr>
+<td>Спокойная подложка</td>
+<td><code>#F2F3F5</code></td>
+<td>Карточки, строки таблиц, оболочка формы.</td>
+</tr>
+<tr>
+<td>Подложка переключателя</td>
+<td><code>#EDEEF0</code></td>
+<td>Сегментированные вкладки.</td>
+</tr>
+<tr>
+<td>Голубая поверхность</td>
+<td><code>#E4F0FF</code></td>
+<td>Преимущества кредитной страницы 08-02.</td>
+</tr>
+<tr>
+<td>Персиковый фон</td>
+<td><code>#FFCF99</code></td>
+<td>Первый экран РКО 10-01.</td>
+</tr>
+<tr>
+<td>Карточки на персиковом</td>
+<td><code>#F2C695</code></td>
+<td>Ряд четырёх преимуществ РКО.</td>
+</tr>
+</tbody>
+</table>
+<p>Лиловый, бирюзовый, розовый, лаймовый и светло-голубой используются как <strong>сюжетные поверхности</strong> промокарточек. Они не образуют отдельную систему статусов. Зелёная галочка означает подтверждение в конкретных сценариях; зелёная промокарточка сама по себе подтверждением не является.</p>
+<p>Предлагаемые токены для реализации набросков: muted <code>#62656C</code>, border <code>#D7D9DF</code>, focus <code>#3B6FDF</code>. Они добавлены для функциональной полноты и не выданы за измеренные брендовые значения. Небольшой белый текст на красном <code>#EF3124</code> имеет контраст около 4,1:1. Поэтому в набросках основные кнопки имеют жирный текст 19 px, а мелкая кнопка входа — более тёмную заливку <code>#CE2A20</code>. Для выпуска нужно подтвердить разрешённые токены банка и проверить контраст всех состояний.</p>
+<h2>5. Типографика и интервалы</h2>
+<p>Наблюдается современный нейтральный гротеск: плотные крупные заголовки, обычное начертание основного текста, жирные названия карточек и CTA. Засечек, рукописных шрифтов и декоративной типографики в интерфейсных блоках нет. Точное название семейства по этим снимкам не определяется.</p>
+<p><strong>Предлагаемая шкала, CSS px, для нового desktop-макета:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Элемент</th>
+<th>Размер / интерлиньяж</th>
+<th>Правило</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H1</td>
+<td>56–64 / 1,06–1,12</td>
+<td>Одна мысль, обычно 2–3 строки, без длинной строки через всю страницу.</td>
+</tr>
+<tr>
+<td>H2</td>
+<td>36–40 / 1,15–1,2</td>
+<td>Начало смысловой секции.</td>
+</tr>
+<tr>
+<td>H3</td>
+<td>22–24 / 1,2–1,3</td>
+<td>Заголовок карточки или результата.</td>
+</tr>
+<tr>
+<td>Вводный текст</td>
+<td>20–22 / 1,4–1,5</td>
+<td>Ограниченная ширина, 2–3 короткие строки.</td>
+</tr>
+<tr>
+<td>Основной текст</td>
+<td>16–18 / 1,45–1,6</td>
+<td>Прямое объяснение действия.</td>
+</tr>
+<tr>
+<td>Подписи</td>
+<td>12–14 / 1,45–1,5</td>
+<td>Условия, пояснения, вспомогательные значения.</td>
+</tr>
+</tbody>
+</table>
+<p>В набросках применён автономный системный стек <strong>Arial, Helvetica, sans-serif</strong> с обычным и жирным начертаниями. Это техническая замена до получения банковского шрифта, а не утверждение, что банк использует Arial.</p>
+<p>Базовый предлагаемый шаг — <strong>8 px</strong>, дополненный 4 px для мелких связей. Внутри карточек: 24–32 px. Между карточками: 16–24 px. Между секциями: 64–96 px. Между заголовком секции и контентом: 24–32 px. Радиусы: 10–14 px у полей и кнопок, 24–32 px у карточек, 40–64 px у крупных границ секций, 999 px у чипов. Эти значения нормализуют визуальные наблюдения для разработки.</p>
+<p>На desktop предлагается центрированный контейнер 1160–1320 px. Рабочая сетка — 12 колонок; пары карточек занимают по 6, тройки по 4, четвёрки по 3. Это удобная модель реализации наблюдаемой структуры, а не извлечённая сетка исходного сайта.</p>
+<h2>6. Компоненты и их правила</h2>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Анатомия и расположение</th>
+<th>Правило использования</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Основная кнопка</td>
+<td>Красная заливка, белая жирная надпись, умеренный радиус.</td>
+<td>Один ведущий следующий шаг внутри блока. «Далее» во время подбора, «Перейти к заявке» после результата.</td>
+</tr>
+<tr>
+<td>Вторичная кнопка</td>
+<td>Светло-серая заливка и тёмная надпись; на тёмном фоне — графитовая.</td>
+<td>Сравнить, узнать условия, вернуться. Не конкурирует с CTA.</td>
+</tr>
+<tr>
+<td>Чёрная кнопка</td>
+<td>Часто в мобильных сценариях; белая надпись.</td>
+<td>Часть операционного языка приложения, не обязательная замена красной кнопки лендинга.</td>
+</tr>
+<tr>
+<td>Переключатель сегментов</td>
+<td>Общая серая капсула, активный сегмент чёрный с белой надписью.</td>
+<td>Меняет аудиторию или формат в пределах текущей секции.</td>
+</tr>
+<tr>
+<td>Чип</td>
+<td>Короткая надпись внутри капсулы; активный вариант контрастный.</td>
+<td>Параметр калькулятора или короткий ответ. Не заменять длинные карточки с описанием.</td>
+</tr>
+<tr>
+<td>Карточка преимущества</td>
+<td>Название сверху слева, описание под ним; иллюстрация справа или внизу.</td>
+<td>Не накладывать текст на объект. Сохранять единые внутренние поля.</td>
+</tr>
+<tr>
+<td>Карточка условия</td>
+<td>Крупное значение, подпись, небольшая пиктограмма в отдельной подложке.</td>
+<td>Только проверенные числовые условия, не смешивать диапазон ставки и персональное предложение.</td>
+</tr>
+<tr>
+<td>Поле</td>
+<td>Светло-серая заливка, подпись сверху, значение ниже, местами нижняя линия.</td>
+<td>Постоянная видимая подпись и пояснение. Не использовать placeholder вместо label.</td>
+</tr>
+<tr>
+<td>Ошибка поля</td>
+<td>Красная рамка и текст причины под полем; пример — заказ наличных 07-13.</td>
+<td>Объяснять исправление словами. Не обозначать ошибку одним цветом.</td>
+</tr>
+<tr>
+<td>Шаги</td>
+<td>Три номера в круглых контурах над карточками, тонкие линии между ними.</td>
+<td>Для понятного короткого процесса. Сроки обработки брать из подтверждённых данных.</td>
+</tr>
+<tr>
+<td>Таблица</td>
+<td>Отдельные серые строки с крупными радиусами; слева параметр, справа значения продуктов.</td>
+<td>Сопоставимые строки, единицы и основания; не прятать существенные отличия в FAQ.</td>
+</tr>
+<tr>
+<td>Форма заявки</td>
+<td>Серая внешняя область → белая форма → поле телефона → пояснение → CTA и согласие.</td>
+<td>В подборе появляется после выбора, а не служит обязательным входом в объяснение продукта.</td>
+</tr>
+<tr>
+<td>FAQ</td>
+<td>Ряд отдельных светло-серых округлых строк с раскрытием.</td>
+<td>Дополнительные вопросы. Основные условия должны быть видны раньше.</td>
+</tr>
+<tr>
+<td>Панель / модальное окно</td>
+<td>Белая поверхность над затемнением, скругления, краткое действие; веб-панель онлайн-заявок отдельно.</td>
+<td>Явное закрытие, возврат фокуса и понятная причина открытия. Последние два правила предлагаются для реализации.</td>
+</tr>
+<tr>
+<td>Пустое состояние</td>
+<td>Небольшая иллюстрация, заголовок и объяснение: нет операций, нет счетов.</td>
+<td>Подсказать следующий шаг, сохранить контекст фильтров.</td>
+</tr>
+<tr>
+<td>Чат</td>
+<td>Входящие карточки слева, ответ пользователя справа, быстрые подсказки над строкой ввода.</td>
+<td>Предложенная адаптация для подбора — короткие управляемые вопросы с объяснимым итогом.</td>
+</tr>
+</tbody>
+</table>
+<h2>7. Иллюстрации и иконки</h2>
+<p>Предметы объёмные, с округлыми фасками, заметными бликами, прозрачными или металлическими деталями. Сочетания: красный пластик, стекло, хром, золото, иридисцентные поверхности. Объекты часто парят или стоят под углом. Используются короткие композиции из 2–4 связанных предметов, а не подробные реалистичные сцены.</p>
+<p>Повторяющиеся метафоры: портфель — бизнес; кошелёк и деньги — финансирование; диаграмма и стрелка — рост; щит и сейф — защита; документ и галочка — оформление; телефон и панели — цифровой сервис. Внутри функциональных элементов пиктограммы значительно проще и спокойнее, чем рекламные объекты.</p>
+<p>Правило для новой страницы: один ведущий объект на первом экране, мелкие иллюстрации только там, где помогают разделить задачи. Декор не должен занимать место анкеты или выдачи. В концепциях 01 и 03 использованы существующие файлы <code>generated/01-business-briefcase.png</code> и <code>generated/06-business-growth.png</code>. Это явно производные ассеты из пользовательской библиотеки, не новые официальные материалы банка.</p>
+<h2>8. Адаптация и состояния</h2>
+<p>В библиотеке есть desktop-страницы и экраны нативного приложения. <strong>Мобильных версий самих веб-лендингов нет</strong>: правила responsive ниже предложены, а не подтверждены.</p>
+<ul>
+<li>До 720 px: две колонки превращаются в одну; сначала задача и действие, затем пояснение и декоративное изображение. Боковые поля 18–24 px.</li>
+<li>H1 уменьшается до 36–40 px. Карточки преимуществ становятся одной колонкой; очень короткие метрики могут оставаться в двух.</li>
+<li>Сложная таблица должна переходить в сравнение по параметрам или горизонтальную область с понятным индикатором; нельзя уменьшать шрифт до нечитаемого.</li>
+<li>Вкладки и варианты ответа переносятся на новую строку. Важный ответ не обрезается многоточием.</li>
+<li>Цель нажатия предлагается не меньше 44×44 px. Фиксированная CTA допустима только с учётом клавиатуры и безопасной области.</li>
+<li>Для подбора необходимы: начальное состояние, выбранный ответ, недоступный следующий шаг, возврат, загрузка, ошибка расчёта, результат, нет подходящего решения, изменение параметров и переход к заявке.</li>
+<li>Скриншоты не подтверждают hover, анимации, управление с клавиатуры, загрузку, sticky-поведение шапки и точные брейкпоинты. Эти свойства требуют проектирования отдельно.</li>
+</ul>
+<h2>9. Как должна работать страница умного подбора</h2>
+<p><strong>Основная задача страницы:</strong> помочь предпринимателю выбрать формат финансирования под задачу и понять следующий шаг. Малый и микробизнес здесь — аудитория сервиса; в интерфейсе не следует заставлять человека самостоятельно определять юридическую категорию бизнеса без необходимости.</p>
+<p>Предлагаемый путь: цель → разовая или повторяющаяся потребность → сумма и срок → существенные параметры бизнеса → рекомендация с причинами → альтернатива → подробные условия → заявка. Проверки бизнеса и документов добавляются там, где реально влияют на подбор. Не запрашивать телефон только ради просмотра объяснения.</p>
+<p>Содержание результата:</p>
+<ol>
+<li>Название формата и статус: предварительный подбор или персональное предложение.</li>
+<li>Связь с ответами пользователя: «вы выбрали деньги частями, поэтому стоит рассмотреть…».</li>
+<li>Сумма, ставка, платёж, срок, комиссии и допуслуги — только из реальных продуктовых данных; для расчёта показывается его основание.</li>
+<li>Ограничения, обязательные условия, документы и существенные различия с альтернативой.</li>
+<li>Действия: изменить параметры, сравнить, перейти к заявке.</li>
+</ol>
+<p>«Умный» не должен означать непрозрачный процент совпадения, придуманный шанс одобрения или автоматическое согласие на допуслуги. Нужны понятные причины. Если данных не хватает, следует объяснить, что уточнить. При отсутствии подходящего варианта сохранить ответы и дать возможность изменить запрос или обратиться за помощью.</p>
+<p>В набросках логика <strong>демонстрационная и локальная</strong>: нет проверки каталога, скоринга, отправки данных и интеграции с банковской системой. Числа суммы и срока показывают ввод клиента, а не продуктовые лимиты. Ставки и платежи обозначены квадратными скобками.</p>
+<h2>10. Пять набросков и выбор направления</h2>
+<table>
+<thead>
+<tr>
+<th>№</th>
+<th>Направление</th>
+<th>Композиция и сценарий</th>
+<th>Когда полезно</th>
+<th>Что проверить дальше</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>01</strong></td>
+<td>Подбор с сопровождением</td>
+<td>Тёмный первый экран; слева обещание и портфель, справа белая карточка из четырёх шагов. После ответов — объяснение формата.</td>
+<td>Первый визит, нет уверенности в продукте. Самая близкая связь с текущим кредитным лендингом.</td>
+<td>Состав вопросов, минимальный объём данных, возврат к ответам.</td>
+</tr>
+<tr>
+<td><strong>02</strong></td>
+<td>Сначала цифры</td>
+<td>Светлая страница; большая серая оболочка, параметры слева, белый результат справа; альтернативы ниже.</td>
+<td>Клиент знает сумму и срок.</td>
+<td>Реальные тарифы, расчёт платежа, сопоставимость сценариев.</td>
+</tr>
+<tr>
+<td><strong>03</strong></td>
+<td>От задачи бизнеса</td>
+<td>Персиковый первый экран, крупная диаграмма роста; три цветные карточки задач; уточнение и рекомендация под ними.</td>
+<td>Микробизнес, которому проще назвать действие, чем банковский продукт.</td>
+<td>Понятность задач, ветка «другая задача», отраслевые отличия.</td>
+</tr>
+<tr>
+<td><strong>04</strong></td>
+<td>Подбор в диалоге</td>
+<td>Белая страница; маршрут слева и диалог справа; быстрые ответы, история, карточка рекомендации.</td>
+<td>Клиенту нужны объяснения по ходу выбора.</td>
+<td>Исправление отдельного ответа, передача специалисту, обработка свободного текста.</td>
+</tr>
+<tr>
+<td><strong>05</strong></td>
+<td>Прозрачное сравнение</td>
+<td>Серая рабочая область; параметры в боковой панели, две рекомендации справа, таблица отличий ниже.</td>
+<td>Клиент сравнивает форматы и хочет контролировать решение.</td>
+<td>Реальная сортировка, достаточность условий, мобильное сравнение.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Предлагаемая основа — 01 с результатом из 05.</strong> Первый экран и брендовая композиция сохраняют узнаваемость кредитного раздела, короткие вопросы уменьшают объём одновременного выбора, а объяснение и сравнение делают рекомендацию проверяемой. Это гипотеза дизайна: преимущество по конверсии или пониманию пока не проверялось.</p>
+<p>Все пять вариантов используют одну базу: красный <code>#EF3124</code>, тёмный <code>#1C1C1E</code>, белый, серый <code>#F2F3F5</code>, голубой <code>#E4F0FF</code>, один гротеск в двух начертаниях. Различаются архитектура страницы и вход в выбор, а не только цвет фона.</p>
+<h2>11. Что передать в реализацию</h2>
+<p>Нужны утверждённые логотип и шрифт, настоящие токены банка, актуальная модель кредитных продуктов, правила доступности, формулы и данные для расчёта, тексты согласий, полный перечень состояний и проверка доступности интерфейса. Условия на предоставленных скриншотах не подтверждают действующие условия на дату исследования.</p>
+<p>Наброски — готовые к обсуждению автономные HTML-файлы. Они не являются работающим банковским сервисом. Основные демонстрационные действия: пройти шаги, изменить сумму и срок, выбрать задачу, пройти диалог, поменять формат сравнения.</p><div class="actions"><a class="btn" href="alfa-reference-atlas.html">Все референсы ↗</a><a class="btn secondary" href="alfa-credit-concepts.html">Пять концепций ↗</a></div></section></main><footer class="footer"><div class="wrap"><div class="footerline"><a class="brand" href="alfa-credit-concepts.html">Альфа-Бизнес</a><a href="alfa-design-system.html">Исследование дизайн-системы ↗</a><a href="alfa-credit-concepts.html">Пять концепций ↗</a></div><p class="muted small">Дизайн-концепция • 21 октября 2026 • Малый и микробизнес</p><p class="muted small">Прототип показывает сценарий выбора. Финансовые параметры в квадратных скобках требуют данных продуктовой команды. Подбор не означает одобрение кредита.</p></div></footer><script>
+document.querySelectorAll('[data-demo]').forEach(b=>b.addEventListener('click',()=>{let t=document.querySelector('.toast');if(t)t.remove();t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=b.dataset.demo;document.body.append(t);setTimeout(()=>t.remove(),4500)}));
+document.querySelectorAll('[data-group]').forEach(group=>group.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{group.querySelectorAll('button').forEach(x=>{x.classList.remove('selected');x.setAttribute('aria-pressed','false')});b.classList.add('selected');b.setAttribute('aria-pressed','true')})));
+</script></body></html>

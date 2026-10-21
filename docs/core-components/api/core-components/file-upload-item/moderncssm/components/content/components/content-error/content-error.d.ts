@@ -1,0 +1,1 @@
+export * from '@alfalab/core-components-file-upload-item/moderncssm/components/content/components/content-error/content-error';

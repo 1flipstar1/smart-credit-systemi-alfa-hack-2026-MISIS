@@ -1,0 +1,2 @@
+declare const styles = ":root {\n    --color-static-brand-black: #000;\n    --color-static-brand-blue: #0056ff;\n    --color-static-brand-bright-blue: #00e8f0;\n    --color-static-brand-green: #31e300;\n    --color-static-brand-red: #ef3124;\n    --color-static-brand-violet: #6a4dff;\n    --color-static-brand-warm-green: #a8f000;\n    --color-static-brand-white: #fff;\n}\n";
+export default styles;

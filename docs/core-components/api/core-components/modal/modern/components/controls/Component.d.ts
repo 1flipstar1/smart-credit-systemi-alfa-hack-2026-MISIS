@@ -1,0 +1,1 @@
+export * from '@alfalab/core-components-modal/modern/components/controls/Component';

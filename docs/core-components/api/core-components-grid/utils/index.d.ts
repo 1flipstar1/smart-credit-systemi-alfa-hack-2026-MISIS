@@ -1,0 +1,2 @@
+import { type ResponsivePropertyType } from '../typings';
+export declare function createClassNames(props: Record<string, ResponsivePropertyType | undefined>, styles: Record<string, string>): string[];

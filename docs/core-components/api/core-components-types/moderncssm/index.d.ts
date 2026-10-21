@@ -1,0 +1,22 @@
+export type BackgroundColorType = 'accent' | 'info' | 'attention-muted' | 'positive-muted' | 'negative-muted' | 'primary' | 'primary-inverted' | 'secondary' | 'secondary-inverted' | 'tertiary' | 'tertiary-inverted' | 'quaternary' | 'quaternary-inverted' | 'specialbg-component' | 'specialbg-component-inverted' | 'specialbg-primary-grouped' | 'specialbg-secondary-grouped' | 'specialbg-tertiary-grouped' | 'specialbg-secondary-transparent' | 'specialbg-secondary-transparent-inverted' | 'specialbg-tertiary-transparent' | 'specialbg-tertiary-transparent-inverted';
+export type BorderColorType = 'accent' | 'key' | 'key-inverted' | 'link' | 'primary' | 'primary-inverted' | 'secondary' | 'secondary-inverted' | 'tertiary' | 'tertiary-inverted' | 'underline' | 'underline-inverted' | 'graphic-attention' | 'graphic-link' | 'graphic-negative' | 'graphic-positive' | 'specialbg-secondary-transparent' | 'specialbg-secondary-transparent-inverted' | 'specialbg-tertiary-transparent' | 'specialbg-tertiary-transparent-inverted';
+export type GraphicColorType = 'accent' | 'link' | 'attention' | 'positive' | 'negative' | 'primary' | 'primary-inverted' | 'secondary' | 'secondary-inverted' | 'tertiary' | 'tertiary-inverted' | 'quaternary' | 'quaternary-inverted' | 'static-light' | 'static-accent' | 'static-dark';
+export type ShadowType = 'shadow-xs' | 'shadow-s' | 'shadow-m' | 'shadow-l' | 'shadow-xl' | 'shadow-xs-hard' | 'shadow-s-hard' | 'shadow-m-hard' | 'shadow-l-hard' | 'shadow-xl-hard' | 'shadow-xs-up' | 'shadow-s-up' | 'shadow-m-up' | 'shadow-l-up' | 'shadow-xl-up' | 'shadow-xs-hard-up' | 'shadow-s-hard-up' | 'shadow-m-hard-up' | 'shadow-l-hard-up' | 'shadow-xl-hard-up' | 'superapp-shadow-default' | 'superapp-shadow-promo';
+export type GapType = 2 | 4 | 8 | 12 | 16 | 20 | 24 | 32 | 40 | 48 | 64 | 72 | 96 | 128;
+export type PaddingType = number | string | {
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
+};
+export type TypographyType = 'accent-caps' | 'accent-component-primary' | 'accent-component-secondary' | 'accent-primary-large' | 'accent-primary-medium' | 'accent-primary-small' | 'accent-secondary-large' | 'accent-secondary-medium' | 'accent-secondary-small' | 'accent-tagline' | 'action-caps' | 'action-component-primary' | 'action-component-secondary' | 'action-primary-large' | 'action-primary-medium' | 'action-primary-small' | 'action-secondary-large' | 'action-secondary-medium' | 'action-secondary-small' | 'action-tagline' | 'headline-large' | 'headline-medium' | 'headline-small' | 'headline-xlarge' | 'headline-xsmall' | 'headline-mobile-large' | 'headline-mobile-medium' | 'headline-mobile-small' | 'headline-mobile-xlarge' | 'headline-mobile-xsmall' | 'headline-system-large' | 'headline-system-medium' | 'headline-system-small' | 'headline-system-xlarge' | 'headline-system-xsmall' | 'headline-system-mobile-large' | 'headline-system-mobile-medium' | 'headline-system-mobile-small' | 'headline-system-mobile-xlarge' | 'headline-system-mobile-xsmall' | 'paragraph-caps' | 'paragraph-component-primary' | 'paragraph-component-secondary' | 'paragraph-primary-large' | 'paragraph-primary-medium' | 'paragraph-primary-small' | 'paragraph-secondary-large' | 'paragraph-secondary-medium' | 'paragraph-secondary-small' | 'paragraph-tagline' | 'promo-large' | 'promo-medium' | 'promo-small' | 'promo-xlarge' | 'promo-xsmall' | 'promo-mobile-large' | 'promo-mobile-medium' | 'promo-mobile-small' | 'promo-mobile-xlarge' | 'promo-mobile-xsmall' | 'promo-system-large' | 'promo-system-medium' | 'promo-system-small' | 'promo-system-xlarge' | 'promo-system-xsmall' | 'promo-system-mobile-large' | 'promo-system-mobile-medium' | 'promo-system-mobile-small' | 'promo-system-mobile-xlarge' | 'promo-system-mobile-xsmall' | 'accent-component' | 'action-component' | 'key-large' | 'key-medium' | 'key-small' | 'key-xlarge' | 'key-xsmall' | 'paragraph-component';
+export type Country = {
+    name: string;
+    regions?: string[];
+    iso2: string;
+    countryCode: string;
+    dialCode: string;
+    format?: string;
+    priority: number;
+    mainCode?: boolean;
+};

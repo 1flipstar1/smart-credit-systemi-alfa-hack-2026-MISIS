@@ -1,0 +1,22 @@
+import { type ChangeEvent, type FC, type ForwardRefExoticComponent, type ReactNode, type RefAttributes, type RefObject } from 'react';
+import { type FormControlProps } from '@alfalab/core-components-form-control/esm';
+import { type FieldProps } from '@alfalab/core-components-select/esm/shared';
+import { type TagComponent } from '../../types';
+type TagListOwnProps = {
+    size?: Exclude<FormControlProps['size'], 40>;
+    value?: string;
+    handleDeleteTag?: (key: string) => void;
+    onInput?: (event: ChangeEvent<HTMLInputElement>) => void;
+    inputRef?: RefObject<HTMLInputElement>;
+    autocomplete?: boolean;
+    isOpen?: boolean;
+    collapseTagList?: boolean;
+    moveInputToNewLine?: boolean;
+    transformCollapsedTagText?: (collapsedCount: number) => string;
+    transformTagText?: (tagText?: ReactNode) => ReactNode;
+    Tag?: TagComponent;
+    handleUpdatePopover?: () => void;
+    FormControlComponent: ForwardRefExoticComponent<FormControlProps & RefAttributes<HTMLDivElement>>;
+};
+export declare const TagList: FC<Partial<FieldProps> & Omit<FormControlProps, 'size'> & TagListOwnProps>;
+export {};

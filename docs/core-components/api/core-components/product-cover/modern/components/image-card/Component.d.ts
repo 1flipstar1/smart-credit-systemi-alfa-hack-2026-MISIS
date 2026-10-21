@@ -1,0 +1,1 @@
+export * from '@alfalab/core-components-product-cover/modern/components/image-card/Component';

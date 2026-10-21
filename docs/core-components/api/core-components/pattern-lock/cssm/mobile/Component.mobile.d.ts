@@ -1,0 +1,1 @@
+export * from '@alfalab/core-components-pattern-lock/cssm/mobile/Component.mobile';

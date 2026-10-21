@@ -1,0 +1,53 @@
+{
+  "TasteProfile": {
+    "name": "UI banking glossy core",
+    "source_count": 30,
+    "lighting": "Broad upper-left softbox, clean highlights and colored edge reflections",
+    "palette": [
+      "scarlet lacquer",
+      "turquoise metal",
+      "champagne gold",
+      "icy pearlescent silver"
+    ],
+    "finish": "Thick rounded solids, glossy lacquer and polished/anodized metal",
+    "geometry": "One dominant subject, one to three supporting objects, compact three-quarter composition",
+    "mood": "Bright, playful, tangible, premium",
+    "constraints": [
+      "No UI panels baked into assets",
+      "No labels or logos",
+      "Keep neon-black branch separate",
+      "Retain alpha channel"
+    ],
+    "evidence": "STYLE-ANALYSIS.md"
+  },
+  "DesignSignalPacket": {
+    "taste_state": "extracted",
+    "chosen_branch": "red-turquoise-gold",
+    "reference_jobs": {
+      "lighting": [
+        11,
+        15,
+        16
+      ],
+      "palette": [
+        11,
+        16,
+        25
+      ],
+      "geometry": [
+        4,
+        24,
+        27
+      ],
+      "alternate_cold": [
+        1,
+        18,
+        28
+      ],
+      "alternate_neon": [
+        6,
+        19
+      ]
+    }
+  }
+}

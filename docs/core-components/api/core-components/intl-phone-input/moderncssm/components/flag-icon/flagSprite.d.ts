@@ -1,0 +1,1 @@
+export * from '@alfalab/core-components-intl-phone-input/moderncssm/components/flag-icon/flagSprite';

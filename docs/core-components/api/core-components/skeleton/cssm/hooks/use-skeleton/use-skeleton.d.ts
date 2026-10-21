@@ -1,0 +1,1 @@
+export * from '@alfalab/core-components-skeleton/cssm/hooks/use-skeleton/use-skeleton';

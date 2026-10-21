@@ -1,0 +1,1 @@
+export * from '@alfalab/core-components-universal-date-input/esm/components/date-range-input/Component';

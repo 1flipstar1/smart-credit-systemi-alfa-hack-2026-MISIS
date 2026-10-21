@@ -1,0 +1,1 @@
+export * from '@alfalab/core-components-input/components/base-input/types/base-input-props';
