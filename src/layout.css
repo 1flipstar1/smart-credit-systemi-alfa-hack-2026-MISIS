@@ -3,7 +3,9 @@ body {
     margin: 0;
     background: var(--color-light-base-bg-primary);
     color: var(--color-light-text-primary);
-    font-family: var(--font-family), Arial, sans-serif;
+    font-family: var(--font-family-system);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 main { width: min(1240px, calc(100% - 80px)); margin: auto; }
 .system-note {

@@ -1,0 +1,626 @@
+{
+  "source": "https://alfabank.ru/sme/profits/",
+  "categories": [
+    {
+      "code": "lump",
+      "title": "Кредиты одной суммой",
+      "description": "Вся сумма сразу на счёт, равные или уменьшающиеся платежи"
+    },
+    {
+      "code": "secured",
+      "title": "С залогом и на недвижимость",
+      "description": "Залог — недвижимость, транспорт или покупаемое имущество; ставка ниже, срок дольше"
+    },
+    {
+      "code": "line",
+      "title": "Деньги частями и на оборот",
+      "description": "Берёте из лимита по мере нужды, проценты — только на использованную сумму"
+    },
+    {
+      "code": "state",
+      "title": "Господдержка и особые условия",
+      "description": "Льготные программы и перекредитование под меньшую нагрузку"
+    },
+    {
+      "code": "other",
+      "title": "Гарантии и другие инструменты",
+      "description": "Для тендеров, поставок с отсрочкой оплаты и отсрочки платежей"
+    }
+  ],
+  "products": [
+    {
+      "code": "credit_ip",
+      "name": "Кредит для ИП",
+      "category": "lump",
+      "description": "На развитие бизнеса индивидуального предпринимателя",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/kredit-dlya-ip/",
+      "preset": {
+        "goal": "oborot",
+        "amount": 2000000,
+        "term_months": 24,
+        "secured": false
+      }
+    },
+    {
+      "code": "credit_ooo",
+      "name": "Кредит для ООО",
+      "category": "lump",
+      "description": "На развитие бизнеса компании",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/kredit-dlya-ooo/",
+      "preset": {
+        "goal": "oborot",
+        "amount": 3000000,
+        "term_months": 24,
+        "secured": false
+      }
+    },
+    {
+      "code": "credit_legal",
+      "name": "Кредит для юридических лиц",
+      "category": "lump",
+      "description": "Для компаний любой формы собственности",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/kredit-dlya-yur-lic/",
+      "preset": {
+        "goal": "oborot",
+        "amount": 3000000,
+        "term_months": 36,
+        "secured": false
+      }
+    },
+    {
+      "code": "credit_startup",
+      "name": "Кредит для развития бизнеса с нуля",
+      "category": "lump",
+      "description": "Бизнес-Кредит: без запроса документов, подходит начинающему бизнесу",
+      "rate_from": 15.5,
+      "rate_note": "",
+      "amount_to": 150000000,
+      "term_to_months": 120,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/businesscredit/",
+      "preset": {
+        "goal": "oborot",
+        "amount": 1000000,
+        "term_months": 24,
+        "secured": false
+      }
+    },
+    {
+      "code": "credit_express",
+      "name": "Экспресс кредит для бизнеса",
+      "category": "lump",
+      "description": "Быстрое решение по заявке онлайн",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/ekspress-kredit/",
+      "preset": {
+        "goal": "oborot",
+        "amount": 1000000,
+        "term_months": 12,
+        "secured": false
+      }
+    },
+    {
+      "code": "credit_1m",
+      "name": "Кредит до 1 млн ₽ для бизнеса",
+      "category": "lump",
+      "description": "Альфа-Старт: небольшая сумма без залога",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": 1000000,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/alfastart/",
+      "preset": {
+        "goal": "oborot",
+        "amount": 1000000,
+        "term_months": 12,
+        "secured": false
+      }
+    },
+    {
+      "code": "credit_invest",
+      "name": "Инвестиционный кредит",
+      "category": "lump",
+      "description": "На новые направления и проекты",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/kredit-investicionnyy/",
+      "preset": {
+        "goal": "equip",
+        "amount": 10000000,
+        "term_months": 60,
+        "secured": true
+      }
+    },
+    {
+      "code": "credit_production",
+      "name": "Кредит на производство",
+      "category": "lump",
+      "description": "Сырьё, цеха и расширение мощностей",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/kredit-na-proizvodstvo/",
+      "preset": {
+        "goal": "equip",
+        "amount": 10000000,
+        "term_months": 60,
+        "secured": true
+      }
+    },
+    {
+      "code": "credit_buy_business",
+      "name": "Кредит на покупку готового бизнеса",
+      "category": "lump",
+      "description": "Покупка действующей компании",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/kredit-na-pokupku-gotovogo-biznesa/",
+      "preset": {
+        "goal": "equip",
+        "amount": 15000000,
+        "term_months": 60,
+        "secured": true
+      }
+    },
+    {
+      "code": "credit_franchise",
+      "name": "Кредит на открытие бизнеса по франшизе",
+      "category": "lump",
+      "description": "Паушальный взнос и запуск точки",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/franshisa/",
+      "preset": {
+        "goal": "oborot",
+        "amount": 2000000,
+        "term_months": 36,
+        "secured": false
+      }
+    },
+    {
+      "code": "credit_plant",
+      "name": "Кредит на покупку завода",
+      "category": "lump",
+      "description": "Крупные вложения в производство",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/zavod/",
+      "preset": {
+        "goal": "equip",
+        "amount": 75000000,
+        "term_months": 120,
+        "secured": true
+      }
+    },
+    {
+      "code": "credit_construction",
+      "name": "Кредит на строительство",
+      "category": "lump",
+      "description": "Строительство и реконструкция объектов",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/stroitelstvo/",
+      "preset": {
+        "goal": "equip",
+        "amount": 20000000,
+        "term_months": 120,
+        "secured": true
+      }
+    },
+    {
+      "code": "credit_secured",
+      "name": "Кредит с залогом",
+      "category": "secured",
+      "description": "Кредит для бизнеса с залогом на развитие бизнеса",
+      "rate_from": 17,
+      "rate_note": "",
+      "amount_to": 150000000,
+      "term_to_months": 120,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/kredit-s-zalogom/",
+      "preset": {
+        "goal": "oborot",
+        "amount": 10000000,
+        "term_months": 60,
+        "secured": true
+      }
+    },
+    {
+      "code": "credit_lombard",
+      "name": "Ломбардный кредит",
+      "category": "secured",
+      "description": "«Деньги на дело» — кредит под залог без оценки бизнеса",
+      "rate_from": 15.5,
+      "rate_note": "",
+      "amount_to": 150000000,
+      "term_to_months": 120,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/lombardnyj_kredit/",
+      "preset": {
+        "goal": "oborot",
+        "amount": 5000000,
+        "term_months": 36,
+        "secured": true
+      }
+    },
+    {
+      "code": "secured_equipment",
+      "name": "Кредит под залог оборудования",
+      "category": "secured",
+      "description": "Оборудование остаётся в работе",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/kredit-pod-zalog-oborudovaniya/",
+      "preset": {
+        "goal": "equip",
+        "amount": 5000000,
+        "term_months": 60,
+        "secured": true
+      }
+    },
+    {
+      "code": "secured_property",
+      "name": "Кредит под залог приобретаемой недвижимости",
+      "category": "secured",
+      "description": "Залогом становится покупаемый объект",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/kredit-pod-zalog-priobretaemoy-nedvizhimosti/",
+      "preset": {
+        "goal": "equip",
+        "amount": 15000000,
+        "term_months": 120,
+        "secured": true
+      }
+    },
+    {
+      "code": "commercial_property",
+      "name": "Кредит на коммерческую недвижимость",
+      "category": "secured",
+      "description": "Офис, склад или торговое помещение",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/kredit-na-kommercheskuyu-nedvizhimost/",
+      "preset": {
+        "goal": "equip",
+        "amount": 15000000,
+        "term_months": 120,
+        "secured": true
+      }
+    },
+    {
+      "code": "business_mortgage",
+      "name": "Ипотека для бизнеса",
+      "category": "secured",
+      "description": "Бизнес-Ипотека для покупки недвижимости",
+      "rate_from": 23,
+      "rate_note": "",
+      "amount_to": 150000000,
+      "term_to_months": 120,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/businessipoteka/",
+      "preset": {
+        "goal": "equip",
+        "amount": 15000000,
+        "term_months": 120,
+        "secured": true
+      }
+    },
+    {
+      "code": "mortgage_ip",
+      "name": "Ипотека для ИП",
+      "category": "secured",
+      "description": "Недвижимость для бизнеса предпринимателя",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/ipoteka-dlya-ip/",
+      "preset": {
+        "goal": "equip",
+        "amount": 10000000,
+        "term_months": 120,
+        "secured": true
+      }
+    },
+    {
+      "code": "mortgage_ooo",
+      "name": "Ипотека для ООО",
+      "category": "secured",
+      "description": "Недвижимость на баланс компании",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/ipoteka-dlya-ooo/",
+      "preset": {
+        "goal": "equip",
+        "amount": 15000000,
+        "term_months": 120,
+        "secured": true
+      }
+    },
+    {
+      "code": "equipment_credit",
+      "name": "Кредит на оборудование",
+      "category": "secured",
+      "description": "Покупку можно оформить в залог",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/kredit-na-oborudovanie/",
+      "preset": {
+        "goal": "equip",
+        "amount": 5000000,
+        "term_months": 60,
+        "secured": true
+      }
+    },
+    {
+      "code": "auto_credit",
+      "name": "Автокредит для бизнеса",
+      "category": "secured",
+      "description": "Транспорт и спецтехника, новые и б/у, можно без первоначального взноса",
+      "rate_from": 17.5,
+      "rate_note": "",
+      "amount_to": 50000000,
+      "term_to_months": 120,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/autocredit/",
+      "preset": {
+        "goal": "equip",
+        "amount": 5000000,
+        "term_months": 60,
+        "secured": true
+      }
+    },
+    {
+      "code": "revolving_line",
+      "name": "Возобновляемая кредитная линия",
+      "category": "line",
+      "description": "Оформите один раз, берите частями, платите процент только за использованную сумму",
+      "rate_from": 14.5,
+      "rate_note": "",
+      "amount_to": 50000000,
+      "term_to_months": 60,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/creditline/",
+      "preset": {
+        "goal": "gap",
+        "amount": 5000000,
+        "term_months": 24,
+        "secured": false
+      }
+    },
+    {
+      "code": "overdraft",
+      "name": "Овердрафт",
+      "category": "line",
+      "description": "Рассчитывайтесь с поставщиками, когда своих денег не хватает",
+      "rate_from": 13,
+      "rate_note": "",
+      "amount_to": 20000000,
+      "term_to_months": 12,
+      "term_note": "1 год",
+      "source_url": "https://alfabank.ru/sme/profits/overdraft/",
+      "preset": {
+        "goal": "gap",
+        "amount": 2000000,
+        "term_months": 12,
+        "secured": false
+      }
+    },
+    {
+      "code": "working_capital",
+      "name": "Кредит на пополнение оборотных средств",
+      "category": "line",
+      "description": "Закупки, зарплаты, аренда и налоги",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/kredit-na-popolnenie-oborotnyh-sredstv/",
+      "preset": {
+        "goal": "oborot",
+        "amount": 3000000,
+        "term_months": 24,
+        "secured": false
+      }
+    },
+    {
+      "code": "seller_credit",
+      "name": "Кредит для селлеров",
+      "category": "line",
+      "description": "Альфа-Селлер Кредит: кредитная линия для продавцов на маркетплейсах",
+      "rate_from": null,
+      "rate_note": "от 1,2%",
+      "amount_to": 20000000,
+      "term_to_months": null,
+      "term_note": "от 12 месяцев",
+      "source_url": "https://alfabank.ru/sme/profits/creditsellers/",
+      "preset": {
+        "goal": "gap",
+        "amount": 2000000,
+        "term_months": 12,
+        "secured": false
+      }
+    },
+    {
+      "code": "credit_card",
+      "name": "Кредитная карта Business One Credit",
+      "category": "line",
+      "description": "Оплата товаров и услуг для бизнеса, кэшбэк до 10%",
+      "rate_from": null,
+      "rate_note": "до 120 дней без процентов",
+      "amount_to": 1000000,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/creditcard/",
+      "preset": {
+        "goal": "gap",
+        "amount": 1000000,
+        "term_months": 12,
+        "secured": false
+      }
+    },
+    {
+      "code": "preferential",
+      "name": "Льготный кредит для бизнеса",
+      "category": "state",
+      "description": "Сниженная ставка по госпрограммам",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/goscredit/",
+      "preset": {
+        "goal": "oborot",
+        "amount": 5000000,
+        "term_months": 36,
+        "secured": false
+      }
+    },
+    {
+      "code": "agro",
+      "name": "Льготный кредит для сельхозпроизводителей",
+      "category": "state",
+      "description": "Госпрограммы для аграрного бизнеса",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/selskoe-hozyaystvo/",
+      "preset": {
+        "goal": "equip",
+        "amount": 5000000,
+        "term_months": 60,
+        "secured": true
+      }
+    },
+    {
+      "code": "refinancing",
+      "name": "Рефинансирование кредитов для бизнеса",
+      "category": "state",
+      "description": "Перекредитование кредитов других банков с удобным графиком",
+      "rate_from": 14,
+      "rate_note": "",
+      "amount_to": 150000000,
+      "term_to_months": 120,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/refin/",
+      "preset": {
+        "goal": "refi",
+        "amount": 7000000,
+        "term_months": 60,
+        "secured": false
+      }
+    },
+    {
+      "code": "guarantee",
+      "name": "Банковская гарантия",
+      "category": "other",
+      "description": "Для тендеров и исполнения госконтрактов",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/guarantee/client/",
+      "preset": {
+        "goal": "tender",
+        "amount": 2000000,
+        "term_months": 12,
+        "secured": false
+      }
+    },
+    {
+      "code": "factoring",
+      "name": "Факторинг для бизнеса",
+      "category": "other",
+      "description": "Деньги за поставку до оплаты покупателем",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/factoring/",
+      "preset": {
+        "goal": "gap",
+        "amount": 5000000,
+        "term_months": 12,
+        "secured": false
+      }
+    },
+    {
+      "code": "credit_holidays",
+      "name": "Кредитные каникулы",
+      "category": "other",
+      "description": "Отсрочка платежей по действующим кредитам",
+      "rate_from": null,
+      "rate_note": "",
+      "amount_to": null,
+      "term_to_months": null,
+      "term_note": "",
+      "source_url": "https://alfabank.ru/sme/profits/credit-holidays-mob/",
+      "preset": {
+        "goal": "other",
+        "amount": 2000000,
+        "term_months": 24,
+        "secured": false
+      }
+    }
+  ]
+}

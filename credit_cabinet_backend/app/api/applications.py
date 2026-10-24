@@ -4,9 +4,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
-from app.db.models import Application, ApplicationEvent, ScoringPrediction
+from app.db.models import Application, ApplicationEvent, Document, ScoringPrediction
 from app.ml.scoring.predictor import CreditPredictor, ModelUnavailableError
 from app.schemas.application import ApplicationCreate, ApplicationOut
+from app.schemas.document import DocumentOut
 from app.schemas.prediction import PredictionOut
 from app.services.workflow_service import change_status
 
@@ -37,6 +38,20 @@ def get_application(application_id: str, db: Session = Depends(get_db)):
     return app
 
 
+@router.put("/{application_id}", response_model=ApplicationOut)
+def update_draft(application_id: str, payload: ApplicationCreate, db: Session = Depends(get_db)):
+    app = db.get(Application, application_id)
+    if app is None:
+        raise HTTPException(status_code=404, detail="Заявка не найдена")
+    if app.status != "draft":
+        raise HTTPException(status_code=409, detail="Изменять можно только черновик")
+    for field, value in payload.model_dump().items():
+        setattr(app, field, value)
+    db.commit()
+    db.refresh(app)
+    return app
+
+
 @router.post("/{application_id}/submit", response_model=ApplicationOut)
 def submit_application(application_id: str, db: Session = Depends(get_db)):
     app = db.get(Application, application_id)
@@ -50,6 +65,52 @@ def submit_application(application_id: str, db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(status_code=409, detail=str(exc)) from exc
     return app
+
+
+def _client_transition(db: Session, application_id: str, steps: list[tuple[str, str]]) -> Application:
+    app = db.get(Application, application_id)
+    if app is None:
+        raise HTTPException(status_code=404, detail="Заявка не найдена")
+    try:
+        for new_status, message in steps:
+            change_status(db, app, new_status, message=message, actor="client")
+        db.commit()
+        db.refresh(app)
+    except ValueError as exc:
+        db.rollback()
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    return app
+
+
+@router.post("/{application_id}/accept", response_model=ApplicationOut)
+def accept_offer(application_id: str, db: Session = Depends(get_db)):
+    return _client_transition(db, application_id, [("signing", "Клиент принял предложение")])
+
+
+@router.post("/{application_id}/decline", response_model=ApplicationOut)
+def decline_offer(application_id: str, db: Session = Depends(get_db)):
+    return _client_transition(db, application_id, [("declined", "Клиент отказался от предложения")])
+
+
+@router.post("/{application_id}/sign", response_model=ApplicationOut)
+def sign_documents(application_id: str, db: Session = Depends(get_db)):
+    # Demo: signature confirmation and disbursement are not integrated, so both steps run at once.
+    return _client_transition(db, application_id, [
+        ("issuing", "Документы подписаны"),
+        ("issued", "Деньги зачислены на счёт"),
+    ])
+
+
+@router.get("/{application_id}/documents", response_model=list[DocumentOut])
+def list_documents(application_id: str, db: Session = Depends(get_db)):
+    if db.get(Application, application_id) is None:
+        raise HTTPException(status_code=404, detail="Заявка не найдена")
+    return (
+        db.query(Document)
+        .filter(Document.application_id == application_id)
+        .order_by(Document.created_at.asc())
+        .all()
+    )
 
 
 @router.get("/{application_id}/events")

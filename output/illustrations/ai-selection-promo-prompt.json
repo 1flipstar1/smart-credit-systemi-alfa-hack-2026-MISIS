@@ -1,0 +1,6 @@
+{
+  "generator": "built-in image_gen",
+  "prompt": "Use case: stylized-concept. Create one compact AI banking promo icon in exactly the visual language of the attached reference screenshot. Reference only for style: simple chunky 3D objects, near-frontal view, crisp rounded edges, shallow visible extrusion, vivid pure red/blue/green, light restrained reflections like its wallet, calendar and percent tags. Subject: a compact electric BLUE rounded-square AI tile, large raised WHITE \"AI\" lettering, a thin red side/back edge, and ONE small bright GREEN four-point sparkle at its upper-right corner to indicate smart assistance. The tile and sparkle are the only objects. Minimal silhouette, balanced chunky proportions, very readable at 90px. More like a bank promo product icon than a glossy app logo. Broad calm surfaces, subtle satin/semi-gloss reflections, no iridescence, no purple gradients, no chrome, no chip pins, no neural spheres, no chat bubbles, no robot. Slight 3/4 orientation but mostly frontal, soft studio lighting. Square canvas with 12 percent transparent margin; fully transparent alpha background (zero alpha outside objects), no blue rectangle backdrop, no floor shadow, no bloom, no watermark. Exact text only \"AI\".",
+  "reference": "User attached bank promo icons screenshot",
+  "output": "originals-satin/ai-selection-promo.png"
+}
