@@ -465,7 +465,7 @@ const fresh = () => ({
   form: { goal: 'oborot', ai: 4, term: 24, sec: false, discount: true, consents: [true, true, false], inn: '772512345678', phone: '', email: 'smirnova@example.ru', who: 'Собственник бизнеса', revenue: '18 400 000', costs: '1 120 000', other: '38 000' },
   company: { state: 'found' },
   docs: { passport: 'ok', statement: 'ok', decl: 'checking', contract: 'none' },
-  app: null,
+  app: null, be: { draftId: null }, uploads: [],
   ui: { counterPick: 'a', payDif: false, vote: null, read: [false, false, false, false], signing: false, stars: 0, needUploaded: false },
   adm: { filter: 'all', tab: 0, factor: 1, docSel: 2, docOk: [false, false, false, false], dtype: 'counter', amount: 2000000, term: 24, collat: false, protect: true, acq: true, line: false, period: 30 }
 });
@@ -552,9 +552,24 @@ function render(isNew) {
   const v = $('#view');
   const fn = VIEWS[S.route] || VIEWS.home;
   v.innerHTML = fn();
+  // Views may redirect (status → sign/done); keep the address in sync so a reload reopens this screen.
+  if (location.hash.slice(1) !== S.route) history.replaceState(null, '', '#' + S.route);
   if (isNew) { v.style.animation = 'none'; void v.offsetWidth; v.style.animation = ''; v.classList.add('entering'); clearTimeout(render._t); render._t = setTimeout(() => v.classList.remove('entering'), 900); }
   renderDemoBar();
   after();
+  save();
+}
+const STORE = 'alfa-credit-cabinet-v1';
+function save() {
+  try { localStorage.setItem(STORE, JSON.stringify(S, (k, v) => (k.startsWith('_') ? undefined : v))); } catch (e) { /* storage unavailable */ }
+}
+function restore() {
+  try {
+    const v = JSON.parse(localStorage.getItem(STORE));
+    if (!v || typeof v !== 'object') return;
+    const d = fresh();
+    S = Object.assign(d, v, { form: { ...d.form, ...v.form }, ui: { ...d.ui, ...v.ui }, adm: { ...d.adm, ...v.adm }, be: { ...d.be, ...v.be }, uploads: v.uploads || [] });
+  } catch (e) { /* ignore broken state */ }
 }
 function after() {
   $$('.seg').forEach(placeSeg);
@@ -606,6 +621,7 @@ function renderDemoBar() {
   $('#demobar').innerHTML = `<div class="wrap">
     <span class="tag">ПРОТОТИП</span>
     <span class="hide-m" style="color:rgba(255,255,255,.7)">Синтетические данные · Альфа Будущее, хакатон 2026</span>
+    <span class="badge ${BE.online ? 'b-pos' : 'b-grey'}" title="${BE.online ? 'Данные сохраняются в API ' + esc(BE.base || location.origin) : 'API недоступен: путь моделируется в браузере'}">${BE.online ? 'API подключён' : 'Офлайн-демо'}</span>
     <span class="sp"></span>
     <span style="color:rgba(255,255,255,.7)" class="hide-m">Заявка: <b style="color:#fff;font-weight:500">${esc(st)}</b></span>
     <div class="seg on-dark" role="tablist" aria-label="Роль">
@@ -625,13 +641,15 @@ function statusLabel(s) {
 
 /* ================= pipeline simulation ================= */
 let pipeTimer = null;
-function addEvent(t) { S.app.events.unshift([nowHM(), t]); }
-function submitApp() {
+// sim = pipeline checks the backend does not record; other events come from the API when it is online.
+function addEvent(t, sim) { S.app.events.unshift([nowHM(), t, Date.now(), sim ? 1 : 0]); }
+function submitApp(backendId) {
   const amt = amount(), f = F();
   const p = product();
   const term = Math.min(f.term, p.maxT);
   S.app = {
-    id: 'КЗ-2026-10431', amount: amt, term, goal: f.goal, product: p, collat: p.key === 'sec', discount: f.discount,
+    id: backendId ? appNumber(backendId) : 'КЗ-2026-10431', backendId: backendId || null,
+    amount: amt, term, goal: f.goal, product: p, collat: p.key === 'sec', discount: f.discount,
     status: 'review', stage: 0, events: [], offer: null, decidedBy: null, at: nowHM()
   };
   addEvent('Заявка отправлена');
@@ -646,27 +664,49 @@ function runPipeline() {
   const msgs = ['Анкета заполнена полностью', 'ЕГРИП и ФНС подтверждены, кредитная история получена', 'Оценка риска: ' + quote(a.amount, a.term, a).score + ' из 100'];
   pipeTimer = setTimeout(() => {
     if (!S.app || S.app !== a || a.status !== 'review') return;
-    addEvent(msgs[a.stage] || '');
+    addEvent(msgs[a.stage] || '', true);
     a.stage++;
-    if (a.stage >= 3) {
-      const pol = policy(a.amount, a);
-      a.stage = 3;
-      if (pol.pass) {
-        a.status = 'approved';
-        a.offer = { amount: a.amount, term: a.term, rate: pol.q.rate, collat: a.collat };
-        a.decidedBy = 'auto';
-        addEvent('Кредит одобрен автоматически');
-        toast('Кредит одобрен', mln(a.amount) + ' — можно подписывать', 'pos', S.route !== 'status' ? { label: 'Открыть', fn: () => go('status') } : null);
-      } else {
-        a.status = 'expert';
-        addEvent('Заявка передана кредитному аналитику');
-        toast('Заявку смотрит специалист', 'Нужна ручная проверка выручки', 'att', { label: 'Вид банка', fn: () => go('adm-card') });
-      }
-    }
-    if (S.route === 'status' || S.route.startsWith('adm')) render();
-    else renderDemoBar();
+    if (a.stage >= 3) { a.stage = 3; autoDecide(a); return; }
+    refreshView();
     runPipeline();
   }, 1700);
+}
+function refreshView() {
+  if (S.route === 'status' || S.route.startsWith('adm')) render();
+  else { renderDemoBar(); save(); }
+}
+async function autoDecide(a) {
+  const pol = policy(a.amount, a);
+  let approve = pol.pass;
+  if (BE.online && a.backendId) {
+    try {
+      const p = await BE.req('POST', `/api/applications/${a.backendId}/score`);
+      addEvent('ML-скоринг ' + p.model_version + ': прогноз ' + (+p.prediction).toFixed(2), true);
+    } catch (e) {
+      addEvent(e.status === 503 ? 'ML-модель не подключена — использована балльная модель конвейера' : 'Скоринг недоступен: ' + e.message, true);
+    }
+    if (approve) {
+      try {
+        await BE.req('POST', `/api/admin/applications/${a.backendId}/decision`, {
+          decision: 'approved',
+          comment: 'Автоматическое решение конвейера: правила политики выполнены' + offerTag({ amount: a.amount, term: a.term, rate: pol.q.rate, collat: a.collat })
+        });
+      } catch (e) { approve = false; }
+    }
+  }
+  if (S.app !== a || a.status !== 'review') return;
+  if (approve) {
+    a.status = 'approved';
+    a.offer = { amount: a.amount, term: a.term, rate: pol.q.rate, collat: a.collat };
+    a.decidedBy = 'auto';
+    addEvent('Кредит одобрен автоматически');
+    toast('Кредит одобрен', mln(a.amount) + ' — можно подписывать', 'pos', S.route !== 'status' ? { label: 'Открыть', fn: () => go('status') } : null);
+  } else {
+    a.status = 'expert';
+    addEvent('Заявка передана кредитному аналитику');
+    toast('Заявку смотрит специалист', 'Нужна ручная проверка выручки', 'att', { label: 'Вид банка', fn: () => go('adm-card') });
+  }
+  refreshView();
 }
 function ensureApp() {
   if (S.app) return;
@@ -689,6 +729,199 @@ function decide(type, params) {
   } else {
     a.status = 'refused'; addEvent('Банк не может выдать кредит сейчас');
   }
+}
+
+/* ================= backend ================= */
+// With the API reachable, the draft, documents, statuses and decisions live in credit_cabinet_backend;
+// without it (file://, no server) the prototype keeps its offline simulation.
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+const tsz = (s) => /Z$|[+-]\d\d:?\d\d$/.test(s) ? s : s + 'Z';
+const hm = (s) => { const d = new Date(tsz(s)); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+const appNumber = (id) => 'КЗ-2026-' + (parseInt(id.replace(/-/g, '').slice(0, 6), 16) % 90000 + 10000);
+const OFFER_RE = /\s*⟨offer:([\d.]+)\/(\d+)\/([\d.]+)\/([01])⟩/;
+const offerTag = (o) => ` ⟨offer:${o.amount}/${o.term}/${o.rate}/${o.collat ? 1 : 0}⟩`;
+const cleanMsg = (m) => String(m || '').replace(OFFER_RE, '');
+const num = (s) => +String(s || '').replace(/\D/g, '') || 0;
+const BE_STAGE = { draft: 'Черновик', review: 'Ждёт эксперта', expert: 'Ждёт эксперта', needinfo: 'Нужны документы', approved: 'Одобрено', counter: 'Другие условия', refused: 'Отказ', signing: 'Подписание', issuing: 'Подписание', issued: 'Выдано', declined: 'Клиент отказался' };
+const DOC_STATUS = { queued: ['В очереди', 'b-info'], processing: ['Распознаём', 'b-info'], recognized: ['✓ Распознан', 'b-pos'], manual_review: ['Ручная проверка', 'b-att'], failed: ['Ошибка', 'b-neg'] };
+
+const BE = {
+  base: '', online: false, products: null, queue: null, analytics: null, gen: 0,
+  async init() {
+    const q = new URLSearchParams(location.search).get('api');
+    const bases = q != null ? [q.replace(/\/$/, '')] : location.protocol.startsWith('http') ? ['', 'http://localhost:8000'] : ['http://localhost:8000'];
+    for (const b of bases) {
+      try {
+        const r = await fetch(b + '/api/health', { signal: AbortSignal.timeout(1500) });
+        if (r.ok && (await r.json()).status === 'ok') { this.base = b; this.online = true; break; }
+      } catch (e) { /* try next base */ }
+    }
+    if (this.online) {
+      try { this.products = await this.req('GET', '/api/products'); } catch (e) { /* default product code */ }
+      setInterval(bePoll, 3000);
+      bePoll();
+    }
+    renderDemoBar();
+  },
+  async req(method, path, body) {
+    const opts = { method, headers: {} };
+    if (body instanceof FormData) opts.body = body;
+    else if (body !== undefined) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+    if (method !== 'GET') this.gen++;
+    const r = await fetch(this.base + path, opts);
+    const data = await r.json().catch(() => null);
+    if (!r.ok) {
+      const d = data && data.detail;
+      const e = new Error(typeof d === 'string' ? d : d ? 'Проверьте поля заявки' : 'Ошибка API ' + r.status);
+      e.status = r.status;
+      throw e;
+    }
+    return data;
+  }
+};
+const live = () => BE.online && S.app && S.app.backendId;
+
+function bePayload(amt = amount(), term) {
+  const f = F(), p = product(f, amt);
+  return {
+    product_code: (BE.products && BE.products[0] && BE.products[0].code) || 'business_standard',
+    amount: amt, term_months: term || Math.min(f.term, p.maxT),
+    goal: GOALS.find((g) => g.id === f.goal).t + ' · ' + p.name,
+    inn: /^\d{10}$|^\d{12}$/.test(f.inn) ? f.inn : '',
+    revenue_year: num(f.revenue) || 1, expenses_month: num(f.costs), debt_payments_month: num(f.other)
+  };
+}
+async function beEnsureDraft() {
+  if (live()) return S.app.backendId;
+  if (!S.be.draftId) S.be.draftId = (await BE.req('POST', '/api/applications', bePayload())).id;
+  return S.be.draftId;
+}
+async function beSubmit() {
+  let id = S.be.draftId;
+  if (id) {
+    try { await BE.req('PUT', `/api/applications/${id}`, bePayload()); }
+    catch (e) { if (e.status === 404 || e.status === 409) id = null; else throw e; }
+  }
+  if (!id) id = (await BE.req('POST', '/api/applications', bePayload())).id;
+  const app = await BE.req('POST', `/api/applications/${id}/submit`);
+  S.be.draftId = null;
+  return app;
+}
+/** Runs a client transition on the backend first; the screen changes only if the API accepted it. */
+async function beAction(name, el) {
+  if (!live()) return true;
+  try { await BE.req('POST', `/api/applications/${S.app.backendId}/${name}`); return true; }
+  catch (e) { if (el) el.classList.remove('loading'); toast('Банк не принял действие', e.message, 'neg'); return false; }
+}
+function pickFiles(cb, multiple) {
+  const i = document.createElement('input');
+  i.type = 'file'; i.accept = '.pdf,.jpg,.jpeg,.png'; i.multiple = !!multiple;
+  i.onchange = () => { if (i.files.length) cb(Array.from(i.files)); };
+  i.click();
+}
+async function beUpload(file, k) {
+  if (k) { S.docs[k] = 'checking'; render(); }
+  try {
+    const id = await beEnsureDraft();
+    const fd = new FormData();
+    fd.append('file', file);
+    const doc = await BE.req('POST', `/api/applications/${id}/documents`, fd);
+    S.uploads.push({ id: doc.id, name: doc.filename, k: k || null, status: doc.status });
+    toast('Файл загружен в банк', doc.filename + ' — ждёт распознавания', 'info');
+  } catch (e) {
+    if (k) S.docs[k] = 'none';
+    toast('Файл не загружен', e.message, 'neg');
+  }
+  render();
+}
+function handleFiles(files) {
+  const list = Array.from(files || []);
+  if (!list.length) return;
+  if (!BE.online) { toast('Файл получен', list[0].name + ' — определяем тип', 'info'); fakeUpload('contract'); return; }
+  list.forEach((f, i) => beUpload(f, i === 0 && S.docs.contract === 'none' ? 'contract' : null));
+}
+
+function beToLocal(remote, a) {
+  if (remote === 'draft') return a.status;
+  if (remote === 'review') return a.status === 'review' || a.status === 'expert' ? a.status : 'expert';
+  if (remote === 'issued' && a.status === 'issuing') return 'issuing';
+  return remote;
+}
+function applyRemote(a, app, events) {
+  const st = beToLocal(app.status, a);
+  if (st === a.status) return false;
+  clearTimeout(pipeTimer);
+  a.status = st;
+  const ev = events.slice().reverse().find((e) => e.to_status === app.status);
+  const m = ev && ev.message ? ev.message.match(OFFER_RE) : null;
+  if (st === 'approved' || st === 'counter') {
+    a.offer = m ? { amount: +m[1], term: +m[2], rate: +m[3], collat: m[4] === '1' }
+      : a.offer || { amount: app.amount, term: app.term_months, rate: quote(app.amount, app.term_months, a).rate, collat: a.collat };
+  }
+  if (['approved', 'counter', 'needinfo', 'refused'].includes(st)) {
+    a.stage = 4;
+    a.decidedBy = ev && /^Автоматическое/.test(ev.message) ? 'auto' : 'Ольга Петрова';
+  }
+  if (S.role === 'client') toast('Статус заявки обновлён', statusLabel(st)[0], st === 'refused' ? 'neg' : 'info');
+  return true;
+}
+function adopt(app, events) {
+  const g = GOALS.find((x) => (app.goal || '').startsWith(x.t)) || GOALS[0];
+  if (app.inn) F().inn = app.inn;
+  S.app = {
+    id: appNumber(app.id), backendId: app.id, amount: app.amount, term: app.term_months, goal: g.id,
+    product: product({ goal: g.id, sec: false, term: app.term_months }, app.amount), collat: false, discount: true,
+    status: 'expert', stage: 3, events: [], beEvents: events, offer: null, decidedBy: null, at: hm(app.created_at)
+  };
+  applyRemote(S.app, app, events);
+}
+function evList(a) {
+  if (!(BE.online && a.backendId && a.beEvents)) return a.events;
+  return a.beEvents.map((e) => [hm(e.created_at), cleanMsg(e.message) || e.event_type, Date.parse(tsz(e.created_at))])
+    .concat(a.events.filter((e) => e[3]))
+    .sort((x, y) => (y[2] || 0) - (x[2] || 0));
+}
+let polling = false;
+async function bePoll() {
+  if (polling || !BE.online) return;
+  polling = true;
+  const gen = BE.gen;
+  let changed = false;
+  try {
+    const a = S.app;
+    if (a && a.backendId) {
+      const [app, events] = await Promise.all([BE.req('GET', `/api/applications/${a.backendId}`), BE.req('GET', `/api/applications/${a.backendId}/events`)]);
+      if (gen === BE.gen && S.app === a) {
+        if (applyRemote(a, app, events)) changed = true;
+        if (!a.beEvents || a.beEvents.length !== events.length) changed = true;
+        a.beEvents = events;
+        if (S.route === 'adm-card') {
+          const docs = await BE.req('GET', `/api/applications/${a.backendId}/documents`);
+          if (JSON.stringify(docs) !== JSON.stringify(a.beDocs || [])) { a.beDocs = docs; changed = true; }
+        }
+      }
+    }
+    for (const u of S.uploads.filter((x) => x.status === 'queued' || x.status === 'processing')) {
+      const doc = await BE.req('GET', `/api/documents/${u.id}`);
+      if (doc.status === u.status) continue;
+      u.status = doc.status;
+      changed = true;
+      if (u.k && doc.status !== 'processing') S.docs[u.k] = doc.status === 'recognized' ? 'ok' : doc.status === 'failed' ? 'none' : 'manual';
+      if (doc.status === 'manual_review') toast('Документ передан на ручную проверку', u.name, 'att');
+      if (doc.status === 'recognized') toast('Документ распознан', u.name);
+    }
+    if (S.route.startsWith('adm')) {
+      const rows = await BE.req('GET', '/api/admin/applications');
+      if (JSON.stringify(rows) !== JSON.stringify(BE.queue)) { BE.queue = rows; changed = S.route === 'adm' || changed; }
+    }
+    if (S.route === 'adm-analytics') {
+      const an = await BE.req('GET', '/api/admin/analytics');
+      if (JSON.stringify(an) !== JSON.stringify(BE.analytics)) { BE.analytics = an; changed = true; }
+    }
+  } catch (e) {
+    if (e.status === 404 && S.app && S.app.backendId) { S.app.backendId = null; toast('Заявка не найдена в банке', 'Продолжаем в демо-режиме', 'att'); changed = true; }
+  } finally { polling = false; }
+  if (changed && !$('#modal') && gen === BE.gen) render();
 }
 
 /* ================= events ================= */
@@ -719,6 +952,7 @@ ACT.role = (d) => {
 };
 ACT.reset = () => {
   clearTimeout(pipeTimer);
+  try { localStorage.removeItem(STORE); } catch (e) { /* storage unavailable */ }
   S = fresh();
   go('home', { force: true });
   toast('Демо сброшено', 'Можно пройти путь заново', 'info');
@@ -1054,6 +1288,7 @@ ACT.in_money = (el) => { const d = el.value.replace(/\D/g, ''); el.value = d ? (
 ACT.ch_who = (el) => { F().who = el.value; };
 ACT.toDocs = () => {
   if (S.company.state !== 'found') { toast('Сначала заполните данные по ИНН', 'Это займёт пару секунд', 'att', { label: 'Заполнить', fn: lookupInn }); return; }
+  if (BE.online && !live()) beEnsureDraft().then(save, (e) => toast('Черновик не сохранён в банке', e.message, 'neg'));
   go('docs');
 };
 
@@ -1064,10 +1299,16 @@ const DOCS = [
   { k: 'decl', t: 'Декларация по УСН за 2025 год', meta: 'usn_2025.pdf · 340 КБ', ok: 'Доходы 18 360 000 ₽ — совпадают с анкетой', ext: 'PDF' },
   { k: 'contract', t: 'Договор с поставщиком', meta: 'Необязательно. Подтверждает цель и может ускорить решение', ok: 'supply_contract.pdf · проверен', ext: 'PDF', optional: true }
 ];
-const DOC_BADGE = { ok: ['✓ Проверен', 'b-pos'], checking: ['Проверяется', 'b-info'], none: ['', ''] };
+const DOC_BADGE = { ok: ['✓ Проверен', 'b-pos'], checking: ['Проверяется', 'b-info'], manual: ['Ручная проверка', 'b-att'], none: ['', ''] };
+function uploadsCard() {
+  if (!S.uploads.length) return '';
+  return `<section class="card" style="display:flex;flex-direction:column;gap:10px"><span class="lbl">Загружено в банк</span>
+    ${S.uploads.map((u) => `<div class="row"><span style="min-width:0;overflow-wrap:anywhere">${esc(u.name)}</span><span class="badge ${(DOC_STATUS[u.status] || ['', 'b-grey'])[1]}">${(DOC_STATUS[u.status] || [u.status])[0]}</span></div>`).join('')}
+    <span class="muted" style="@mixin paragraph_secondary_medium;">Файлы хранятся в API, распознавание выполняет document-worker</span></section>`;
+}
 VIEWS.docs = () => {
   const d = S.docs;
-  const req = ['passport', 'statement', 'decl'].filter((k) => d[k] === 'ok').length;
+  const req = ['passport', 'statement', 'decl'].filter((k) => d[k] === 'ok' || d[k] === 'manual').length;
   if (d.decl === 'checking' && !S._declTimer) S._declTimer = setTimeout(() => { S.docs.decl = 'ok'; S._declTimer = null; if (S.route === 'docs') { render(); toast('Декларация проверена', 'Доходы совпадают с анкетой'); } }, 2600);
   return `<div class="cab">${cabHeader('new')}
   ${cabTop('Документы', 2, 'Шаг 3 из 8 · проверяем сразу после загрузки', ['company', 'Данные компании'])}
@@ -1090,8 +1331,9 @@ VIEWS.docs = () => {
         ${img('docs', '', 'width:120px')}
         <b style="@mixin action_component_primary;">Перетащите файлы сюда или выберите</b>
         <span class="muted" style="@mixin paragraph_secondary_large;">PDF, JPG или PNG до 20 МБ. Мы сами поймём, что это за документ</span>
-        <input id="file" type="file" class="sr" data-ch="file" multiple>
+        <input id="file" type="file" class="sr" data-ch="file" accept=".pdf,.jpg,.jpeg,.png" multiple>
       </label>
+      ${uploadsCard()}
     </div>
     <aside class="aside">
       <div class="card" style="display:flex;flex-direction:column;gap:14px">
@@ -1103,15 +1345,15 @@ VIEWS.docs = () => {
     </aside>
   </div></div>`;
 };
-ACT.upload = (d) => fakeUpload(d.v);
+ACT.upload = (d) => (BE.online ? pickFiles((f) => beUpload(f[0], d.v)) : fakeUpload(d.v));
 function fakeUpload(k) {
   S.docs[k] = 'checking'; render();
   setTimeout(() => { S.docs[k] = 'ok'; if (S.route === 'docs') render(); toast('Документ проверен', DOCS.find((x) => x.k === k).t); }, 2600);
 }
-ACT.ch_file = (el) => { if (el.files.length) { toast('Файл получен', el.files[0].name + ' — определяем тип', 'info'); fakeUpload('contract'); } };
+ACT.ch_file = (el) => handleFiles(el.files);
 document.addEventListener('dragover', (e) => { const z = e.target.closest?.('#dz'); if (z) { e.preventDefault(); z.classList.add('over'); } });
 document.addEventListener('dragleave', (e) => { const z = e.target.closest?.('#dz'); if (z) z.classList.remove('over'); });
-document.addEventListener('drop', (e) => { const z = e.target.closest?.('#dz'); if (z) { e.preventDefault(); z.classList.remove('over'); const fl = e.dataTransfer.files; toast('Файл получен', (fl[0] ? fl[0].name : 'файл') + ' — определяем тип', 'info'); fakeUpload('contract'); } });
+document.addEventListener('drop', (e) => { const z = e.target.closest?.('#dz'); if (z) { e.preventDefault(); z.classList.remove('over'); handleFiles(e.dataTransfer.files); } });
 
 /* ================= К4 REVIEW ================= */
 VIEWS.review = () => {
@@ -1119,7 +1361,7 @@ VIEWS.review = () => {
   const q = quote(amt, term, { collat: p.key === 'sec', discount: f.discount });
   const base = p.key === 'sec' ? '21,5%' : '23,5%';
   const ready = f.consents.every(Boolean);
-  const dl = (k) => S.docs[k] === 'ok' ? '<span style="color:var(--pos-t);font-weight:500">✓ проверен</span>' : S.docs[k] === 'checking' ? '<span style="color:var(--info-t);font-weight:500">проверяется</span>' : '<span class="muted">не загружен</span>';
+  const dl = (k) => S.docs[k] === 'ok' ? '<span style="color:var(--pos-t);font-weight:500">✓ проверен</span>' : S.docs[k] === 'manual' ? '<span style="color:var(--att-t);font-weight:500">ручная проверка</span>' : S.docs[k] === 'checking' ? '<span style="color:var(--info-t);font-weight:500">проверяется</span>' : '<span class="muted">не загружен</span>';
   return `<div class="cab">${cabHeader('new')}
   ${cabTop('Проверьте заявку', 3, 'Шаг 4 из 8 · всё можно поправить до отправки', ['docs', 'Документы'])}
   <div class="wrap main">
@@ -1158,10 +1400,17 @@ VIEWS.review = () => {
 };
 ['0', '1', '2'].forEach((i) => { ACT['ch_consent' + i] = (el) => { F().consents[+i] = el.checked; render(); }; });
 ACT.ch_disc = (el) => { F().discount = el.checked; render(); };
-ACT.submit = (d, el) => {
+ACT.submit = async (d, el) => {
   if (!F().consents.every(Boolean)) return;
   el.classList.add('loading');
-  setTimeout(() => { submitApp(); go('status'); toast('Заявка отправлена', 'Следим за ней — статус обновится сам', 'pos'); }, 800);
+  let backendId = null;
+  if (BE.online) {
+    try { backendId = (await beSubmit()).id; }
+    catch (e) { el.classList.remove('loading'); toast('Заявка не отправлена', e.message, 'neg'); return; }
+  } else await wait(800);
+  submitApp(backendId);
+  go('status');
+  toast('Заявка отправлена', backendId ? 'Сохранена в банке · ' + S.app.id : 'Следим за ней — статус обновится сам', 'pos');
 };
 /* ================= К5 STATUS + outcomes ================= */
 function trackerCard(a) {
@@ -1185,7 +1434,7 @@ function trackerCard(a) {
   </section>`;
 }
 function eventsCard(a) {
-  return `<div class="card" style="display:flex;flex-direction:column;gap:12px"><span class="lbl">Лента событий</span><div class="events">${a.events.slice(0, 7).map((e) => `<div><span>${e[0]}</span><span>${esc(e[1])}</span></div>`).join('')}</div></div>`;
+  return `<div class="card" style="display:flex;flex-direction:column;gap:12px"><span class="lbl">Лента событий</span><div class="events">${evList(a).slice(0, 7).map((e) => `<div><span>${e[0]}</span><span>${esc(e[1])}</span></div>`).join('')}</div></div>`;
 }
 function chatCard() {
   return `<div class="card" style="display:flex;flex-direction:column;gap:10px"><span class="lbl">Вопрос по заявке</span>
@@ -1259,7 +1508,7 @@ function approvedView(a) {
       </div></section>`;
 }
 ACT.payDif = (d) => { S.ui.payDif = d.v === '1'; render(); };
-ACT.toSign = () => { S.app.status = 'signing'; addEvent('Клиент перешёл к подписанию'); go('sign'); };
+ACT.toSign = async (d, el) => { if (!(await beAction('accept', el))) return; S.app.status = 'signing'; addEvent('Клиент перешёл к подписанию'); go('sign'); };
 
 /* counter */
 function counterOptions(a) {
@@ -1300,7 +1549,8 @@ function counterView(a) {
     ${servicesCard('Ещё может помочь бизнесу', extras)}`;
 }
 ACT.pickOpt = (d) => { S.ui.counterPick = d.v; render(); };
-ACT.acceptOpt = () => {
+ACT.acceptOpt = async (d, el) => {
+  if (!(await beAction('accept', el))) return;
   const a = S.app, o = counterOptions(a).find((x) => x.id === S.ui.counterPick) || counterOptions(a)[0];
   a.offer = { amount: o.amount, term: o.term, rate: o.rate, collat: o.collat, line: o.line };
   a.amount = o.amount; a.term = o.term;
@@ -1309,7 +1559,7 @@ ACT.acceptOpt = () => {
   go('sign');
 };
 ACT.declineOffer = () => modal(`<h3 style="@mixin headline_small;">Отказаться от предложения?</h3><p class="muted" style="margin:0">Заявка закроется. Отказ не влияет на возможность подать новую</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn accent" type="button" data-a="declineYes">Отказаться</button><button class="btn secondary" type="button" data-a="closeModal">Вернуться</button></div>`);
-ACT.declineYes = () => { S.app.status = 'declined'; addEvent('Клиент отказался от встречного предложения'); closeModal(); render(); toast('Заявка закрыта', 'Можно подать новую в любой момент', 'info'); };
+ACT.declineYes = async (d, el) => { if (!(await beAction('decline', el))) return; S.app.status = 'declined'; addEvent('Клиент отказался от встречного предложения'); closeModal(); render(); toast('Заявка закрыта', 'Можно подать новую в любой момент', 'info'); };
 
 const SERVICES = [
   ['acq', 'Торговый эквайринг', 'Выручка с карт сразу на счёт — банк лучше видит обороты, следующий лимит может быть выше', 'growth'],
@@ -1347,9 +1597,12 @@ function needInfoView(a) {
     </section>
     <section class="card" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><div style="flex:1 1 260px"><b style="font-weight:500">Нет такого документа?</b><span class="muted" style="display:block;@mixin paragraph_primary_small;">Уменьшите сумму до 2 млн ₽ — тогда выписка не понадобится</span></div><button class="btn secondary s40" type="button" data-a="lowerTo2">Подать на 2 млн ₽</button></section>`;
 }
-ACT.needUpload = (d, el) => { el.classList.add('loading'); setTimeout(() => { S.ui.needUploaded = true; render(); toast('Выписка распознана', 'Выручка подтверждена'); }, 1300); };
-ACT.resume = () => { S.docs.extra = 'ok'; const a = S.app; a.status = 'review'; a.stage = 2; addEvent('Клиент загрузил выписку из другого банка'); render(); runPipeline(); };
-ACT.lowerTo2 = () => { const a = S.app; a.amount = 2e6; a.status = 'review'; a.stage = 2; addEvent('Клиент уменьшил сумму до 2 млн ₽'); render(); runPipeline(); };
+ACT.needUpload = (d, el) => {
+  if (live()) { pickFiles(async (f) => { await beUpload(f[0]); S.ui.needUploaded = true; render(); }); return; }
+  el.classList.add('loading'); setTimeout(() => { S.ui.needUploaded = true; render(); toast('Выписка распознана', 'Выручка подтверждена'); }, 1300);
+};
+ACT.resume = async (d, el) => { if (!(await beAction('submit', el))) return; S.docs.extra = 'ok'; const a = S.app; a.status = 'review'; a.stage = 2; addEvent('Клиент загрузил выписку из другого банка'); render(); runPipeline(); };
+ACT.lowerTo2 = async (d, el) => { if (!(await beAction('submit', el))) return; const a = S.app; a.amount = 2e6; a.status = 'review'; a.stage = 2; addEvent('Клиент уменьшил сумму до 2 млн ₽'); render(); runPipeline(); };
 
 /* refused */
 function refusedView(a) {
@@ -1385,7 +1638,16 @@ function refusedView(a) {
       <div class="chips"><button class="chip" type="button" aria-pressed="${S.ui.vote === 'y'}" data-a="vote" data-v="y">Да, понятно</button><button class="chip" type="button" aria-pressed="${S.ui.vote === 'n'}" data-a="vote" data-v="n">Не очень</button></div></section>`;
 }
 ACT.vote = (d) => { S.ui.vote = d.v; render(); toast('Спасибо, ответ учтён', d.v === 'n' ? 'Менеджер напишет в чат заявки' : ''); };
-ACT.retrySmaller = () => { const a = S.app; a.amount = 1.5e6; a.status = 'review'; a.stage = 0; a.events = []; addEvent('Новая заявка на 1,5 млн ₽'); render(); runPipeline(); toast('Новая заявка отправлена', '1,5 млн ₽ на ' + termTxt(a.term), 'pos'); };
+ACT.retrySmaller = async (d, el) => {
+  const a = S.app;
+  if (live()) {
+    try {
+      const created = await BE.req('POST', '/api/applications', bePayload(1.5e6, a.term));
+      await BE.req('POST', `/api/applications/${created.id}/submit`);
+      Object.assign(a, { backendId: created.id, id: appNumber(created.id), beEvents: null });
+    } catch (e) { toast('Новая заявка не отправлена', e.message, 'neg'); return; }
+  }
+  a.amount = 1.5e6; a.status = 'review'; a.stage = 0; a.events = []; addEvent('Новая заявка на 1,5 млн ₽'); render(); runPipeline(); toast('Новая заявка отправлена', '1,5 млн ₽ на ' + termTxt(a.term), 'pos'); };
 
 /* ================= П1 SIGN ================= */
 VIEWS.sign = () => {
@@ -1446,6 +1708,10 @@ ACT.signConfirm = () => {
   const v = $('#code').value;
   if (v !== '123456') { fieldErr('#f-code', 'Код не подходит. В демо: 123456'); const m = $('.modal'); m.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-8px)' }, { transform: 'translateX(8px)' }, { transform: 'translateX(0)' }], { duration: 260 }); return; }
   $('#code-btn').classList.add('loading');
+  if (live()) {
+    beAction('sign', $('#code-btn')).then((ok) => { if (ok) { closeModal(); S.app.status = 'issuing'; issue(); } });
+    return;
+  }
   setTimeout(() => {
     closeModal();
     addEvent('Документы подписаны');
@@ -1505,7 +1771,7 @@ VIEWS.done = () => {
       </section>
     </div>
     <aside class="aside">
-      <div class="card" style="display:flex;flex-direction:column;gap:12px"><span class="lbl">Весь путь заявки</span><div class="events">${a.events.slice().reverse().map((e) => `<div><span>${e[0]}</span><span>${esc(e[1])}</span></div>`).join('')}</div></div>
+      <div class="card" style="display:flex;flex-direction:column;gap:12px"><span class="lbl">Весь путь заявки</span><div class="events">${evList(a).slice().reverse().map((e) => `<div><span>${e[0]}</span><span>${esc(e[1])}</span></div>`).join('')}</div></div>
       <div class="card" style="display:flex;flex-direction:column;gap:10px"><span class="lbl">Оцените опыт</span>
         <div style="display:flex;gap:6px" role="radiogroup" aria-label="Оценка">${[1, 2, 3, 4, 5].map((n) => `<button type="button" role="radio" aria-checked="${S.ui.stars === n}" aria-label="Оценка ${n}" data-a="star" data-v="${n}" style="width:44px;height:44px;border:0;border-radius:12px;@mixin headline_small;cursor:pointer;background:var(--bg2);color:${n <= S.ui.stars ? 'var(--red)' : '#c4c6cc'};transition:color var(--d1),transform var(--d1)">★</button>`).join('')}</div>
       </div>
@@ -1568,6 +1834,14 @@ function queueRows() {
     const stg = liveStage(a);
     R.unshift({ id: a.id.replace('КЗ-2026-', 'КЗ-'), client: 'ИП Смирнова А. В.', inn: F().inn, sum: a.amount, goal: GOALS.find((g) => g.id === a.goal).t, stage: stg, risk: sc, sla: a.status === 'expert' ? '12 мин' : '—', owner: a.decidedBy && a.decidedBy !== 'auto' ? 'О. Петрова' : (a.status === 'expert' ? 'О. Петрова' : 'Авто'), tag: a.status === 'expert' ? 'exp' : a.status === 'needinfo' ? 'docs' : 'auto', live: true });
   }
+  if (BE.online && BE.queue) {
+    const mine = S.app && S.app.backendId;
+    BE.queue.filter((x) => x.id !== mine && x.status !== 'draft').reverse().forEach((x) => R.unshift({
+      id: appNumber(x.id).replace('КЗ-2026-', 'КЗ-'), client: x.inn ? 'Клиент · ИНН ' + x.inn : 'Клиент из API', inn: x.inn || '—', sum: x.amount,
+      goal: (x.goal || '').split(' · ')[0] || '—', stage: BE_STAGE[x.status] || x.status, risk: null, sla: '—',
+      owner: x.status === 'review' ? 'О. Петрова' : 'Авто', tag: x.status === 'review' ? 'exp' : x.status === 'needinfo' ? 'docs' : 'auto', live: true, beId: x.id
+    }));
+  }
   return R;
 }
 VIEWS.adm = () => {
@@ -1608,8 +1882,8 @@ VIEWS.adm = () => {
         <span class="muted" style="@mixin paragraph_secondary_large;">Показано ${rows.length} из ${all.length}</span>
       </div>
       <div style="overflow-x:auto"><table class="q"><thead><tr><th>Заявка</th><th>Клиент</th><th>Сумма · цель</th><th>Этап</th><th>Риск-балл</th><th>SLA</th><th>Ответственный</th></tr></thead><tbody id="qbody">
-        ${rows.filter((r) => !S.adm.q || (r.client + r.inn + r.id).toLowerCase().includes(S.adm.q.toLowerCase())).map((r) => `<tr class="${r.live ? 'live' : ''}" data-a="${r.live ? 'openLive' : 'openDemo'}" data-v="${r.id}" tabindex="0">
-          <td><b style="font-weight:500;color:#2a77ef">${r.live ? '<span class="live-dot" aria-hidden="true"></span>' : ''}${r.id}</b>${r.live ? '<span class="muted" style="display:block;@mixin paragraph_secondary_small;">в демо-пути</span>' : ''}</td>
+        ${rows.filter((r) => !S.adm.q || (r.client + r.inn + r.id).toLowerCase().includes(S.adm.q.toLowerCase())).map((r) => `<tr class="${r.live ? 'live' : ''}" data-a="${r.beId ? 'openBe' : r.live ? 'openLive' : 'openDemo'}" data-v="${r.beId || r.id}" tabindex="0">
+          <td><b style="font-weight:500;color:#2a77ef">${r.live ? '<span class="live-dot" aria-hidden="true"></span>' : ''}${r.id}</b>${r.live ? `<span class="muted" style="display:block;@mixin paragraph_secondary_small;">${r.beId || live() ? 'из API' : 'в демо-пути'}</span>` : ''}</td>
           <td><b style="font-weight:500;display:block">${r.client}</b><span class="muted" style="@mixin paragraph_secondary_medium;">${r.inn}</span></td>
           <td><b style="font-weight:500;display:block" class="tnum">${rub(r.sum)}</b><span class="muted" style="@mixin paragraph_secondary_medium;">${r.goal}</span></td>
           <td><span class="badge ${STAGE_BADGE[r.stage] || 'b-grey'}">${r.stage}</span></td>
@@ -1625,6 +1899,15 @@ ACT.in_q = (el) => {
   $$('#qbody tr').forEach((tr) => { tr.hidden = q && !tr.textContent.toLowerCase().includes(q); });
 };
 ACT.openLive = () => go('adm-card');
+ACT.openBe = async (d) => {
+  try {
+    const [app, events] = await Promise.all([BE.req('GET', `/api/applications/${d.v}`), BE.req('GET', `/api/applications/${d.v}/events`)]);
+    clearTimeout(pipeTimer);
+    adopt(app, events);
+    S.adm.tab = 0;
+    go('adm-card', { force: true });
+  } catch (e) { toast('Заявка не открылась', e.message, 'neg'); }
+};
 ACT.openDemo = (d) => toast('Открыта только живая заявка', d.v + ' — пример в очереди. Откройте КЗ-10431', 'info', { label: 'Открыть', fn: () => go('adm-card') });
 document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.matches('tr[data-a]')) e.target.click(); });
 
@@ -1745,7 +2028,10 @@ function cardDocs() {
   const R = { ok: ['совпадает', 'b-pos'], warn: ['расхождение', 'b-att'], none: ['нет данных', 'b-grey'] };
   const cur = D[S.adm.docSel], ci = S.adm.docSel;
   const okN = D.filter((x, i) => st(i) === 'ok').length;
-  return `<div style="display:flex;justify-content:flex-end;gap:10px;align-items:center"><span class="muted" style="@mixin paragraph_secondary_large;">Подтверждено</span><b>${okN}/4</b><div class="progress" style="width:140px"><i style="width:${okN * 25}%"></i></div></div>
+  const beDocs = (S.app && S.app.beDocs) || [];
+  const apiDocs = beDocs.length ? `<section class="acard" style="display:flex;flex-direction:column;gap:8px"><span class="lbl">Файлы клиента в API</span>
+    ${beDocs.map((x) => `<div class="chk"><span><b style="font-weight:500;overflow-wrap:anywhere">${esc(x.filename)}</b><br><span class="muted" style="@mixin paragraph_secondary_medium;">${esc(x.content_type)} · ${hm(x.created_at)}</span></span><span class="badge ${(DOC_STATUS[x.status] || ['', 'b-grey'])[1]}">${(DOC_STATUS[x.status] || [x.status])[0]}</span></div>`).join('')}</section>` : '';
+  return `${apiDocs}<div style="display:flex;justify-content:flex-end;gap:10px;align-items:center"><span class="muted" style="@mixin paragraph_secondary_large;">Подтверждено</span><b>${okN}/4</b><div class="progress" style="width:140px"><i style="width:${okN * 25}%"></i></div></div>
   <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
     <div style="flex:1 1 280px;display:flex;flex-direction:column;gap:8px">
       ${D.map((x, i) => `<button type="button" class="docsel" aria-pressed="${i === ci}" data-a="docSel" data-v="${i}"><span style="flex:1;min-width:0"><b style="font-weight:500;display:block">${x.t}</b><span class="muted" style="@mixin paragraph_secondary_medium;">${x.meta}</span></span><span class="badge ${B[st(i)][1]}">${B[st(i)][0]}</span></button>`).join('')}
@@ -1852,16 +2138,23 @@ ACT.in_dam = (el) => {
   if (s.dtype === 'approve') set('pt', rub(s.amount) + ' на ' + termTxt(s.term)); else if (s.dtype === 'counter') set('pt', 'Готовы выдать ' + rub(s.amount));
 };
 ACT.ch_dam = () => render();
-ACT.sendDecision = (d, el) => {
+const DECISION_API = { approve: 'approved', counter: 'counter', info: 'needinfo', refuse: 'refused' };
+ACT.sendDecision = async (d, el) => {
   const s = S.adm;
+  const extras = [s.acq ? 'acq' : null, s.line ? 'line' : null].filter(Boolean);
+  const params = { amount: s.amount, term: s.term, collat: s.collat, discount: s.protect, extras };
+  const lbl = { approve: 'одобрение', counter: 'встречное предложение', info: 'запрос документа', refuse: 'отказ' }[s.dtype];
   el.classList.add('loading');
-  setTimeout(() => {
-    const extras = [s.acq ? 'acq' : null, s.line ? 'line' : null].filter(Boolean);
-    decide(s.dtype, { amount: s.amount, term: s.term, collat: s.collat, discount: s.protect, extras });
-    const lbl = { approve: 'одобрение', counter: 'встречное предложение', info: 'запрос документа', refuse: 'отказ' }[s.dtype];
-    render();
-    toast('Решение отправлено', 'Клиент видит: ' + lbl, 'pos', { label: 'Вид клиента', fn: () => go('status') });
-  }, 700);
+  if (live()) {
+    const offer = s.dtype === 'approve' || s.dtype === 'counter'
+      ? offerTag({ amount: s.amount, term: s.term, rate: quote(s.amount, s.term, params).rate, collat: s.collat }) : '';
+    const comment = ($('#dcm') && $('#dcm').value.trim()) || 'Решение аналитика: ' + lbl;
+    try { await BE.req('POST', `/api/admin/applications/${S.app.backendId}/decision`, { decision: DECISION_API[s.dtype], comment: comment + offer }); }
+    catch (e) { el.classList.remove('loading'); toast('Решение не сохранено', e.message, 'neg'); return; }
+  } else await wait(700);
+  decide(s.dtype, params);
+  render();
+  toast('Решение отправлено', 'Клиент видит: ' + lbl, 'pos', { label: 'Вид клиента', fn: () => go('status') });
 };
 
 /* ---------- analytics ---------- */
@@ -1878,6 +2171,10 @@ VIEWS['adm-analytics'] = () => {
   return `<div class="adm">${rail('adm-analytics')}<main class="ws">
     <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap"><div><h1>Аналитика конвейера</h1><span class="muted">Малый и микробизнес · синтетические данные</span></div>
       ${seg(['7 дней', '30 дней', '90 дней'], [7, 30, 90].indexOf(per), 'period', 'white')}</div>
+    ${BE.online && BE.analytics ? `<section class="acard" style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><span class="lbl">Живые данные API · заявок ${BE.analytics.total_applications}</span><span class="muted" style="@mixin paragraph_secondary_medium;">GET /api/admin/analytics</span></div>
+      <div class="chips">${Object.entries(BE.analytics.by_status).map(([k, v]) => `<span class="badge ${STAGE_BADGE[BE_STAGE[k]] || 'b-grey'}">${BE_STAGE[k] || k} · ${v}</span>`).join('') || '<span class="muted">Заявок пока нет</span>'}</div>
+      <span class="muted" style="@mixin paragraph_secondary_medium;">Графики ниже — синтетические данные конвейера для демонстрации</span></section>` : ''}
     <div class="kpi">
       <div><span class="lbl">Заявок</span><b class="tnum">${n(312)}</b><span class="muted" style="@mixin paragraph_secondary_medium;">за период</span></div>
       <div><span class="lbl">Конверсия в выдачу</span><b>23%</b><span class="muted" style="@mixin paragraph_secondary_medium;">от поступивших</span></div>
@@ -1919,11 +2216,14 @@ ACT.period = (d) => { S.adm.period = [7, 30, 90][+d.v]; render(); };
 
 /* ================= boot ================= */
 function boot() {
+  restore();
   const h = (location.hash || '').replace('#', '');
   const map = { admin: 'adm', bank: 'adm', analytics: 'adm-analytics', apply: 'params' };
-  S.route = map[h] || (VIEWS[h] ? h : 'home');
+  S.route = map[h] || (VIEWS[h] ? h : h ? 'home' : VIEWS[S.route] ? S.route : 'home');
   S.role = S.route.startsWith('adm') ? 'bank' : 'client';
+  if (S.app && S.app.status === 'issuing') S.app.status = 'issued';
   render(true);
+  BE.init().then(runPipeline);
 }
 boot();
 

@@ -1,10 +1,10 @@
-﻿import {chromium} from 'playwright';
+﻿import {launchBrowser} from './browser.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 
 const root = path.resolve('output/bank-ui-study');
-const browser = await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
+const browser = await launchBrowser();
 const page = await browser.newPage();
 const errors = [];
 const checks = [];

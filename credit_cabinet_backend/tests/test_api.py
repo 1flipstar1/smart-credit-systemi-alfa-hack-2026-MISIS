@@ -62,3 +62,16 @@ def test_cors_allows_browser_frontend():
     client = TestClient(app)
     response = client.get("/api/health", headers={"Origin": "null"})
     assert response.headers.get("access-control-allow-origin") == "*"
+
+
+def test_update_draft_only_before_submit():
+    client = TestClient(app)
+    payload = {"product_code": "business_standard", "amount": 1000000, "term_months": 12, "revenue_year": 5000000}
+    app_id = client.post("/api/applications", json=payload).json()["id"]
+
+    updated = client.put(f"/api/applications/{app_id}", json={**payload, "amount": 2000000})
+    assert updated.status_code == 200
+    assert updated.json()["amount"] == 2000000
+
+    client.post(f"/api/applications/{app_id}/submit")
+    assert client.put(f"/api/applications/{app_id}", json=payload).status_code == 409

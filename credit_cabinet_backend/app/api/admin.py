@@ -24,6 +24,8 @@ def list_applications(
             "product_code": a.product_code,
             "amount": a.amount,
             "term_months": a.term_months,
+            "goal": a.goal,
+            "inn": a.inn,
             "status": a.status,
             "created_at": a.created_at,
         }

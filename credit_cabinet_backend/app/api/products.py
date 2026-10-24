@@ -17,7 +17,7 @@ def list_products(db: Session = Depends(get_db)) -> list[dict]:
                 "code": "business_standard",
                 "name": "Кредит для бизнеса",
                 "min_amount": 10000,
-                "max_amount": 10000000,
+                "max_amount": 150000000,
                 "max_term_months": 120,
             }
         ]

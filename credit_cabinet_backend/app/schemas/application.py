@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, ConfigDict
 
 class ApplicationCreate(BaseModel):
     product_code: str = Field(min_length=1, max_length=64)
-    amount: float = Field(gt=0, le=10_000_000)
+    amount: float = Field(gt=0, le=150_000_000)
     term_months: int = Field(ge=1, le=120)
     goal: str = Field(default="", max_length=500)
     inn: str = Field(default="", pattern=r"^$|^\d{10}$|^\d{12}$")

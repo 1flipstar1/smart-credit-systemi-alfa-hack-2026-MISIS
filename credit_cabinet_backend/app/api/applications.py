@@ -38,6 +38,20 @@ def get_application(application_id: str, db: Session = Depends(get_db)):
     return app
 
 
+@router.put("/{application_id}", response_model=ApplicationOut)
+def update_draft(application_id: str, payload: ApplicationCreate, db: Session = Depends(get_db)):
+    app = db.get(Application, application_id)
+    if app is None:
+        raise HTTPException(status_code=404, detail="Заявка не найдена")
+    if app.status != "draft":
+        raise HTTPException(status_code=409, detail="Изменять можно только черновик")
+    for field, value in payload.model_dump().items():
+        setattr(app, field, value)
+    db.commit()
+    db.refresh(app)
+    return app
+
+
 @router.post("/{application_id}/submit", response_model=ApplicationOut)
 def submit_application(application_id: str, db: Session = Depends(get_db)):
     app = db.get(Application, application_id)

@@ -1,13 +1,13 @@
 // Delivery conversion only: keep generated PNG originals and their alpha intact.
 import fs from 'node:fs';
 import path from 'node:path';
-import {chromium} from 'playwright';
+import {launchBrowser} from './browser.mjs';
 
 const root = 'output/credit-minimal';
 const dest = 'src/assets/credit-minimal';
 const source = JSON.parse(fs.readFileSync(`${root}/generation.json`, 'utf8'));
 fs.mkdirSync(dest, {recursive:true});
-const browser = await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
+const browser = await launchBrowser();
 const page = await browser.newPage();
 try {
     for (const item of source.images) {
