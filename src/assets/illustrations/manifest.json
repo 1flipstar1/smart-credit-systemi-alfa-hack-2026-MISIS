@@ -1,0 +1,22 @@
+{
+  "generator": "built-in image_gen",
+  "assets": {
+    "case": "case.webp",
+    "ai": "assistant.webp",
+    "calc": "calculator.webp",
+    "cursor": "cursor.webp",
+    "discount": "discount.webp",
+    "docs": "documents.webp",
+    "briefcase": "case.webp",
+    "growth": "growth.webp",
+    "shield": "shield.webp",
+    "sliders": "sliders.webp",
+    "clock": "stopwatch.webp",
+    "ic_oborot": "case.webp",
+    "ic_truck": "equipment.webp",
+    "ic_clock": "stopwatch.webp",
+    "ic_refi": "discount.webp",
+    "ic_contract": "documents.webp",
+    "ic_ai": "ai-selection.webp"
+  }
+}

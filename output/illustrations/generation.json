@@ -1,0 +1,154 @@
+{
+  "generator": "built-in image_gen",
+  "references": [
+    "Библиотека ui/Промо материалы и картинки ассеты",
+    "Библиотека ui/Лендинг Альфа Бизнес",
+    "Библиотека ui/Лендинг Главный"
+  ],
+  "images": [
+    {
+      "name": "case",
+      "prompt": "Use case: stylized-concept. Create one production-ready transparent PNG illustration for a Russian business credit cabinet. Input images are STYLE REFERENCES ONLY: promo contact sheet and bank website contact sheet. Match their professional Alfa banking 3D illustration language: bold sculptural rounded forms, vivid lacquer red as primary, selective electric blue, mint/green and violet accents, brushed silver and subtle translucent glass, clean studio lighting, soft contact shading. Restrained coherent composition, clear silhouette readable at 64px, refined materials, 3/4 perspective, generous transparent margin, all objects fully inside canvas. Avoid random stars, floating confetti, rainbow chrome, excessive ornaments, logos, letters and words. Actual transparent alpha background. Subject: A closed red business briefcase with a brushed silver handle and clasp, a large sculptural red percentage sign beside it and two subtle silver coins. Hero composition, confident financial product, landscape proportions.",
+      "delivery": {
+        "file": "case.webp",
+        "width": 1000,
+        "height": 667,
+        "transparentPixels": 302911
+      },
+      "original": "originals-satin/case.png",
+      "edit": "satin-edit.json"
+    },
+    {
+      "name": "assistant",
+      "prompt": "Use case: stylized-concept. Create one production-ready transparent PNG illustration for a Russian business credit cabinet. Input images are STYLE REFERENCES ONLY: promo contact sheet and bank website contact sheet. Match their professional Alfa banking 3D illustration language: bold sculptural rounded forms, vivid lacquer red as primary, selective electric blue, mint/green and violet accents, brushed silver and subtle translucent glass, clean studio lighting, soft contact shading. Restrained coherent composition, clear silhouette readable at 64px, refined materials, 3/4 perspective, generous transparent margin, all objects fully inside canvas. Avoid random stars, floating confetti, rainbow chrome, excessive ornaments, logos, letters and words. Actual transparent alpha background. Subject: A red rounded chat bubble with two smaller blue and mint chat bubbles. Friendly compact assistant illustration. No AI lettering.",
+      "delivery": {
+        "file": "assistant.webp",
+        "width": 512,
+        "height": 341,
+        "transparentPixels": 91196
+      },
+      "original": "originals-satin/assistant.png",
+      "edit": "satin-edit.json"
+    },
+    {
+      "name": "calculator",
+      "prompt": "Use case: stylized-concept. Create one production-ready transparent PNG illustration for a Russian business credit cabinet. Input images are STYLE REFERENCES ONLY: promo contact sheet and bank website contact sheet. Match their professional Alfa banking 3D illustration language: bold sculptural rounded forms, vivid lacquer red as primary, selective electric blue, mint/green and violet accents, brushed silver and subtle translucent glass, clean studio lighting, soft contact shading. Restrained coherent composition, clear silhouette readable at 64px, refined materials, 3/4 perspective, generous transparent margin, all objects fully inside canvas. Avoid random stars, floating confetti, rainbow chrome, excessive ornaments, logos, letters and words. Actual transparent alpha background. Subject: A vivid blue calculator with a red casing edge, clean white raised buttons and a percentage symbol on its screen, one pale silver coin.",
+      "delivery": {
+        "file": "calculator.webp",
+        "width": 512,
+        "height": 427,
+        "transparentPixels": 111155
+      },
+      "original": "originals-satin/calculator.png",
+      "edit": "satin-edit.json"
+    },
+    {
+      "name": "cursor",
+      "prompt": "Use case: stylized-concept. Create one production-ready transparent PNG illustration for a Russian business credit cabinet. Input images are STYLE REFERENCES ONLY: promo contact sheet and bank website contact sheet. Match their professional Alfa banking 3D illustration language: bold sculptural rounded forms, vivid lacquer red as primary, selective electric blue, mint/green and violet accents, brushed silver and subtle translucent glass, clean studio lighting, soft contact shading. Restrained coherent composition, clear silhouette readable at 64px, refined materials, 3/4 perspective, generous transparent margin, all objects fully inside canvas. Avoid random stars, floating confetti, rainbow chrome, excessive ornaments, logos, letters and words. Actual transparent alpha background. Subject: A large silver computer arrow cursor in front of a blue translucent browser tile, a small lime green rounded click ripple. Simple digital application concept.",
+      "delivery": {
+        "file": "cursor.webp",
+        "width": 512,
+        "height": 417,
+        "transparentPixels": 103425
+      },
+      "original": "originals-satin/cursor.png",
+      "edit": "satin-edit.json"
+    },
+    {
+      "name": "discount",
+      "prompt": "Use case: stylized-concept. Create one production-ready transparent PNG illustration for a Russian business credit cabinet. Input images are STYLE REFERENCES ONLY: promo contact sheet and bank website contact sheet. Match their professional Alfa banking 3D illustration language: bold sculptural rounded forms, vivid lacquer red as primary, selective electric blue, mint/green and violet accents, brushed silver and subtle translucent glass, clean studio lighting, soft contact shading. Restrained coherent composition, clear silhouette readable at 64px, refined materials, 3/4 perspective, generous transparent margin, all objects fully inside canvas. Avoid random stars, floating confetti, rainbow chrome, excessive ornaments, logos, letters and words. Actual transparent alpha background. Subject: A bold sculptural red percentage symbol with one gold and one turquoise coin, polished but calm, simple triangle composition.",
+      "delivery": {
+        "file": "discount.webp",
+        "width": 512,
+        "height": 410,
+        "transparentPixels": 124102
+      },
+      "original": "originals-satin/discount.png",
+      "edit": "satin-edit.json"
+    },
+    {
+      "name": "documents",
+      "prompt": "Use case: stylized-concept. Create one production-ready transparent PNG illustration for a Russian business credit cabinet. Input images are STYLE REFERENCES ONLY: promo contact sheet and bank website contact sheet. Match their professional Alfa banking 3D illustration language: bold sculptural rounded forms, vivid lacquer red as primary, selective electric blue, mint/green and violet accents, brushed silver and subtle translucent glass, clean studio lighting, soft contact shading. Restrained coherent composition, clear silhouette readable at 64px, refined materials, 3/4 perspective, generous transparent margin, all objects fully inside canvas. Avoid random stars, floating confetti, rainbow chrome, excessive ornaments, logos, letters and words. Actual transparent alpha background. Subject: A red document folder behind two clean white paper sheets with subtle embossed blue lines, a green circular approval check in front.",
+      "delivery": {
+        "file": "documents.webp",
+        "width": 512,
+        "height": 410,
+        "transparentPixels": 105111
+      },
+      "original": "originals-satin/documents.png",
+      "edit": "satin-edit.json"
+    },
+    {
+      "name": "equipment",
+      "prompt": "Use case: stylized-concept. Create one production-ready transparent PNG illustration for a Russian business credit cabinet. Input images are STYLE REFERENCES ONLY: promo contact sheet and bank website contact sheet. Match their professional Alfa banking 3D illustration language: bold sculptural rounded forms, vivid lacquer red as primary, selective electric blue, mint/green and violet accents, brushed silver and subtle translucent glass, clean studio lighting, soft contact shading. Restrained coherent composition, clear silhouette readable at 64px, refined materials, 3/4 perspective, generous transparent margin, all objects fully inside canvas. Avoid random stars, floating confetti, rainbow chrome, excessive ornaments, logos, letters and words. Actual transparent alpha background. Subject: A compact red and silver industrial machine / workshop milling unit on a blue base, simple shapes suggesting equipment financing. No briefcase.",
+      "delivery": {
+        "file": "equipment.webp",
+        "width": 512,
+        "height": 425,
+        "transparentPixels": 117437
+      },
+      "original": "originals-satin/equipment.png",
+      "edit": "satin-edit.json"
+    },
+    {
+      "name": "growth",
+      "prompt": "Use case: stylized-concept. Create one production-ready transparent PNG illustration for a Russian business credit cabinet. Input images are STYLE REFERENCES ONLY: promo contact sheet and bank website contact sheet. Match their professional Alfa banking 3D illustration language: bold sculptural rounded forms, vivid lacquer red as primary, selective electric blue, mint/green and violet accents, brushed silver and subtle translucent glass, clean studio lighting, soft contact shading. Restrained coherent composition, clear silhouette readable at 64px, refined materials, 3/4 perspective, generous transparent margin, all objects fully inside canvas. Avoid random stars, floating confetti, rainbow chrome, excessive ornaments, logos, letters and words. Actual transparent alpha background. Subject: Three increasing turquoise and blue bars with a single red upward arrow, two small brushed metal coins at the base.",
+      "delivery": {
+        "file": "growth.webp",
+        "width": 512,
+        "height": 384,
+        "transparentPixels": 128103
+      },
+      "original": "originals-satin/growth.png",
+      "edit": "satin-edit.json"
+    },
+    {
+      "name": "shield",
+      "prompt": "Use case: stylized-concept. Create one production-ready transparent PNG illustration for a Russian business credit cabinet. Input images are STYLE REFERENCES ONLY: promo contact sheet and bank website contact sheet. Match their professional Alfa banking 3D illustration language: bold sculptural rounded forms, vivid lacquer red as primary, selective electric blue, mint/green and violet accents, brushed silver and subtle translucent glass, clean studio lighting, soft contact shading. Restrained coherent composition, clear silhouette readable at 64px, refined materials, 3/4 perspective, generous transparent margin, all objects fully inside canvas. Avoid random stars, floating confetti, rainbow chrome, excessive ornaments, logos, letters and words. Actual transparent alpha background. Subject: A substantial blue-violet shield with a raised white check mark and a thin silver rim, red backing visible, confident account security.",
+      "delivery": {
+        "file": "shield.webp",
+        "width": 512,
+        "height": 468,
+        "transparentPixels": 118629
+      },
+      "original": "originals-satin/shield.png",
+      "edit": "satin-edit.json"
+    },
+    {
+      "name": "sliders",
+      "prompt": "Use case: stylized-concept. Create one production-ready transparent PNG illustration for a Russian business credit cabinet. Input images are STYLE REFERENCES ONLY: promo contact sheet and bank website contact sheet. Match their professional Alfa banking 3D illustration language: bold sculptural rounded forms, vivid lacquer red as primary, selective electric blue, mint/green and violet accents, brushed silver and subtle translucent glass, clean studio lighting, soft contact shading. Restrained coherent composition, clear silhouette readable at 64px, refined materials, 3/4 perspective, generous transparent margin, all objects fully inside canvas. Avoid random stars, floating confetti, rainbow chrome, excessive ornaments, logos, letters and words. Actual transparent alpha background. Subject: A pale blue translucent settings panel with three horizontal sliders, red blue and green rounded slider handles. No writing.",
+      "delivery": {
+        "file": "sliders.webp",
+        "width": 512,
+        "height": 341,
+        "transparentPixels": 93127
+      },
+      "original": "originals-satin/sliders.png",
+      "edit": "satin-edit.json"
+    },
+    {
+      "name": "stopwatch",
+      "prompt": "Use case: stylized-concept. Create one production-ready transparent PNG illustration for a Russian business credit cabinet. Input images are STYLE REFERENCES ONLY: promo contact sheet and bank website contact sheet. Match their professional Alfa banking 3D illustration language: bold sculptural rounded forms, vivid lacquer red as primary, selective electric blue, mint/green and violet accents, brushed silver and subtle translucent glass, clean studio lighting, soft contact shading. Restrained coherent composition, clear silhouette readable at 64px, refined materials, 3/4 perspective, generous transparent margin, all objects fully inside canvas. Avoid random stars, floating confetti, rainbow chrome, excessive ornaments, logos, letters and words. Actual transparent alpha background. Subject: A red stopwatch with a brushed silver button and pale face, blue simple hands, a small green check badge. No digits.",
+      "delivery": {
+        "file": "stopwatch.webp",
+        "width": 512,
+        "height": 468,
+        "transparentPixels": 122336
+      },
+      "original": "originals-satin/stopwatch.png",
+      "edit": "satin-edit.json"
+    },
+    {
+      "name": "ai-selection",
+      "prompt": "Use case: stylized-concept. Create one compact AI banking promo icon in exactly the visual language of the attached reference screenshot. Reference only for style: simple chunky 3D objects, near-frontal view, crisp rounded edges, shallow visible extrusion, vivid pure red/blue/green, light restrained reflections like its wallet, calendar and percent tags. Subject: a compact electric BLUE rounded-square AI tile, large raised WHITE \"AI\" lettering, a thin red side/back edge, and ONE small bright GREEN four-point sparkle at its upper-right corner to indicate smart assistance. The tile and sparkle are the only objects. Minimal silhouette, balanced chunky proportions, very readable at 90px. More like a bank promo product icon than a glossy app logo. Broad calm surfaces, subtle satin/semi-gloss reflections, no iridescence, no purple gradients, no chrome, no chip pins, no neural spheres, no chat bubbles, no robot. Slight 3/4 orientation but mostly frontal, soft studio lighting. Square canvas with 12 percent transparent margin; fully transparent alpha background (zero alpha outside objects), no blue rectangle backdrop, no floor shadow, no bloom, no watermark. Exact text only \"AI\".",
+      "original": "originals-satin/ai-selection-promo.png",
+      "delivery": {
+        "file": "ai-selection.webp",
+        "width": 512,
+        "height": 512,
+        "transparentPixels": 158229
+      },
+      "edit": "ai-selection-promo-prompt.json"
+    }
+  ]
+}

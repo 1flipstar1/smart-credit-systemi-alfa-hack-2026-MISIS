@@ -38,6 +38,7 @@ try {
         scenarios.push({route:status === 'signing' ? 'sign' : status === 'issued' ? 'done' : 'status', status});
     }
     for (const {route, status} of scenarios) {
+        console.log(`Checking cabinet: ${route}${status ? ` / ${status}` : ''}`);
         await page.goto(`${prototype}#${route}`);
         if (status) await page.evaluate(({route,status}) => {
             ensureApp();
@@ -50,6 +51,8 @@ try {
         await page.evaluate(() => document.fonts.ready);
         const brokenImages = await page.evaluate(async () => {
             const images = [...document.images];
+            // Off-screen lazy images otherwise leave decode() pending indefinitely.
+            images.forEach(image => { image.loading = 'eager'; });
             const results = await Promise.all(images.map(image => image.decode().then(() => null,
                 () => image.alt || 'Illustration failed to decode')));
             return results.filter(Boolean);
@@ -88,10 +91,10 @@ try {
             }
         }
     }
-    await page.goto(pathToFileURL(path.resolve('output/credit-minimal/index.html')).href);
+    await page.goto(pathToFileURL(path.resolve('output/illustrations/index.html')).href);
     await page.setViewportSize({width:1440, height:1000});
     await page.evaluate(() => Promise.all([...document.images].map(image => image.decode())));
-    await page.screenshot({path:path.resolve('output/credit-minimal/gallery.png'), fullPage:true});
+    await page.screenshot({path:path.resolve('output/illustrations/gallery.png'), fullPage:true});
     assert(errors.length === 0, errors.join('\n'));
     fs.writeFileSync(path.join(root, 'verification-core-components.json'), JSON.stringify({checks, typography, informationOnly:true, javascriptErrors:errors}, null, 2));
     console.log('PASS: information block, embedded fonts, cabinet typography, responsive checks, no JavaScript errors');
