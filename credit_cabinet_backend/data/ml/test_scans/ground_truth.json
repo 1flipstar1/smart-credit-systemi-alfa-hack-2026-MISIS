@@ -1,0 +1,286 @@
+[
+  {
+    "scan_path": "data/ml/test_scans/company_card_good.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Ромашка",
+      "inn": "7701234567",
+      "ogrn": "1027700132195",
+      "address": "г. Москва, ул. Ленина, д. 5",
+      "director": "Иванов Иван Иванович",
+      "registration_date": "15.03.2021"
+    },
+    "expected_status": "OK",
+    "injected_defects": [],
+    "notes": "clean scan"
+  },
+  {
+    "scan_path": "data/ml/test_scans/company_card_bad_inn.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Ромашка",
+      "inn": "7701234567",
+      "ogrn": "1027700132195"
+    },
+    "expected_status": "ISSUES_FOUND",
+    "injected_defects": [
+      "inn_mismatch"
+    ],
+    "notes": "INN mismatch with application"
+  },
+  {
+    "scan_path": "data/ml/test_scans/company_card_blurry.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Ромашка",
+      "inn": "7701234567",
+      "ogrn": "1027700132195"
+    },
+    "expected_status": "NEEDS_RESCAN",
+    "injected_defects": [
+      "blur"
+    ],
+    "notes": "blurry scan"
+  },
+  {
+    "scan_path": "data/ml/test_scans/company_card_unreadable.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Ромашка",
+      "inn": "7701234567"
+    },
+    "expected_status": "NEEDS_RESCAN",
+    "injected_defects": [
+      "noise"
+    ],
+    "notes": "heavy noise"
+  },
+  {
+    "scan_path": "data/ml/test_scans/company_card_missing_inn.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Ромашка",
+      "ogrn": "1027700132195"
+    },
+    "expected_status": "NEEDS_REVIEW",
+    "injected_defects": [
+      "missing_inn"
+    ],
+    "notes": "no INN field"
+  },
+  {
+    "scan_path": "data/ml/test_scans/application_good.png",
+    "expected_document_type": "credit_application",
+    "expected_fields": {
+      "inn": "7701234567",
+      "amount": "1500000",
+      "term_months": "12",
+      "purpose": "пополнение оборотных средств"
+    },
+    "expected_status": "OK",
+    "injected_defects": [],
+    "notes": "clean application"
+  },
+  {
+    "scan_path": "data/ml/test_scans/application_bad_amount.png",
+    "expected_document_type": "credit_application",
+    "expected_fields": {
+      "inn": "7701234567",
+      "amount": "999999",
+      "term_months": "12"
+    },
+    "expected_status": "ISSUES_FOUND",
+    "injected_defects": [
+      "amount_mismatch"
+    ],
+    "notes": "amount mismatch"
+  },
+  {
+    "scan_path": "data/ml/test_scans/company_card_auto_corr.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Ромашка",
+      "inn": "7701234567",
+      "ogrn": "1027700132195"
+    },
+    "expected_status": "OK",
+    "injected_defects": [
+      "ocr_autocorrect"
+    ],
+    "notes": "INN with letter O"
+  },
+  {
+    "scan_path": "data/ml/test_scans/company_card_ip.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ИП Иванов",
+      "inn": "123456789012",
+      "ogrn": "304774612345678"
+    },
+    "expected_status": "OK",
+    "injected_defects": [],
+    "notes": "IP card"
+  },
+  {
+    "scan_path": "data/ml/test_scans/financial_statement_good.png",
+    "expected_document_type": "financial_statement",
+    "expected_fields": {
+      "inn": "7701234567",
+      "revenue": "1000000",
+      "profit": "200000"
+    },
+    "expected_status": "OK",
+    "injected_defects": [],
+    "notes": "financial statement"
+  },
+  {
+    "scan_path": "data/ml/test_scans/variation_0.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Тест",
+      "inn": "7701234567",
+      "ogrn": "1027700132195"
+    },
+    "expected_status": "NEEDS_REVIEW",
+    "injected_defects": [
+      "blur=1",
+      "noise=500"
+    ],
+    "notes": "variation"
+  },
+  {
+    "scan_path": "data/ml/test_scans/variation_1.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Тест",
+      "inn": "7701234567",
+      "ogrn": "1027700132195"
+    },
+    "expected_status": "NEEDS_RESCAN",
+    "injected_defects": [
+      "blur=1",
+      "noise=2000"
+    ],
+    "notes": "variation"
+  },
+  {
+    "scan_path": "data/ml/test_scans/variation_2.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Тест",
+      "inn": "7701234567",
+      "ogrn": "1027700132195"
+    },
+    "expected_status": "NEEDS_RESCAN",
+    "injected_defects": [
+      "blur=3",
+      "noise=500"
+    ],
+    "notes": "variation"
+  },
+  {
+    "scan_path": "data/ml/test_scans/variation_3.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Тест",
+      "inn": "7701234567",
+      "ogrn": "1027700132195"
+    },
+    "expected_status": "NEEDS_RESCAN",
+    "injected_defects": [
+      "blur=3",
+      "noise=500"
+    ],
+    "notes": "variation"
+  },
+  {
+    "scan_path": "data/ml/test_scans/variation_4.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Тест",
+      "inn": "7701234567",
+      "ogrn": "1027700132195"
+    },
+    "expected_status": "NEEDS_REVIEW",
+    "injected_defects": [
+      "blur=0",
+      "noise=500"
+    ],
+    "notes": "variation"
+  },
+  {
+    "scan_path": "data/ml/test_scans/variation_5.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Тест",
+      "inn": "7701234567",
+      "ogrn": "1027700132195"
+    },
+    "expected_status": "NEEDS_REVIEW",
+    "injected_defects": [
+      "blur=1",
+      "noise=0"
+    ],
+    "notes": "variation"
+  },
+  {
+    "scan_path": "data/ml/test_scans/variation_6.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Тест",
+      "inn": "7701234567",
+      "ogrn": "1027700132195"
+    },
+    "expected_status": "NEEDS_RESCAN",
+    "injected_defects": [
+      "blur=3",
+      "noise=0"
+    ],
+    "notes": "variation"
+  },
+  {
+    "scan_path": "data/ml/test_scans/variation_7.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Тест",
+      "inn": "7701234567",
+      "ogrn": "1027700132195"
+    },
+    "expected_status": "NEEDS_RESCAN",
+    "injected_defects": [
+      "blur=3",
+      "noise=0"
+    ],
+    "notes": "variation"
+  },
+  {
+    "scan_path": "data/ml/test_scans/variation_8.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Тест",
+      "inn": "7701234567",
+      "ogrn": "1027700132195"
+    },
+    "expected_status": "NEEDS_RESCAN",
+    "injected_defects": [
+      "blur=2",
+      "noise=2000"
+    ],
+    "notes": "variation"
+  },
+  {
+    "scan_path": "data/ml/test_scans/variation_9.png",
+    "expected_document_type": "company_card",
+    "expected_fields": {
+      "name": "ООО Тест",
+      "inn": "7701234567",
+      "ogrn": "1027700132195"
+    },
+    "expected_status": "NEEDS_REVIEW",
+    "injected_defects": [
+      "blur=1",
+      "noise=0"
+    ],
+    "notes": "variation"
+  }
+]

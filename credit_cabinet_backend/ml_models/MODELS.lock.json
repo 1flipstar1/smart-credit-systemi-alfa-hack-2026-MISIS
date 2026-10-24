@@ -1,0 +1,8 @@
+{
+  "ocr_engine": "tesseract",
+  "ocr_version": "5.x",
+  "ocr_lang": "rus",
+  "tessdata_source": "https://github.com/tesseract-ocr/tessdata_fast/raw/main/rus.traineddata",
+  "license": "Apache-2.0",
+  "field_matcher": "heuristic"
+}

@@ -1,14 +1,23 @@
 FEATURE_ORDER = [
-    "amount",
-    "term_months",
-    "revenue_year",
-    "expenses_month",
-    "debt_payments_month",
+    "credit_history",
+    "debt_burden",
+    "financial_capacity",
+    "business_age",
+    "registry_tax",
+    "product_fit",
+    "data_quality",
+    "current_overdue_days",
+    "max_overdue_days_24mo",
+    "overdue_count_24mo",
+    "bankruptcy_flag",
+    "registry_active",
+    "revenue_month",
+    "ebitda_month",
+    "existing_debt_month",
+    "business_age_months",
+    "arrears_ratio",
 ]
 
 
-def prepare_features(values: dict[str, float]) -> list[float]:
-    missing = [name for name in FEATURE_ORDER if name not in values]
-    if missing:
-        raise ValueError(f"Не хватает признаков: {', '.join(missing)}")
-    return [float(values[name]) for name in FEATURE_ORDER]
+def prepare_features(values: dict) -> dict:
+    return {k: values.get(k) for k in FEATURE_ORDER}
