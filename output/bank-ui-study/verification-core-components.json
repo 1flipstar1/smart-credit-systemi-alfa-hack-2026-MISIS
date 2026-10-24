@@ -13,6 +13,317 @@
       "overflow": false
     }
   ],
+  "typography": [
+    {
+      "route": "home",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "home",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "home",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "params",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "params",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "params",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "company",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "company",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "company",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "docs",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "docs",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "docs",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "review",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "review",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "review",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "adm",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "adm",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "adm",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "adm-card",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "adm-card",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "adm-card",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "adm-analytics",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "adm-analytics",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "adm-analytics",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "status": "expert",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "status": "expert",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "status": "expert",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "status": "approved",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "status": "approved",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "status": "approved",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "status": "counter",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "status": "counter",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "status": "counter",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "status": "needinfo",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "status": "needinfo",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "status": "needinfo",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "status": "refused",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "status": "refused",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "status",
+      "status": "refused",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "sign",
+      "status": "signing",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "sign",
+      "status": "signing",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "sign",
+      "status": "signing",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "done",
+      "status": "issued",
+      "width": 1440,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "done",
+      "status": "issued",
+      "width": 720,
+      "issues": [],
+      "overflow": false
+    },
+    {
+      "route": "done",
+      "status": "issued",
+      "width": 390,
+      "issues": [],
+      "overflow": false
+    }
+  ],
   "informationOnly": true,
   "javascriptErrors": []
 }

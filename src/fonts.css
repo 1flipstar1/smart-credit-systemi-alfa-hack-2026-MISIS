@@ -1,0 +1,22 @@
+/* Official font files: https://core-ds.github.io/core-components/master/?path=/docs/guidelines-typography--docs */
+@font-face {
+    font-family: 'Styrene UI';
+    src: url('./fonts/styrene-ui_regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Styrene UI';
+    src: url('./fonts/styrene-ui_medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Styrene UI';
+    src: url('./fonts/styrene-ui_bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}

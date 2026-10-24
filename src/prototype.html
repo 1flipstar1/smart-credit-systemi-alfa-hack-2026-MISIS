@@ -1,0 +1,1932 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Умный кредитный кабинет</title>
+<style>
+/* CORE_TYPOGRAPHY */
+/* Layout: Alfa site shell — dark hero bands, white sheets with 48px top radius; cabinet = grey ground + white plates; bank = dark rail + grey workspace */
+:root{
+  --red:#ef3124;--red-h:#e32a17;--red-p:#d72505;
+  --ink:rgba(3,3,6,.88);--ink2:rgba(4,4,19,.55);--ink3:rgba(5,8,29,.38);
+  --bg:#ffffff;--bg2:#f2f3f5;--bg3:#e7e8eb;--line:#eef0f3;--line2:#d5d6dc;
+  --dark:#121213;--dark2:#1c1c1e;--dark3:#29292c;--dark4:#3a3a3e;
+  --on-dark:#ffffff;--on-dark2:rgba(255,255,255,.65);
+  --pos:#0cc44d;--pos-m:#dff8e5;--pos-t:#087a32;
+  --att:#fa9313;--att-m:#ffefd9;--att-t:#a35a00;
+  --info:#2288fa;--info-m:#e4f0ff;--info-t:#1a5fb4;
+  --neg:#ff4837;--neg-m:#ffebeb;--neg-t:#c4170a;
+  --violet:#8b3dff;--lime:#a6e82a;--grey-mark:#b8b9c0;
+  --comp:rgba(11,31,53,.07);--comp-h:rgba(11,31,53,.12);
+  /* Typography: official Core Components mixins; embedded Styrene UI, system body. */
+  --ff-title:var(--font-family-styrene);
+  --ff-text:var(--font-family-system);
+  --font:var(--ff-text);
+  --r-s:8px;--r-m:16px;--r-l:24px;--r-xl:32px;--r-sheet:48px;
+  /* motion */
+  --d1:150ms;--d2:250ms;--d3:400ms;--d-sheet:500ms; /* Drawer TIMEOUT = 500 (core-components-drawer) */
+  --e-std:cubic-bezier(.4,0,.2,1);--e-out:cubic-bezier(0,0,.2,1);--e-in:cubic-bezier(.4,0,1,1);--e-spring:cubic-bezier(.34,1.4,.64,1);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);@mixin paragraph_primary_medium;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:#2a77ef}
+button{font:inherit;color:inherit}
+h1,h2,h3{margin:0;text-wrap:balance}
+:focus-visible{outline:2px solid var(--info);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.muted{color:var(--ink2)}
+.lbl{@mixin action_caps;color:var(--ink2)}
+.tnum{font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- demo bar ---------- */
+.demobar{position:sticky;top:0;z-index:60;background:#000;color:#fff;@mixin paragraph_secondary_large;}
+.demobar .wrap{display:flex;align-items:center;gap:12px;min-height:44px;flex-wrap:wrap;padding-block:6px}
+.demobar .tag{background:var(--lime);color:#121213;border-radius:99px;padding:0 10px;@mixin accent_secondary_medium;}
+.demobar .sp{flex:1}
+.demobar button.lnk{background:none;border:0;color:rgba(255,255,255,.7);cursor:pointer;padding:6px 4px;@mixin paragraph_secondary_large;}
+.demobar button.lnk:hover{color:#fff}
+
+/* ---------- buttons (Button: accent / primary / secondary; sizes 40/48/56) ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:56px;padding:0 32px;border-radius:16px;border:0;@mixin action_component_primary;text-decoration:none;cursor:pointer;white-space:nowrap;
+  transition:background-color var(--d1) var(--e-std),color var(--d1) var(--e-std),transform var(--d1) var(--e-std),box-shadow var(--d1) var(--e-std),opacity var(--d1)}
+.btn:active{transform:scale(.97)}
+.btn.s40{height:40px;padding:0 16px;border-radius:12px;@mixin action_primary_small;}
+.btn.s48{height:48px;padding:0 24px;border-radius:14px;@mixin action_component_primary;}
+.btn.block{width:100%}
+.btn.accent{background:var(--red);color:#fff}.btn.accent:hover{background:var(--red-h)}.btn.accent:active{background:var(--red-p)}
+.btn.primary{background:#212124;color:#fff}.btn.primary:hover{background:#2f2f32}
+.btn.dark{background:var(--dark3);color:#fff}.btn.dark:hover{background:#2f2f32}
+.btn.secondary{background:var(--comp);color:var(--ink)}.btn.secondary:hover{background:var(--comp-h)}
+.btn.white{background:#fff;color:#121213}.btn.white:hover{background:#e7e8eb}
+.btn.ghost{background:rgba(255,255,255,.16);color:#fff}.btn.ghost:hover{background:rgba(255,255,255,.24)}
+.btn[disabled],.btn.is-disabled{background:var(--comp);color:var(--ink3);cursor:not-allowed;transform:none}
+.btn.loading{color:transparent!important;pointer-events:none}
+.btn.loading::after{content:"";position:absolute;width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .7s linear infinite}
+.btn.secondary.loading::after{border-color:rgba(3,3,6,.15);border-top-color:var(--ink)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.linkbtn{background:none;border:0;padding:0;color:#2a77ef;cursor:pointer;font:inherit}
+.linkbtn:hover{color:#225fbf}
+
+/* ---------- header ---------- */
+/* logo glyph keeps brand weight */
+.logo{display:inline-flex;flex-direction:column;align-items:center;text-decoration:none;color:var(--red);@mixin headline_small;cursor:pointer;background:none;border:0;padding:0}
+.logo i{display:block;width:20px;height:3px;background:var(--red);margin-top:3px}
+.hdr{display:flex;align-items:center;gap:28px;min-height:76px;flex-wrap:wrap;padding-block:8px}
+.hdr nav{display:flex;gap:24px;@mixin action_primary_small;}
+.hdr nav button{background:none;border:0;padding:6px 0;cursor:pointer;color:inherit;opacity:.8;transition:opacity var(--d1)}
+.hdr nav button:hover,.hdr nav button.on{opacity:1}
+.hdr .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.ava{width:36px;height:36px;border-radius:50%;background:#212124;color:#fff;display:inline-flex;align-items:center;justify-content:center;@mixin action_secondary_large;flex:none}
+
+/* ---------- landing ---------- */
+.hero{background:var(--dark);color:#fff;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:24px;align-items:center;padding-top:24px;position:relative}
+.hero-copy{display:flex;flex-direction:column;gap:28px;padding-block:24px 160px;position:relative;z-index:2}
+
+.big{@mixin headline_xlarge;}
+.h1{@mixin headline_xlarge;letter-spacing:0}
+.lead{@mixin paragraph_primary_large;color:rgba(255,255,255,.86);max-width:520px;margin:0}
+.hero-img{position:relative;align-self:start;margin:-32px -24px -150px 0;display:flex;justify-content:center;z-index:0}
+.hero-img img{width:min(106%,690px);max-width:none;filter:drop-shadow(0 30px 60px rgba(0,0,0,.45));animation:float 7s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.params{position:relative;z-index:3;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding-bottom:104px}
+.param{background:rgba(41,41,44,.62);-webkit-backdrop-filter:blur(22px) saturate(150%);backdrop-filter:blur(22px) saturate(150%);border-radius:28px;padding:24px 24px 20px;min-height:160px;display:flex;flex-direction:column;gap:4px}
+.param b{@mixin headline_xsmall;}
+.param span{@mixin paragraph_component_primary;color:rgba(255,255,255,.86)}
+.param em{margin-top:auto;align-self:flex-end;width:48px;height:48px;border-radius:16px;background:rgba(58,58,62,.85);display:flex;align-items:center;justify-content:center}
+.param em svg{width:24px;height:24px}
+@media (max-width:1023px){.hero-grid{grid-template-columns:1fr}.hero-copy{padding-block:16px 0}.hero-img{margin:0 0 -120px}.hero-img img{width:min(100%,520px)}.params{grid-template-columns:repeat(2,minmax(0,1fr))}.h1{@mixin headline_medium;}}
+@media (max-width:520px){.params{grid-template-columns:1fr 1fr;gap:10px}.param{min-height:132px;padding:16px;border-radius:20px}.param b{@mixin paragraph_component_primary;}.param span{@mixin paragraph_secondary_large;}.param em{width:40px;height:40px;border-radius:12px}}
+.sheet{background:var(--bg);border-radius:var(--r-sheet) var(--r-sheet) 0 0;margin-top:-48px;position:relative;padding-block:72px 120px}
+.sec{padding-top:96px}
+.sec:first-child{padding-top:0}
+.sec-h{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:32px}
+.h2{@mixin headline_medium;}
+.tasks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}
+.task{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:8px;min-height:200px;padding:24px 148px 24px 24px;background:var(--bg2);border-radius:28px;border:0;text-align:left;cursor:pointer;
+  transition:background var(--d2) var(--e-std),transform var(--d2) var(--e-std)}
+.task:hover{background:var(--bg3);transform:translateY(-2px)}
+.task img{position:absolute;right:16px;bottom:16px;width:128px;height:128px;object-fit:contain;transition:transform var(--d3) var(--e-spring)}
+.task:hover img{transform:translateY(-4px) scale(1.06)}
+.task b{@mixin headline_xsmall;}
+.task span{@mixin paragraph_primary_small;color:var(--ink2)}
+.task .go{margin-top:auto;@mixin action_primary_small;color:var(--red)}
+.task.ai{background:var(--red);color:#fff;box-shadow:0 12px 32px rgba(239,49,36,.28)}.task.ai span{color:rgba(255,255,255,.86)}.task.ai .go{color:#fff}.task.ai:hover{background:var(--red-h)}
+.task.ai .ai-tag{align-self:flex-start;display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:99px;background:rgba(255,255,255,.2);color:#fff;@mixin action_secondary_medium;letter-spacing:0}
+.task.ai img{width:128px;height:128px}
+.steps4{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px}
+.step4{display:flex;flex-direction:column;align-items:center;gap:16px}
+.num{width:34px;height:34px;border-radius:50%;border:2px dashed var(--red);display:flex;align-items:center;justify-content:center;@mixin action_secondary_large;}
+.num.full{background:var(--red);color:#fff;border-style:solid}
+.step4 .box{width:100%;background:var(--bg2);border-radius:24px;padding:24px;text-align:center;min-height:132px}
+.step4 b{display:block;@mixin headline_xsmall;margin-bottom:8px}
+.banner{background:var(--dark);border-radius:var(--r-xl);padding:clamp(24px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:32px;align-items:center;color:#fff;overflow:hidden}
+.mini{background:var(--dark2);border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.segbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.segbar i{height:6px;border-radius:3px;background:var(--dark4);position:relative;overflow:hidden}
+.segbar i.ok{background:var(--pos)}
+.segbar i.now{background:var(--dark4)}
+.segbar i.now::after{content:"";position:absolute;inset:0;background:var(--att);transform-origin:left;animation:fillx 2.4s var(--e-std) infinite}
+@keyframes fillx{0%{transform:scaleX(0)}70%,100%{transform:scaleX(1)}}
+.table{min-width:640px;display:flex;flex-direction:column;gap:6px}
+.trow{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:16px;padding:20px 24px;background:var(--bg2);border-radius:16px;@mixin paragraph_primary_small;transition:background var(--d1)}
+.trow:hover{background:var(--bg3)}
+.trow.head{padding:12px 24px;@mixin paragraph_secondary_medium;color:var(--ink2)}
+.trow.head:hover{background:var(--bg2)}
+.trow b{@mixin action_component_primary;}
+.fade-swap{animation:fadeup var(--d2) var(--e-out)}
+.formband{background:var(--bg2);border-radius:var(--r-xl);padding:clamp(24px,5vw,64px);display:flex;justify-content:center}
+.formcard{width:100%;max-width:460px;background:#fff;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:16px}
+.footer{background:var(--dark);color:#fff;border-radius:var(--r-sheet) var(--r-sheet) 0 0;margin-top:-48px;position:relative}
+.footer .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:32px;@mixin paragraph_primary_small;padding-block:64px 48px}
+.footer .cols div{display:flex;flex-direction:column;gap:8px}
+.footer .cols .lbl{color:rgba(255,255,255,.5);@mixin paragraph_secondary_medium;}
+.footer button{background:none;border:0;color:#fff;text-align:left;padding:0;cursor:pointer;@mixin paragraph_primary_small;}
+.footer button:hover{color:rgba(255,255,255,.7)}
+
+/* ---------- segmented control (SegmentedControl / Tabs) ---------- */
+.seg{position:relative;display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr;padding:3px;background:var(--bg2);border-radius:99px;isolation:isolate}
+.seg .ind{position:absolute;top:3px;bottom:3px;left:3px;border-radius:99px;background:#212124;z-index:-1;transition:transform var(--d2) var(--e-std),width var(--d2) var(--e-std)}
+.seg button{border:0;background:none;height:34px;padding:0 18px;border-radius:99px;@mixin action_component_secondary;cursor:pointer;white-space:nowrap;transition:color var(--d2) var(--e-std)}
+.seg button[aria-selected="true"]{color:#fff}
+.seg.on-dark{background:rgba(255,255,255,.1)}.seg.on-dark button{color:rgba(255,255,255,.75)}.seg.on-dark button[aria-selected="true"]{color:#121213}.seg.on-dark .ind{background:#fff}
+.seg.white{background:#fff}
+
+/* ---------- tags / chips (Tag 32/40) ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:0;height:40px;padding:0 16px;border-radius:99px;background:var(--bg2);@mixin action_component_secondary;cursor:pointer;transition:background var(--d1) var(--e-std),color var(--d1),transform var(--d1)}
+.chip:hover{background:var(--bg3)}
+.chip:active{transform:scale(.96)}
+.chip[aria-pressed="true"]{background:#212124;color:#fff}
+
+/* ---------- inputs (FormControl filled, floating label) ---------- */
+.field{position:relative;display:block;background:var(--bg2);border-radius:var(--r-s) var(--r-s) 0 0;transition:background var(--d1)}
+.field:hover{background:var(--bg3)}
+.field input,.field select,.field textarea{width:100%;border:0;background:transparent;@mixin paragraph_component_primary;color:var(--ink);padding:26px 12px 8px;outline:none;border-radius:inherit;appearance:none}
+.field select{cursor:pointer}
+.field textarea{resize:vertical;min-height:84px}
+.field label{position:absolute;left:12px;top:17px;@mixin paragraph_component_primary;color:var(--ink2);pointer-events:none;transform-origin:left top;transition:transform var(--d2) var(--e-std),color var(--d2)}
+.field input:focus+label,.field input:not(:placeholder-shown)+label,.field select+label,.field textarea+label{transform:translateY(-9px) scale(.75)}
+.field::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line2);transition:height var(--d1),background var(--d1)}
+.field:focus-within::after{height:2px;background:#212124}
+.field.err::after{height:2px;background:var(--neg)}
+.field .hint{position:absolute;left:12px;bottom:-20px;@mixin paragraph_secondary_medium;color:var(--neg-t)}
+.field .suffix{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--ink2)}
+
+/* ---------- switch & checkbox (Switch / Checkbox) ---------- */
+.sw{display:flex;align-items:flex-start;gap:12px;cursor:pointer;user-select:none}
+.sw input{position:absolute;opacity:0;width:1px;height:1px}
+.sw .tr{flex:none;width:40px;height:24px;border-radius:12px;background:var(--line2);position:relative;transition:background var(--d2) var(--e-std);margin-top:1px}
+.sw .tr::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform var(--d2) var(--e-spring)}
+.sw input:checked+.tr{background:var(--red)}
+.sw input:checked+.tr::after{transform:translateX(16px)}
+.sw input:focus-visible+.tr{outline:2px solid var(--info);outline-offset:2px}
+.cb{display:flex;gap:12px;align-items:flex-start;cursor:pointer;@mixin paragraph_primary_small;user-select:none}
+.cb input{position:absolute;opacity:0;width:1px;height:1px}
+.cb .bx{flex:none;width:22px;height:22px;border-radius:6px;border:2px solid var(--line2);display:flex;align-items:center;justify-content:center;transition:background var(--d1),border-color var(--d1)}
+.cb .bx svg{width:14px;height:14px;stroke:#fff;stroke-width:3;fill:none;stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset var(--d2) var(--e-out)}
+.cb input:checked+.bx{background:var(--red);border-color:var(--red)}
+.cb input:checked+.bx svg{stroke-dashoffset:0}
+.cb input:focus-visible+.bx{outline:2px solid var(--info);outline-offset:2px}
+
+/* ---------- range (Slider) ---------- */
+input[type=range].rng{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;cursor:pointer;--p:50%}
+.rng::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:linear-gradient(to right,var(--red) var(--p),var(--line2) var(--p))}
+.rng::-moz-range-track{height:4px;border-radius:2px;background:linear-gradient(to right,var(--red) var(--p),var(--line2) var(--p))}
+.rng::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;margin-top:-10px;border-radius:50%;background:#fff;border:0;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:transform var(--d1) var(--e-spring)}
+.rng::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:#fff;border:0;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.rng:active::-webkit-slider-thumb{transform:scale(1.15)}
+
+/* ---------- accordion (Collapse) ---------- */
+.acc-item{background:var(--bg2);border-radius:16px;transition:background var(--d1)}
+.acc-item:hover{background:var(--bg3)}
+.acc-item>button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;background:none;border:0;padding:20px 24px;@mixin action_component_primary;text-align:left;cursor:pointer}
+.acc-item .chev{flex:none;width:24px;height:24px;transition:transform var(--d2) var(--e-std)}
+.acc-item.open .chev{transform:rotate(180deg)}
+.acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--d2) var(--e-std)}
+.acc-item.open .acc-body{grid-template-rows:1fr}
+.acc-body>div{overflow:hidden}
+.acc-body p{margin:0;padding:0 24px 20px;@mixin paragraph_primary_small;color:var(--ink2)}
+
+/* ---------- cards & badges ---------- */
+.card{background:#fff;border-radius:28px;padding:28px}
+.plate{background:var(--bg2);border-radius:var(--r-m);padding:14px 16px}
+.badge{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:99px;@mixin action_secondary_medium;white-space:nowrap}
+.b-pos{background:var(--pos-m);color:var(--pos-t)}.b-att{background:var(--att-m);color:var(--att-t)}.b-info{background:var(--info-m);color:var(--info-t)}.b-neg{background:var(--neg-m);color:var(--neg-t)}.b-grey{background:var(--bg2);color:var(--ink2)}
+.b-pos-s{background:var(--pos);color:#fff}.b-att-s{background:var(--att);color:#fff}.b-info-s{background:var(--info);color:#fff}.b-neg-s{background:var(--neg);color:#fff}
+.row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);@mixin paragraph_primary_small;}
+.row:last-child{border-bottom:0}
+.row b{font-weight:500;text-align:right}
+.progress{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.progress>i{display:block;height:100%;border-radius:4px;background:var(--pos);transition:width var(--d3) var(--e-std)}
+
+/* ---------- cabinet shell ---------- */
+.cab{background:var(--bg2);min-height:100%;padding-bottom:96px}
+.cab-hdr{background:#fff;border-bottom:1px solid var(--bg3)}
+.cab-top{padding-block:28px 24px;display:flex;flex-direction:column;gap:20px}
+.cab-top .t{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.cab-top h1{@mixin headline_medium;}
+.back{align-self:flex-start;background:none;border:0;padding:0;cursor:pointer;@mixin paragraph_primary_small;color:var(--ink);opacity:.8}
+.back:hover{opacity:1;color:var(--red)}
+.stepper{list-style:none;margin:0;padding:0 0 4px;display:flex;gap:6px;overflow-x:auto}
+.stepper li{flex:1 0 104px;display:flex;flex-direction:column;gap:8px;@mixin paragraph_secondary_medium;color:var(--ink2)}
+.stepper li i{display:block;height:4px;border-radius:2px;background:#dcdde1;position:relative;overflow:hidden}
+.stepper li i::after{content:"";position:absolute;inset:0;transform-origin:left;transform:scaleX(0);transition:transform var(--d3) var(--e-std)}
+.stepper li.done i::after{background:var(--pos);transform:scaleX(1)}
+.stepper li.now i::after{background:var(--red);transform:scaleX(1)}
+.stepper li.now{color:var(--ink);font-weight:500}
+.main{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.content{flex:999 1 600px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.aside{flex:1 1 320px;display:flex;flex-direction:column;gap:16px;position:sticky;top:60px}
+.goal{display:flex;align-items:center;gap:12px;padding:12px;border-radius:20px;cursor:pointer;text-align:left;background:var(--bg2);border:2px solid transparent;transition:border-color var(--d2) var(--e-std),background var(--d2),transform var(--d1)}
+.goal:hover{background:var(--bg3)}
+.goal:active{transform:scale(.98)}
+.goal[aria-pressed="true"]{background:#fff;border-color:var(--red)}
+.goal img{width:64px;height:64px;object-fit:contain;flex:none;transition:transform var(--d3) var(--e-spring)}
+.goal[aria-pressed="true"] img{transform:scale(1.1) rotate(-4deg)}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px}
+.kv>div{background:var(--bg2);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.kv span{@mixin paragraph_secondary_medium;color:var(--ink2)}
+.kv b{@mixin action_component_primary;}
+.skel{display:block;height:16px;border-radius:6px;background:linear-gradient(90deg,var(--bg3) 0%,#f7f8fa 50%,var(--bg3) 100%);background-size:200% 100%;animation:shimmer 1.2s linear infinite}
+@keyframes shimmer{to{background-position:-200% 0}}
+.doc{display:flex;gap:16px;align-items:center;padding:16px;border-radius:20px;background:var(--bg2);flex-wrap:wrap;transition:background var(--d2)}
+.ico{flex:none;width:44px;height:52px;border-radius:8px;background:#fff;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;@mixin accent_secondary_small;color:var(--red);box-shadow:inset 0 0 0 1px #e1e3e8}
+.dz{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;border:2px dashed var(--line2);background:#fafafb;border-radius:28px;padding:28px;transition:border-color var(--d2),background var(--d2)}
+.dz.over{border-color:var(--red);background:#fff5f4}
+.track{display:flex;flex-direction:column;gap:4px;list-style:none;margin:0;padding:0}
+.track li{display:flex;gap:14px;align-items:flex-start;padding:12px;border-radius:16px;transition:background var(--d3) var(--e-std),opacity var(--d3)}
+.track li.now{background:var(--dark3)}
+.track li.todo{opacity:.45}
+.track .dot{flex:none;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;@mixin accent_secondary_medium;border:2px solid rgba(255,255,255,.4);transition:all var(--d2) var(--e-std)}
+.track li.done .dot{background:var(--pos);border-color:var(--pos);color:#fff;animation:pop var(--d3) var(--e-spring)}
+.track li.now .dot{border:3px solid var(--att);border-right-color:transparent;animation:spin 1s linear infinite}
+@keyframes pop{0%{transform:scale(.4)}100%{transform:scale(1)}}
+.events{display:flex;flex-direction:column;gap:12px;@mixin paragraph_primary_small;}
+.events div{display:flex;gap:10px;animation:fadeup var(--d2) var(--e-out)}
+.events span:first-child{flex:none;width:44px;color:var(--ink2)}
+.optcard{display:flex;flex-direction:column;gap:8px;align-items:flex-start;text-align:left;min-height:220px;padding:20px;border-radius:24px;cursor:pointer;background:var(--bg2);border:2px solid transparent;transition:border-color var(--d2),background var(--d2),transform var(--d1)}
+.optcard:hover{background:var(--bg3)}
+.optcard[aria-pressed="true"]{background:#fff;border-color:var(--red)}
+.cmp{display:grid;grid-template-columns:170px 1fr 110px;gap:12px;align-items:center;@mixin paragraph_secondary_large;}
+.bar{height:14px;background:var(--bg2);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:4px;transition:width var(--d3) var(--e-std),background var(--d2)}
+.svc{background:var(--bg2);border-radius:24px;padding:20px 120px 20px 20px;position:relative;overflow:hidden;min-height:140px;display:flex;flex-direction:column;gap:6px;border:0;text-align:left;cursor:pointer;transition:background var(--d2)}
+.svc:hover{background:var(--bg3)}
+.svc img{position:absolute;right:-8px;bottom:-6px;width:120px;transition:transform var(--d3) var(--e-spring)}
+.svc:hover img{transform:translateY(-4px) scale(1.05)}
+.svc.added{box-shadow:inset 0 0 0 2px var(--pos)}
+.sched{display:grid;grid-template-columns:repeat(24,minmax(0,1fr));grid-template-rows:minmax(0,1fr);gap:2px;height:120px}
+.sched>div{display:flex;flex-direction:column;justify-content:flex-end;gap:2px;height:100%}
+.sched i{display:block;transition:height var(--d3) var(--e-std)}
+.outcome-hero{border-radius:32px;padding:clamp(24px,4vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px;align-items:center;overflow:hidden}
+.outcome-hero img{width:min(100%,300px);justify-self:center}
+.entering .outcome-hero img{animation:popin var(--d3) var(--e-spring) both .1s}
+@keyframes popin{from{opacity:0;transform:scale(.8) rotate(-6deg)}to{opacity:1;transform:none}}
+.h1c{@mixin headline_large;}
+
+
+/* ---------- bank (admin) ---------- */
+.adm{display:flex;flex-wrap:wrap;align-items:stretch;min-height:100%;background:var(--bg2);@mixin paragraph_primary_small;}
+.rail{flex:1 1 232px;background:var(--dark);color:#fff;padding:20px 14px;display:flex;flex-direction:column;gap:4px}
+.rail .brand{display:flex;align-items:center;gap:10px;padding:0 8px 18px;font-weight:500}
+.rail .brand span{color:var(--red);@mixin headline_small;border-bottom:3px solid var(--red);padding-bottom:1px}
+.rail button{display:flex;align-items:center;gap:10px;min-height:40px;padding:0 12px;border-radius:10px;color:rgba(255,255,255,.72);background:none;border:0;@mixin action_component_secondary;cursor:pointer;text-align:left;transition:background var(--d1),color var(--d1)}
+.rail button:hover{background:var(--dark2);color:#fff}
+.rail button.on{background:var(--dark3);color:#fff}
+.rail .cnt{margin-left:auto;@mixin paragraph_secondary_medium;background:var(--red);color:#fff;border-radius:99px;padding:0 7px;line-height:20px}
+.rail .sep{height:1px;background:var(--dark3);margin:10px 4px}
+.ws{flex:999 1 640px;min-width:0;padding:24px clamp(16px,2.5vw,32px) 64px;display:flex;flex-direction:column;gap:16px}
+.ws h1{@mixin headline_small;}
+.acard{background:#fff;border-radius:20px;padding:20px}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:12px}
+.kpi>div{background:#fff;border-radius:20px;padding:16px 18px;display:flex;flex-direction:column;gap:4px}
+.kpi b{@mixin headline_medium;}
+.agrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:16px}
+.hb{display:grid;grid-template-columns:150px 1fr 76px;gap:10px;align-items:center;@mixin paragraph_secondary_large;}
+.hb .t{height:20px;background:var(--bg2);border-radius:6px;overflow:hidden;position:relative}
+.hb .t i{display:block;height:100%;border-radius:6px;transform-origin:left;transition:width var(--d3) var(--e-std)}
+.entering .hb .t i{animation:growx var(--d3) var(--e-out) both}
+@keyframes growx{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+table.q{width:100%;border-collapse:collapse;min-width:900px}
+table.q th{@mixin action_secondary_medium;color:var(--ink2);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+table.q td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.q tbody tr{cursor:pointer;transition:background var(--d1)}
+table.q tbody tr:hover td{background:#fafafb}
+table.q tr.live td{background:#fff8f7}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:6px;animation:pulse-r 1.6s infinite}
+@keyframes pulse-r{0%{box-shadow:0 0 0 0 rgba(239,49,36,.5)}70%{box-shadow:0 0 0 7px rgba(239,49,36,0)}100%{box-shadow:0 0 0 0 rgba(239,49,36,0)}}
+.risk{display:flex;align-items:center;gap:8px}
+.risk .m{width:64px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.risk .m i{display:block;height:100%}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line2);position:relative}
+.tabs button{background:none;border:0;padding:12px 4px;margin-right:20px;@mixin action_component_primary;color:var(--ink2);cursor:pointer;transition:color var(--d1)}
+.tabs button[aria-selected="true"]{color:var(--ink)}
+.tabs .ul{position:absolute;bottom:-1px;height:2px;background:var(--red);transition:transform var(--d2) var(--e-std),width var(--d2) var(--e-std)}
+.pipe{list-style:none;margin:0;padding:0;display:flex;gap:6px;overflow-x:auto}
+.pipe li{flex:1 0 120px;display:flex;flex-direction:column;gap:6px;@mixin paragraph_secondary_medium;}
+.pipe i{display:block;height:6px;border-radius:3px;background:#dcdde1;transition:background var(--d3)}
+.chk{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.chk:last-child{border-bottom:0}
+.factor{display:grid;grid-template-columns:180px 1fr 36px;gap:10px;align-items:center;padding:6px 8px;border:0;border-radius:10px;cursor:pointer;width:100%;text-align:left;background:transparent;transition:background var(--d1)}
+.factor:hover{background:#fafafb}
+.factor[aria-pressed="true"]{background:var(--bg2)}
+.factor .dv{display:grid;grid-template-columns:1fr 1fr;height:16px;align-items:center}
+.factor .dv>span{display:flex;height:100%}
+.factor .dv>span:first-child{justify-content:flex-end;border-right:1px solid #c4c6cc}
+.factor .dv i{display:block;height:100%}
+.entering .factor .dv i{animation:growx var(--d3) var(--e-out) both}
+.factor .dv span:first-child i{border-radius:4px 0 0 4px;transform-origin:right}
+.factor .dv span:last-child i{border-radius:0 4px 4px 0}
+.months{position:relative;height:180px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:minmax(0,1fr);gap:4px;align-items:end;border-bottom:1px solid #dcdde1}
+.months i{display:block;border-radius:4px 4px 0 0;transform-origin:bottom}
+.entering .months i{animation:growy var(--d3) var(--e-out) both}
+@keyframes growy{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.dtype{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:8px}
+.dtype button{display:flex;align-items:center;justify-content:center;gap:8px;height:52px;border-radius:14px;@mixin action_component_secondary;cursor:pointer;background:#fff;border:2px solid transparent;transition:border-color var(--d2),transform var(--d1)}
+.dtype button:active{transform:scale(.98)}
+.dtype .d{width:10px;height:10px;border-radius:50%}
+.metric{display:flex;flex-direction:column;gap:2px;background:var(--bg2);border-radius:14px;padding:12px 14px}
+.metric span{@mixin paragraph_secondary_medium;color:var(--ink2)}
+.metric b{@mixin headline_xsmall;transition:color var(--d2)}
+.leg{display:flex;gap:14px;flex-wrap:wrap;@mixin paragraph_secondary_medium;color:var(--ink2)}
+.docsel{display:flex;gap:10px;align-items:center;width:100%;padding:14px;border-radius:16px;cursor:pointer;background:#fff;border:2px solid transparent;text-align:left;transition:border-color var(--d2)}
+.docsel[aria-pressed="true"]{border-color:var(--red)}
+
+/* ---------- overlays: modal, toast (BaseModal / Toast / Notification) ---------- */
+.backdrop{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px;animation:fadein var(--d2) var(--e-std)}
+.backdrop.out{animation:fadeout var(--d2) var(--e-in) forwards}
+.modal{background:#fff;border-radius:24px;width:min(100%,520px);max-height:calc(100% - 32px);overflow:auto;padding:28px;display:flex;flex-direction:column;gap:16px;animation:modalin var(--d3) var(--e-out)}
+.backdrop.out .modal{animation:modalout var(--d2) var(--e-in) forwards}
+.modal .x{align-self:flex-end;margin:-12px -12px 0 0;width:40px;height:40px;border-radius:50%;border:0;background:var(--bg2);cursor:pointer;@mixin paragraph_primary_large;transition:background var(--d1)}
+.modal .x:hover{background:var(--bg3)}
+@keyframes modalin{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes modalout{to{opacity:0;transform:translateY(8px) scale(.98)}}
+@media (max-width:600px){.backdrop{align-items:flex-end;padding:0}.modal{border-radius:24px 24px 0 0;width:100%;animation:sheetin var(--d-sheet) var(--e-out);padding-bottom:max(28px,env(safe-area-inset-bottom,0px))}.backdrop.out .modal{animation:sheetout var(--d2) var(--e-in) forwards}}
+@keyframes sheetin{from{transform:translateY(100%)}to{transform:none}}
+@keyframes sheetout{to{transform:translateY(100%)}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@keyframes fadeout{to{opacity:0}}
+.toasts{position:fixed;z-index:100;left:50%;bottom:max(24px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;align-items:center;width:min(calc(100% - 32px),440px);pointer-events:none}
+.toast{pointer-events:auto;display:flex;gap:12px;align-items:center;width:100%;background:#212124;color:#fff;border-radius:16px;padding:14px 16px;box-shadow:0 8px 28px rgba(0,0,0,.25);animation:toastin var(--d3) var(--e-spring)}
+.toast.out{animation:toastout var(--d2) var(--e-in) forwards}
+.toast .ti{flex:none;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;@mixin accent_primary_small;}
+.toast b{display:block;@mixin action_primary_small;}
+.toast span{@mixin paragraph_secondary_large;color:rgba(255,255,255,.7)}
+.toast button{margin-left:auto;background:none;border:0;color:#fff;font-weight:500;cursor:pointer;white-space:nowrap}
+@keyframes toastin{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes toastout{to{opacity:0;transform:translateY(12px)}}
+
+/* ---------- page transition ---------- */
+#view{animation:pagein var(--d3) var(--e-out)}
+#view.leave{animation:pageout var(--d1) var(--e-in) forwards}
+@keyframes pagein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pageout{to{opacity:0;transform:translateY(-6px)}}
+@keyframes fadeup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.entering .stagger>*{animation:fadeup var(--d3) var(--e-out) both}
+.entering .stagger>*:nth-child(2){animation-delay:40ms}.entering .stagger>*:nth-child(3){animation-delay:80ms}.entering .stagger>*:nth-child(4){animation-delay:120ms}.entering .stagger>*:nth-child(5){animation-delay:160ms}.entering .stagger>*:nth-child(6){animation-delay:200ms}.entering .stagger>*:nth-child(n+7){animation-delay:240ms}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:95}
+
+@media (max-width:720px){.hide-m{display:none!important}.aside{position:static}.hb{grid-template-columns:110px 1fr 64px}.cmp{grid-template-columns:110px 1fr 90px}.factor{grid-template-columns:120px 1fr 36px}.task{padding-right:120px}.task img{width:96px;height:96px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important}}
+
+@keyframes loadbar{to{width:100%}}
+@keyframes needle{from{transform:rotate(-60deg)}to{transform:none}}
+@keyframes scan{0%{top:-40px}100%{top:100%}}
+
+/* Title — mobile scale (TitleMobile / TitleResponsive, breakpoint desktop-s 1024px) */
+@media (max-width:1023px){
+  .h1,.big{@mixin headline-mobile_xlarge;}
+  .h1c{@mixin headline-mobile_large;}
+  .h2,.cab-top h1{@mixin headline-mobile_medium;}
+  .ws h1{@mixin headline-mobile_small;}
+  .kpi b{@mixin headline-mobile_medium;}
+  .param b,.task b,.step4 b,.metric b{@mixin headline-mobile_xsmall;}
+}
+
+p{margin:0}
+
+</style>
+</head>
+<body>
+<div class="demobar" id="demobar"></div>
+<div id="view" aria-live="polite"></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<script>
+const IMG=/* CREDIT_ILLUSTRATIONS */{};
+'use strict';
+/* ================= helpers ================= */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const rub = (v) => Math.round(v).toLocaleString('ru-RU') + ' ₽';
+const mln = (v) => { const m = v / 1e6; return (m >= 1 ? String(+m.toFixed(1)).replace('.', ',') + ' млн' : Math.round(v / 1000) + ' тыс') + ' ₽'; };
+const termTxt = (t) => t < 12 ? t + ' мес' : (t % 12 ? t + ' мес' : (t / 12) + (t === 12 ? ' год' : (t / 12 < 5 ? ' года' : ' лет')));
+const annuity = (P, rate, n) => { const r = rate / 1200; return P * r / (1 - Math.pow(1 + r, -n)); };
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const nowHM = () => { const d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+const CHK = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.2l3 3 6-6.5"/></svg>';
+const CHEV = '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+/* ================= data ================= */
+const AMOUNTS = [300000, 500000, 1000000, 2000000, 3000000, 5000000, 7000000, 10000000, 15000000, 20000000, 30000000, 75000000, 150000000];
+const GOALS = [
+  { id: 'oborot', t: 'Оборотные средства', d: 'Закупка, зарплаты, аренда', img: 'ic_oborot', long: 'Пополнить оборотные средства', ld: 'Закупка товара к сезону, зарплаты, аренда' },
+  { id: 'equip', t: 'Оборудование, транспорт', d: 'Покупку можно оформить в залог', img: 'ic_truck', long: 'Купить оборудование или транспорт', ld: 'Можно оформить в залог приобретаемое' },
+  { id: 'gap', t: 'Кассовый разрыв', d: 'Деньги частями по мере нужды', img: 'ic_clock', long: 'Закрыть кассовый разрыв', ld: 'Деньги частями, когда клиенты платят с отсрочкой' },
+  { id: 'refi', t: 'Рефинансирование', d: 'Объединить кредиты', img: 'ic_refi', long: 'Рефинансировать кредиты', ld: 'Объединить платежи и снизить нагрузку' },
+  { id: 'tender', t: 'Госконтракт', d: 'Исполнение и тендер', img: 'ic_contract', long: 'Исполнить госконтракт', ld: 'Финансирование под тендер и контракт' },
+  { id: 'other', t: 'Другая задача', d: 'Опишите вместе с помощником', img: 'ic_ai', long: 'Не знаю, что выбрать', ld: 'ИИ-помощник задаст 3 вопроса и подберёт продукт под задачу' }
+];
+const HINTS = {
+  oborot: 'Для сезонной закупки обычно хватает 1–2 лет. Чем короче срок, тем меньше переплата.',
+  equip: 'Купленное оборудование можно оформить в залог — это даст срок до 10 лет.',
+  gap: 'При кассовом разрыве удобнее лимит: берёте частями и платите проценты только за использованное.',
+  refi: 'Подготовьте реквизиты текущих кредитов — они понадобятся на шаге документов.',
+  tender: 'Понадобится номер контракта или извещения о закупке.',
+  other: 'Расскажите о задаче в чате — помощник подскажет продукт.'
+};
+const STAGES = [
+  ['Проверка полноты', 'Анкета и документы заполнены'],
+  ['Внешние источники', 'ЕГРИП, ФНС и бюро кредитных историй'],
+  ['Оценка риска', 'Финансы, нагрузка и история платежей'],
+  ['Кредитное решение', 'Продукт, сумма, срок и правила банка'],
+];
+const STEPS = ['Параметры', 'Компания', 'Документы', 'Отправка', 'Рассмотрение', 'Решение', 'Подписание', 'Выдача'];
+const CASH_FLOW = 445000, LEASE = 38000;
+
+/* ================= state ================= */
+const fresh = () => ({
+  route: 'home', role: 'client', biz: 'ip', tblTab: 0, faq: -1, logged: false,
+  form: { goal: 'oborot', ai: 4, term: 24, sec: false, discount: true, consents: [true, true, false], inn: '772512345678', phone: '', email: 'smirnova@example.ru', who: 'Собственник бизнеса', revenue: '18 400 000', costs: '1 120 000', other: '38 000' },
+  company: { state: 'found' },
+  docs: { passport: 'ok', statement: 'ok', decl: 'checking', contract: 'none' },
+  app: null,
+  ui: { counterPick: 'a', payDif: false, vote: null, read: [false, false, false, false], signing: false, stars: 0, needUploaded: false },
+  adm: { filter: 'all', tab: 0, factor: 1, docSel: 2, docOk: [false, false, false, false], dtype: 'counter', amount: 2000000, term: 24, collat: false, protect: true, acq: true, line: false, period: 30 }
+});
+let S = fresh();
+const F = () => S.form;
+const amount = () => AMOUNTS[F().ai];
+
+function product(f = F(), amt = amount()) {
+  const line = f.goal === 'gap' || f.goal === 'tender';
+  const secured = f.sec || amt > 30e6 || f.term > 60 || f.goal === 'equip';
+  if (line) return { key: 'line', name: 'Деньги частями', maxT: 120, base: null };
+  if (secured) return { key: 'sec', name: 'Кредит одной суммой с залогом', maxT: 120, base: 21.5 };
+  return { key: 'unsec', name: 'Кредит одной суммой без залога', maxT: 60, base: 23.5 };
+}
+function quote(amt, term, opts = {}) {
+  const base = opts.collat ? 21.5 : 23.5;
+  const rate = opts.discount === false ? base : 14;
+  const pay = annuity(amt, rate, term);
+  const dti = (pay + LEASE) / CASH_FLOW * 100;
+  const score = Math.round(29 + dti * 0.22 - (opts.collat ? 4 : 0));
+  return { rate, pay, over: pay * term - amt, dti, score };
+}
+function policy(amt, opts = {}) {
+  const q = quote(amt, opts.term || 24, opts);
+  const revOk = amt <= 2e6 || opts.collat || S.docs.extra === 'ok';
+  return { revOk, dtiOk: q.dti <= 50, pass: revOk && q.dti <= 50, q };
+}
+
+/* ================= toast ================= */
+function toast(title, text = '', kind = 'pos', action) {
+  const host = $('#toasts');
+  const el = document.createElement('div');
+  const col = { pos: 'var(--pos)', info: 'var(--info)', att: 'var(--att)', neg: 'var(--neg)' }[kind];
+  const mark = { pos: '✓', info: 'i', att: '!', neg: '✕' }[kind];
+  el.className = 'toast';
+  el.setAttribute('role', 'status');
+  el.innerHTML = `<span class="ti" style="background:${col}">${mark}</span><div><b>${esc(title)}</b>${text ? `<span>${esc(text)}</span>` : ''}</div>${action ? `<button type="button">${esc(action.label)}</button>` : ''}`;
+  if (action) el.querySelector('button').onclick = () => { action.fn(); close(); };
+  host.appendChild(el);
+  const close = () => { el.classList.add('out'); setTimeout(() => el.remove(), 260); };
+  setTimeout(close, action ? 6000 : 3600);
+}
+
+/* ================= modal ================= */
+function modal(html, onMount) {
+  closeModal(true);
+  const bd = document.createElement('div');
+  bd.className = 'backdrop';
+  bd.id = 'modal';
+  bd.innerHTML = `<div class="modal" role="dialog" aria-modal="true"><button class="x" type="button" data-a="closeModal" aria-label="Закрыть">✕</button>${html}</div>`;
+  bd.addEventListener('mousedown', (e) => { if (e.target === bd) closeModal(); });
+  document.body.appendChild(bd);
+  const f = bd.querySelector('input,button.btn,select');
+  setTimeout(() => { const t = f || bd.querySelector('.x'); if (t && t.isConnected) t.focus(); }, 50);
+  if (onMount) onMount(bd);
+}
+function closeModal(instant) {
+  const bd = $('#modal');
+  if (!bd) return;
+  if (instant) { bd.remove(); return; }
+  bd.classList.add('out');
+  setTimeout(() => bd.remove(), 240);
+}
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+/* ================= router & render ================= */
+const VIEWS = {};
+let leaving = false;
+function go(route, opts = {}) {
+  if (route === S.route && !opts.force) { render(); return; }
+  const v = $('#view');
+  const swap = () => {
+    S.route = route;
+    S.role = route.startsWith('adm') ? 'bank' : 'client';
+    render(true);
+    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+  };
+  if (leaving) return swap();
+  leaving = true;
+  v.classList.add('leave');
+  setTimeout(() => { v.classList.remove('leave'); leaving = false; swap(); }, 150);
+}
+function render(isNew) {
+  const v = $('#view');
+  const fn = VIEWS[S.route] || VIEWS.home;
+  v.innerHTML = fn();
+  if (isNew) { v.style.animation = 'none'; void v.offsetWidth; v.style.animation = ''; v.classList.add('entering'); clearTimeout(render._t); render._t = setTimeout(() => v.classList.remove('entering'), 900); }
+  renderDemoBar();
+  after();
+}
+function after() {
+  $$('.seg').forEach(placeSeg);
+  $$('.tabs').forEach(placeTabs);
+  $$('input[type=range].rng').forEach(paintRange);
+  $$('[data-count]').forEach(countUp);
+}
+function placeSeg(seg) {
+  const btns = $$('button', seg);
+  const i = Math.max(0, btns.findIndex((b) => b.getAttribute('aria-selected') === 'true'));
+  let ind = $('.ind', seg);
+  if (!ind) { ind = document.createElement('span'); ind.className = 'ind'; seg.prepend(ind); }
+  const b = btns[i];
+  if (!b) return;
+  ind.style.width = b.offsetWidth + 'px';
+  ind.style.transform = `translateX(${b.offsetLeft - 3}px)`;
+}
+function placeTabs(t) {
+  const b = $('button[aria-selected="true"]', t);
+  let ul = $('.ul', t);
+  if (!ul) { ul = document.createElement('span'); ul.className = 'ul'; t.appendChild(ul); }
+  if (!b) return;
+  ul.style.width = b.offsetWidth + 'px';
+  ul.style.transform = `translateX(${b.offsetLeft}px)`;
+}
+function paintRange(r) {
+  const p = (r.value - r.min) / (r.max - r.min) * 100;
+  r.style.setProperty('--p', p + '%');
+}
+function countUp(el) {
+  if (el.dataset.done) return;
+  el.dataset.done = 1;
+  const to = +el.dataset.count;
+  const fmt = el.dataset.fmt || 'rub';
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = fmt === 'rub' ? rub(to) : to; return; }
+  const t0 = performance.now(), dur = 900;
+  const step = (t) => {
+    const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+    el.textContent = fmt === 'rub' ? rub(to * e) : Math.round(to * e);
+    if (k < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+window.addEventListener('resize', () => { $$('.seg').forEach(placeSeg); $$('.tabs').forEach(placeTabs); });
+
+/* demo bar */
+function renderDemoBar() {
+  const st = S.app ? statusLabel(S.app.status)[0] : 'нет заявки';
+  $('#demobar').innerHTML = `<div class="wrap">
+    <span class="tag">ПРОТОТИП</span>
+    <span class="hide-m" style="color:rgba(255,255,255,.7)">Синтетические данные · Альфа Будущее, хакатон 2026</span>
+    <span class="sp"></span>
+    <span style="color:rgba(255,255,255,.7)" class="hide-m">Заявка: <b style="color:#fff;font-weight:500">${esc(st)}</b></span>
+    <div class="seg on-dark" role="tablist" aria-label="Роль">
+      <button role="tab" type="button" aria-selected="${S.role === 'client'}" data-a="role" data-v="client">Клиент</button>
+      <button role="tab" type="button" aria-selected="${S.role === 'bank'}" data-a="role" data-v="bank">Сотрудник банка</button>
+    </div>
+    <button class="lnk" type="button" data-a="reset">Сбросить демо</button>
+  </div>`;
+  placeSeg($('#demobar .seg'));
+}
+function statusLabel(s) {
+  return ({
+    review: ['На рассмотрении', 'b-info'], expert: ['У специалиста', 'b-att'], approved: ['Одобрена', 'b-pos'], counter: ['Другие условия', 'b-att'],
+    needinfo: ['Нужен документ', 'b-info'], issuing: ['Выдача', 'b-info'], refused: ['Отказ', 'b-neg'], signing: ['Подписание', 'b-info'], issued: ['Деньги выданы', 'b-pos'], declined: ['Вы отказались', 'b-grey']
+  })[s] || ['—', 'b-grey'];
+}
+
+/* ================= pipeline simulation ================= */
+let pipeTimer = null;
+function addEvent(t) { S.app.events.unshift([nowHM(), t]); }
+function submitApp() {
+  const amt = amount(), f = F();
+  const p = product();
+  const term = Math.min(f.term, p.maxT);
+  S.app = {
+    id: 'КЗ-2026-10431', amount: amt, term, goal: f.goal, product: p, collat: p.key === 'sec', discount: f.discount,
+    status: 'review', stage: 0, events: [], offer: null, decidedBy: null, at: nowHM()
+  };
+  addEvent('Заявка отправлена');
+  S.ui.read = [false, false, false, false];
+  S.ui.signing = false;
+  runPipeline();
+}
+function runPipeline() {
+  clearTimeout(pipeTimer);
+  const a = S.app;
+  if (!a || a.status !== 'review') return;
+  const msgs = ['Анкета заполнена полностью', 'ЕГРИП и ФНС подтверждены, кредитная история получена', 'Оценка риска: ' + quote(a.amount, a.term, a).score + ' из 100'];
+  pipeTimer = setTimeout(() => {
+    if (!S.app || S.app !== a || a.status !== 'review') return;
+    addEvent(msgs[a.stage] || '');
+    a.stage++;
+    if (a.stage >= 3) {
+      const pol = policy(a.amount, a);
+      a.stage = 3;
+      if (pol.pass) {
+        a.status = 'approved';
+        a.offer = { amount: a.amount, term: a.term, rate: pol.q.rate, collat: a.collat };
+        a.decidedBy = 'auto';
+        addEvent('Кредит одобрен автоматически');
+        toast('Кредит одобрен', mln(a.amount) + ' — можно подписывать', 'pos', S.route !== 'status' ? { label: 'Открыть', fn: () => go('status') } : null);
+      } else {
+        a.status = 'expert';
+        addEvent('Заявка передана кредитному аналитику');
+        toast('Заявку смотрит специалист', 'Нужна ручная проверка выручки', 'att', { label: 'Вид банка', fn: () => go('adm-card') });
+      }
+    }
+    if (S.route === 'status' || S.route.startsWith('adm')) render();
+    else renderDemoBar();
+    runPipeline();
+  }, 1700);
+}
+function ensureApp() {
+  if (S.app) return;
+  S.form.ai = 4; S.form.term = 24;
+  S.app = { id: 'КЗ-2026-10431', amount: 3e6, term: 24, goal: 'oborot', product: product(S.form, 3e6), collat: false, discount: true, status: 'expert', stage: 3, events: [], offer: null, decidedBy: null, at: '10:42' };
+  S.app.events = [['10:51', 'Заявка передана кредитному аналитику'], ['10:51', 'Оценка риска: 38 из 100'], ['10:47', 'ЕГРИП и ФНС подтверждены, кредитная история получена'], ['10:43', 'Анкета заполнена полностью'], ['10:42', 'Заявка отправлена']];
+}
+function decide(type, params) {
+  ensureApp();
+  const a = S.app;
+  clearTimeout(pipeTimer);
+  a.stage = 4;
+  a.decidedBy = 'Ольга Петрова';
+  if (type === 'approve' || type === 'counter') {
+    a.status = type === 'approve' ? 'approved' : 'counter';
+    a.offer = { amount: params.amount, term: params.term, rate: quote(params.amount, params.term, params).rate, collat: params.collat, extras: params.extras };
+    addEvent(type === 'approve' ? 'Кредит одобрен специалистом' : 'Банк предложил другие условия');
+  } else if (type === 'info') {
+    a.status = 'needinfo'; addEvent('Банк запросил выписку из другого банка');
+  } else {
+    a.status = 'refused'; addEvent('Банк не может выдать кредит сейчас');
+  }
+}
+
+/* ================= events ================= */
+const ACT = {};
+document.addEventListener('click', (e) => {
+  const g = e.target.closest('[data-go]');
+  if (g) { e.preventDefault(); go(g.dataset.go); return; }
+  const a = e.target.closest('[data-a]');
+  if (a && ACT[a.dataset.a]) { e.preventDefault(); ACT[a.dataset.a](a.dataset, a, e); }
+});
+document.addEventListener('input', (e) => {
+  const el = e.target;
+  if (el.matches('input[type=range].rng')) { paintRange(el); }
+  const k = el.dataset.in;
+  if (k && ACT['in_' + k]) ACT['in_' + k](el, e);
+});
+document.addEventListener('change', (e) => {
+  const el = e.target;
+  const k = el.dataset.ch;
+  if (k && ACT['ch_' + k]) ACT['ch_' + k](el, e);
+});
+document.addEventListener('submit', (e) => { e.preventDefault(); const k = e.target.dataset.submit; if (k && ACT[k]) ACT[k](e.target); });
+
+ACT.closeModal = () => closeModal();
+ACT.role = (d) => {
+  if (d.v === 'bank') { if (!S.route.startsWith('adm')) go(S.app ? 'adm-card' : 'adm'); }
+  else if (S.route.startsWith('adm')) go(S.app ? 'status' : 'home');
+};
+ACT.reset = () => {
+  clearTimeout(pipeTimer);
+  S = fresh();
+  go('home', { force: true });
+  toast('Демо сброшено', 'Можно пройти путь заново', 'info');
+};
+/* ================= shared client pieces ================= */
+const LOGO = `<button class="logo" type="button" data-go="home" aria-label="На главную">А<i></i></button>`;
+function cabHeader(active) {
+  return `<header class="cab-hdr"><div class="wrap hdr">
+    ${LOGO}<b style="@mixin action_component_primary;">Кабинет предпринимателя</b>
+    <nav class="hide-m" aria-label="Кабинет">
+      <button type="button" class="${active === 'apps' ? 'on' : ''}" data-a="myApps">Мои заявки</button>
+      <button type="button" class="${active === 'new' ? 'on' : ''}" data-go="params">Новая заявка</button>
+      <button type="button" data-go="home">Продукты</button>
+    </nav>
+    <div class="right"><span class="ava">АС</span><span class="hide-m" style="@mixin action_primary_small;">ИП Смирнова А. В.</span></div>
+  </div></header>`;
+}
+function stepper(cur, doneAll) {
+  return `<ol class="stepper" aria-label="Этапы заявки">${STEPS.map((s, i) => `<li class="${doneAll || i < cur ? 'done' : i === cur ? 'now' : ''}"><i></i>${s}</li>`).join('')}</ol>`;
+}
+function cabTop(title, step, sub, back) {
+  return `<div class="wrap cab-top">
+    ${back ? `<button type="button" class="back" data-go="${back[0]}">← ${back[1]}</button>` : ''}
+    <div class="t"><h1>${title}</h1><span class="muted" style="@mixin paragraph_primary_small;">${sub}</span></div>
+    ${stepper(step)}
+  </div>`;
+}
+const img = (k, alt = '', style = '') => `<img src="${IMG[k]}" alt="${esc(alt)}" style="${style}" loading="lazy">`;
+function seg(items, cur, act, cls = '') {
+  return `<div class="seg ${cls}" role="tablist">${items.map((t, i) => `<button type="button" role="tab" aria-selected="${i === cur}" data-a="${act}" data-v="${i}">${t}</button>`).join('')}</div>`;
+}
+function cb(id, checked, label, ch) {
+  return `<label class="cb" for="${id}"><input type="checkbox" id="${id}" ${checked ? 'checked' : ''} data-ch="${ch}"><span class="bx">${CHK}</span><span>${label}</span></label>`;
+}
+function sw(id, checked, label, ch) {
+  return `<label class="sw" for="${id}"><input type="checkbox" id="${id}" ${checked ? 'checked' : ''} data-ch="${ch}"><span class="tr"></span><span>${label}</span></label>`;
+}
+
+ACT.myApps = () => { if (S.app) go('status'); else toast('Заявок пока нет', 'Подберите кредит — это пара минут', 'info', { label: 'Подобрать', fn: () => go('params') }); };
+
+/* ================= LANDING ================= */
+const ICO = {
+  pct: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="#fff"/><path d="M8.5 15.5l7-7" stroke="#29292c" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="9" r="1.5" fill="#29292c"/><circle cx="15" cy="15" r="1.5" fill="#29292c"/></svg>',
+  cal: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14.5" rx="3" fill="#fff"/><path d="M8 3.5v4M16 3.5v4" stroke="#fff" stroke-width="2" stroke-linecap="round"/><rect x="4" y="9" width="16" height="1.6" fill="#29292c"/><g fill="#29292c"><rect x="7" y="12.5" width="2" height="2" rx=".5"/><rect x="11" y="12.5" width="2" height="2" rx=".5"/><rect x="15" y="12.5" width="2" height="2" rx=".5"/><rect x="7" y="16" width="2" height="2" rx=".5"/><rect x="11" y="16" width="2" height="2" rx=".5"/></g></svg>',
+  cash: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3" fill="#fff"/><circle cx="12" cy="12" r="2.6" fill="#29292c"/><path d="M6 15.5h2M16 8.5h2" stroke="#29292c" stroke-width="1.6" stroke-linecap="round"/></svg>',
+  ok: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="#fff"/><path d="M8 12.3l2.7 2.7L16 9.6" fill="none" stroke="#29292c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+};
+
+VIEWS.home = () => {
+  const tbl = S.tblTab === 0 ? [
+    ['Ставка', 'от 23,5%', 'от 21,5%'], ['Ставка со скидкой<span style="display:block;@mixin paragraph_secondary_medium;color:var(--ink2);margin-top:4px">при Защите бизнеса и Подписке</span>', 'от 14%', 'от 14%'],
+    ['Сумма', 'от 300 000 ₽ до 30 млн ₽', 'от 500 000 ₽ до 150 млн ₽'], ['Срок', 'от 1 до 5 лет', 'от 1 до 10 лет'], ['Главное отличие', 'Без поручителей для ИП', 'Разные виды залогов']
+  ] : [
+    ['Как работает', 'Лимит на срок договора', 'Транши по заявке в кабинете'], ['Проценты', 'Только на выбранную сумму', 'Только на выбранную сумму'],
+    ['Лимит', 'устанавливаем за 1 день', 'после оценки'], ['Подходит для', 'Кассовых разрывов', 'Закупок по графику']
+  ];
+  const tblHead = S.tblTab === 0 ? ['Без залога', 'С залогом'] : ['Возобновляемая линия', 'Невозобновляемая линия'];
+  const faq = [
+    ['Какие документы нужны для заявки?', 'Регистрационные данные подтянем по ИНН. Если для решения понадобится что-то ещё, запросим это прямо в кабинете.'],
+    ['Чем предварительная оценка отличается от решения?', 'Оценка показывает уровень риска. Итоговое решение учитывает ещё продукт, сумму, срок и результаты проверок.'],
+    ['Что если банк предложит другие условия?', 'Вы увидите новое предложение в кабинете и сможете принять его или отказаться.'],
+    ['Можно ли оформить кредит без залога?', 'Да, кредит одной суммой без залога — от 300 000 ₽ до 30 млн ₽ на срок до 5 лет.']
+  ];
+  return `
+  <section class="hero"><div class="wrap">
+    <header class="hdr">
+      ${LOGO}
+      <nav class="hide-m" aria-label="Разделы" style="color:#fff">
+        <button type="button" data-a="soon">Частным лицам</button><button type="button" class="on">Малому бизнесу и ИП</button><button type="button" data-a="soon">Среднему и крупному бизнесу</button>
+      </nav>
+      <div class="right">
+        <button class="btn dark s40" type="button" data-a="myApps">Мои заявки</button>
+        ${S.logged ? `<span class="ava" style="background:#fff;color:#121213" title="ИП Смирнова А. В.">АС</span>` : `<button class="btn accent s40" type="button" data-a="login">Войти</button>`}
+      </div>
+    </header>
+    <div class="hero-grid">
+      <div class="hero-copy stagger">
+        <h1 class="h1 hero-t">Кредит под задачу вашего бизнеса</h1>
+        <p class="lead">Скажите, на что нужны деньги, — подберём продукт, заполним анкету по ИНН и покажем, что происходит с заявкой на каждом шаге</p>
+        <div><button class="btn accent" type="button" data-go="params">Подобрать кредит</button></div>
+      </div>
+      <div class="hero-img">${img('case', 'Графитовый бизнес-портфель с красным знаком процента')}</div>
+    </div>
+    <div class="params">
+      <div class="param"><b>От 14%</b><span>Ставка со скидкой</span><em>${ICO.pct}</em></div>
+      <div class="param"><b>До 10 лет</b><span>Срок</span><em>${ICO.cal}</em></div>
+      <div class="param"><b>До 150 млн ₽</b><span>Сумма</span><em>${ICO.cash}</em></div>
+      <div class="param"><b>0 ₽</b><span>За выдачу</span><em>${ICO.ok}</em></div>
+    </div>
+  </div></section>
+
+  <main class="sheet"><div class="wrap">
+    <section class="sec">
+      <div class="sec-h"><h2 class="h2">На что нужны деньги?</h2>${seg(['ИП', 'ООО'], S.biz === 'ip' ? 0 : 1, 'biz')}</div>
+      <div class="tasks stagger">
+        ${GOALS.map((g) => `<button type="button" class="task ${g.id === 'other' ? 'ai' : ''}" data-a="pickTask" data-v="${g.id}">
+          ${g.id === 'other' ? '<span class="ai-tag">✦ ИИ-подбор</span>' : ''}<b>${g.long}</b><span>${g.id === 'oborot' && S.biz === 'ooo' ? 'Закупки, зарплаты, налоги и аренда компании' : g.ld}</span><span class="go">${g.id === 'other' ? 'Спросить помощника →' : 'Подобрать →'}</span>${img(g.img)}
+        </button>`).join('')}
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2 class="h2" style="text-align:center;margin-bottom:8px">Как получить кредит</h2>
+      <p class="muted" style="text-align:center;margin:0 0 40px">Весь путь — в одном кабинете, без звонков и визитов в офис</p>
+      <div class="steps4">
+        ${[['Выберите задачу', 'Подскажем продукт, сумму и срок'], ['Подтвердите данные', 'Заполним анкету по ИНН из ЕГРЮЛ и ЕГРИП'], ['Получите решение', 'Одобрение, другие условия или уточняющий вопрос'], ['Подпишите онлайн', 'Деньги придут на расчётный счёт']]
+          .map((s, i) => `<div class="step4"><span class="num ${i === 3 ? 'full' : ''}">${i + 1}</span><div class="box"><b>${s[0]}</b><span class="muted" style="@mixin paragraph_primary_small;">${s[1]}</span></div></div>`).join('')}
+      </div>
+    </section>
+
+    <section class="sec"><div class="banner">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <h2 class="h2">Статус заявки всегда перед глазами</h2>
+        <p style="margin:0;color:var(--on-dark2)">Видно, на каком этапе заявка, что уже проверено и нужно ли от вас что-то ещё</p>
+        <div class="mini">
+          <div style="display:flex;justify-content:space-between;gap:12px;@mixin paragraph_primary_small;"><span style="color:rgba(255,255,255,.6)">Заявка · Кредит одной суммой</span><span class="badge b-att">Оценка</span></div>
+          <b style="@mixin headline_small;">3 000 000 ₽ на 24 месяца</b>
+          <div class="segbar" aria-label="Этап 3 из 5"><i class="ok"></i><i class="ok"></i><i class="now"></i><i></i><i></i></div>
+          <div class="segbar" style="@mixin paragraph_secondary_small;color:rgba(255,255,255,.55)"><span>Заявка</span><span>Данные</span><span style="color:#fff">Оценка</span><span>Решение</span><span>Выдача</span></div>
+        </div>
+        <button class="btn white s48" type="button" data-a="myApps" style="align-self:flex-start">Открыть кабинет</button>
+      </div>
+      <div style="display:flex;justify-content:center">${img('clock', 'Красный секундомер', 'width:min(100%,380px)')}</div>
+    </div></section>
+
+    <section class="sec">
+      <div class="sec-h"><h2 class="h2">Виды кредитов и условия</h2>${seg(['Кредит одной суммой', 'Деньги частями'], S.tblTab, 'tblTab')}</div>
+      <div style="overflow-x:auto"><div class="table fade-swap" id="tbl">
+        <div class="trow head"><span></span><span>${tblHead[0]}</span><span>${tblHead[1]}</span></div>
+        ${tbl.map((r) => `<div class="trow"><b>${r[0]}</b><span>${r[1]}</span><span>${r[2]}</span></div>`).join('')}
+      </div></div>
+    </section>
+
+    <section class="sec"><div class="formband">
+      <form class="formcard" data-submit="leadSubmit" novalidate>
+        <h3 style="@mixin headline_small;">Заявка на кредит</h3>
+        <p class="muted" style="margin:0;@mixin paragraph_primary_small;">Укажите ИНН — остальное заполним сами и покажем предварительное решение</p>
+        <div class="field" id="f-inn"><input id="lead-inn" inputmode="numeric" maxlength="12" placeholder=" " value="${esc(F().inn)}" data-in="inn" autocomplete="off"><label for="lead-inn">ИНН компании или ИП</label></div>
+        <div class="field" id="f-phone" style="margin-top:8px"><input id="lead-phone" type="tel" placeholder=" " value="${esc(F().phone)}" data-in="phone" autocomplete="off"><label for="lead-phone">Телефон</label></div>
+        <button class="btn accent block" type="submit" id="lead-btn" style="margin-top:12px">Продолжить</button>
+        <span class="muted" style="@mixin paragraph_secondary_medium;">Нажимая «Продолжить», вы даёте согласие на обработку персональных данных</span>
+      </form>
+    </div></section>
+
+    <section class="sec">
+      <h2 class="h2" style="margin-bottom:24px">Вопросы и ответы</h2>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${faq.map((q, i) => `<div class="acc-item ${S.faq === i ? 'open' : ''}"><button type="button" aria-expanded="${S.faq === i}" data-a="faq" data-v="${i}">${q[0]}${CHEV}</button><div class="acc-body"><div><p>${q[1]}</p></div></div></div>`).join('')}
+      </div>
+    </section>
+  </div></main>
+
+  <footer class="footer"><div class="wrap cols">
+    <div><span class="lbl">Связь с банком</span><button type="button" data-a="myApps">Чат в кабинете</button><span style="color:rgba(255,255,255,.6)">Ответим в рабочее время</span></div>
+    <div><span class="lbl">Кредиты</span><button type="button" data-a="pickTask" data-v="oborot">Одной суммой</button><button type="button" data-a="pickTask" data-v="gap">Деньги частями</button><button type="button" data-a="pickTask" data-v="equip">С залогом</button></div>
+    <div><span class="lbl">Кабинет</span><button type="button" data-a="myApps">Мои заявки</button><button type="button" data-a="role" data-v="bank">Кабинет сотрудника</button></div>
+    <div><span class="lbl">Проект</span><span>Альфа Будущее · Хакатон 2026</span><span style="color:rgba(255,255,255,.6)">Прототип на синтетических данных</span></div>
+  </div></footer>`;
+};
+ACT.soon = () => toast('Раздел вне прототипа', 'В демо работает «Малому бизнесу и ИП»', 'info');
+ACT.biz = (d) => { S.biz = d.v === '0' ? 'ip' : 'ooo'; render(); };
+ACT.tblTab = (d) => { S.tblTab = +d.v; render(); };
+ACT.faq = (d, el) => {
+  const i = +d.v;
+  S.faq = S.faq === i ? -1 : i;
+  $$('.acc-item').forEach((it, k) => { it.classList.toggle('open', k === S.faq); $('button', it).setAttribute('aria-expanded', k === S.faq); });
+};
+ACT.pickTask = (d) => { F().goal = d.v; if (d.v === 'equip') F().sec = true; go('params'); };
+ACT.login = () => modal(`
+  <h3 style="@mixin headline_small;">Вход в кабинет</h3>
+  <p class="muted" style="margin:0">В прототипе вход демонстрационный: данные не запрашиваются и никуда не отправляются</p>
+  <div class="plate" style="display:flex;gap:12px;align-items:center"><span class="ava">АС</span><div><b style="font-weight:500">ИП Смирнова А. В.</b><span class="muted" style="display:block;@mixin paragraph_secondary_large;">Демо-клиент · ИНН 772512345678</span></div></div>
+  <button class="btn accent block" type="button" data-a="doLogin">Войти как демо-клиент</button>`);
+ACT.doLogin = (d, el) => { el.classList.add('loading'); setTimeout(() => { S.logged = true; closeModal(); render(); toast('Вы вошли', 'Демо-клиент ИП Смирнова А. В.'); }, 700); };
+ACT.in_inn = (el) => { el.value = el.value.replace(/\D/g, '').slice(0, 12); F().inn = el.value; $('#f-inn').classList.remove('err'); $('#f-inn .hint')?.remove(); };
+ACT.in_phone = (el) => {
+  let d = el.value.replace(/\D/g, '');
+  if (d.startsWith('8')) d = '7' + d.slice(1);
+  if (d && !d.startsWith('7')) d = '7' + d;
+  d = d.slice(0, 11);
+  const p = d.slice(1);
+  let out = d ? '+7' : '';
+  if (p.length) out += ' (' + p.slice(0, 3);
+  if (p.length >= 3) out += ') ' + p.slice(3, 6);
+  if (p.length >= 6) out += '-' + p.slice(6, 8);
+  if (p.length >= 8) out += '-' + p.slice(8, 10);
+  el.value = out; F().phone = out;
+  $('#f-phone').classList.remove('err'); $('#f-phone .hint')?.remove();
+};
+function fieldErr(id, msg) { const f = $(id); f.classList.add('err'); if (!$('.hint', f)) f.insertAdjacentHTML('beforeend', `<span class="hint">${msg}</span>`); }
+ACT.leadSubmit = () => {
+  let ok = true;
+  if (!/^\d{10}$|^\d{12}$/.test(F().inn)) { fieldErr('#f-inn', 'ИНН — 10 цифр для ООО или 12 для ИП'); ok = false; }
+  if (F().phone.replace(/\D/g, '').length !== 11) { fieldErr('#f-phone', 'Введите номер полностью'); ok = false; }
+  if (!ok) return;
+  $('#lead-btn').classList.add('loading');
+  S.company.state = 'loading';
+  setTimeout(() => { go('company'); setTimeout(lookupInn, 50); }, 500);
+};
+
+/* ================= К1 PARAMS ================= */
+VIEWS.params = () => {
+  const f = F(), amt = amount(), p = product(), term = Math.min(f.term, p.maxT);
+  const q = quote(amt, term, { collat: p.key === 'sec', discount: f.discount });
+  let warn = '';
+  if (amt > 30e6 && !f.sec) warn = 'Сумма больше 30 млн ₽ — понадобится залог';
+  else if (f.term > p.maxT) warn = 'Для этого продукта срок до ' + termTxt(p.maxT);
+  return `<div class="cab">${cabHeader('new')}
+  ${cabTop('Что нужно бизнесу?', 0, 'Шаг 1 из 8 · черновик сохраняется автоматически', ['home', 'На главную'])}
+  <div class="wrap main">
+    <div class="content">
+      <section class="card" style="display:flex;flex-direction:column;gap:16px">
+        <span class="lbl">Цель финансирования</span>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:10px">
+          ${GOALS.map((g) => `<button type="button" class="goal" aria-pressed="${f.goal === g.id}" data-a="goal" data-v="${g.id}">${img(g.img)}<span style="display:flex;flex-direction:column;gap:2px"><b style="@mixin action_component_primary;line-height:20px">${g.t}</b><span class="muted" style="@mixin paragraph_secondary_medium;">${g.d}</span></span></button>`).join('')}
+        </div>
+      </section>
+      <section class="card" style="display:flex;flex-direction:column;gap:24px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><label class="lbl" for="amt">Сумма</label><b style="@mixin headline_small;" class="tnum" data-o="amt">${rub(amt)}</b></div>
+          <input id="amt" class="rng" type="range" min="0" max="${AMOUNTS.length - 1}" step="1" value="${f.ai}" data-in="amt" data-ch="amt">
+          <div style="display:flex;justify-content:space-between;@mixin paragraph_secondary_medium;" class="muted"><span>300 тыс ₽</span><span>150 млн ₽</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px"><span class="lbl">Срок</span>
+          <div class="chips">${[6, 12, 24, 36, 60, 120].map((t) => `<button type="button" class="chip" aria-pressed="${f.term === t}" data-a="term" data-v="${t}">${termTxt(t)}</button>`).join('')}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px"><span class="lbl">Обеспечение</span>
+          <div class="chips"><button type="button" class="chip" aria-pressed="${!f.sec}" data-a="sec" data-v="0">Без залога</button><button type="button" class="chip" aria-pressed="${f.sec}" data-a="sec" data-v="1">Готов предоставить залог</button></div>
+        </div>
+      </section>
+      <section class="card" style="display:flex;gap:16px;align-items:center">
+        ${img('ai', '', 'width:88px;flex:none')}
+        <div style="display:flex;flex-direction:column;gap:4px"><b style="@mixin action_component_primary;">Подсказка помощника</b><span class="muted fade-swap" style="@mixin paragraph_primary_small;" key="${f.goal}">${HINTS[f.goal]}</span></div>
+      </section>
+    </div>
+    <aside class="aside">
+      <div class="card" style="display:flex;flex-direction:column;gap:4px">
+        <span class="lbl">Подходит лучше всего</span>
+        <b style="@mixin headline_xsmall;margin:6px 0 8px" class="fade-swap">${p.name}</b>
+        <div class="row"><span class="muted">Ставка</span><b>от ${q.rate}%</b></div>
+        <div class="row"><span class="muted">Платёж в месяц</span><b class="tnum" data-o="pay">${p.key === 'line' ? 'по траншам' : rub(q.pay)}</b></div>
+        <div class="row"><span class="muted">Переплата</span><b class="tnum" data-o="over">${p.key === 'line' ? 'от выборки' : rub(q.over)}</b></div>
+        <div class="row"><span class="muted">Срок</span><b>${termTxt(term)}</b></div>
+        ${warn ? `<span class="badge b-att fade-swap" style="height:auto;padding:6px 10px;white-space:normal;margin-top:8px">${warn}</span>` : ''}
+        <button class="btn accent block" type="button" data-a="toCompany" style="margin-top:16px">Продолжить</button>
+        <span class="muted" style="@mixin paragraph_secondary_medium;margin-top:6px">Ставка с учётом скидки при Защите бизнеса и Подписке. Расчёт предварительный, не оферта</span>
+      </div>
+    </aside>
+  </div></div>`;
+};
+ACT.goal = (d) => { F().goal = d.v; if (d.v === 'equip') F().sec = true; render(); };
+ACT.term = (d) => { F().term = +d.v; render(); };
+ACT.sec = (d) => { F().sec = d.v === '1'; render(); };
+ACT.in_amt = (el) => {
+  F().ai = +el.value;
+  const amt = amount(), p = product(), term = Math.min(F().term, p.maxT), q = quote(amt, term, { collat: p.key === 'sec' });
+  const o = (k, v) => { const n = $(`[data-o="${k}"]`); if (n) n.textContent = v; };
+  o('amt', rub(amt));
+  if (p.key !== 'line') { o('pay', rub(q.pay)); o('over', rub(q.over)); }
+};
+ACT.ch_amt = () => render();
+ACT.toCompany = () => { if (S.company.state !== 'found') S.company.state = 'idle'; go('company'); };
+
+/* ================= К2 COMPANY ================= */
+function lookupInn() {
+  S.company.state = 'loading';
+  if (S.route === 'company') render();
+  setTimeout(() => {
+    S.company.state = 'found';
+    if (S.route === 'company') { render(); toast('Данные компании заполнены', 'ЕГРИП и ФНС: всё в порядке'); }
+  }, 1400);
+}
+VIEWS.company = () => {
+  const st = S.company.state, f = F();
+  const found = st === 'found';
+  const body = st === 'loading' ? `<div style="display:flex;flex-direction:column;gap:12px" aria-busy="true"><span class="muted" style="@mixin paragraph_secondary_large;">Запрашиваем ЕГРИП и сервисы ФНС…</span><div class="kv">${Array(6).fill('<div><span class="skel" style="width:40%;height:10px"></span><span class="skel" style="width:80%;margin-top:6px"></span></div>').join('')}</div></div>`
+    : found ? `<div class="stagger" style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="badge b-pos">✓ ЕГРИП: действующий</span><span class="badge b-pos">✓ «Прозрачный бизнес»: нет налоговой задолженности</span><span class="badge b-info">Обновлено сегодня</span></div>
+        <div class="kv">
+          <div><span>Наименование</span><b>ИП Смирнова Анна Викторовна</b></div><div><span>ОГРНИП</span><b>319774600123456</b></div>
+          <div><span>Дата регистрации</span><b>14.03.2019 · 7 лет</b></div><div><span>Основной ОКВЭД</span><b>47.71 Розничная торговля одеждой</b></div>
+          <div><span>Регион</span><b>Москва</b></div><div><span>Налогообложение</span><b>УСН «доходы минус расходы»</b></div>
+        </div>
+        <span class="muted" style="@mixin paragraph_secondary_large;">Данные подставлены автоматически. Если что-то не так, напишите в чат — вводить заново не нужно</span></div>`
+    : `<span class="muted" style="@mixin paragraph_primary_small;">Нажмите «Заполнить по ИНН» — подтянем реквизиты из реестров</span>`;
+  const ready = found ? 80 : 20;
+  return `<div class="cab">${cabHeader('new')}
+  ${cabTop('Данные компании', 1, 'Шаг 2 из 8 · черновик сохранён', ['params', 'Параметры кредита'])}
+  <div class="wrap main">
+    <div class="content">
+      <section class="card" style="display:flex;flex-direction:column;gap:16px">
+        <span class="lbl">ИНН</span>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:stretch">
+          <div class="field" id="f-inn2" style="flex:1 1 260px"><input id="inn2" inputmode="numeric" placeholder=" " value="${esc(f.inn)}" data-in="inn2" maxlength="12"><label for="inn2">ИНН компании или ИП</label></div>
+          <button class="btn secondary ${st === 'loading' ? 'loading' : ''}" type="button" data-a="lookup">Заполнить по ИНН</button>
+        </div>
+        ${body}
+      </section>
+      <section class="card" style="display:flex;flex-direction:column;gap:16px">
+        <span class="lbl">Финансы бизнеса</span>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px">
+          <div class="field"><input id="rev" placeholder=" " value="${esc(f.revenue)}" data-in="money" data-k="revenue"><label for="rev">Выручка за 12 месяцев, ₽</label></div>
+          <div class="field"><input id="cost" placeholder=" " value="${esc(f.costs)}" data-in="money" data-k="costs"><label for="cost">Расходы в месяц, ₽</label></div>
+          <div class="field"><input id="oth" placeholder=" " value="${esc(f.other)}" data-in="money" data-k="other"><label for="oth">Платежи по кредитам и лизингу в месяц, ₽</label></div>
+          <div class="field"><select id="who" data-ch="who">${['Собственник бизнеса', 'Финансовый директор или бухгалтер', 'Сотрудник по доверенности'].map((o) => `<option ${o === f.who ? 'selected' : ''}>${o}</option>`).join('')}</select><label for="who">Кто оформляет заявку</label></div>
+        </div>
+        <div class="plate" style="display:flex;gap:12px;align-items:center;background:var(--info-m)"><span class="badge b-info-s" style="width:28px;height:28px;padding:0;justify-content:center;border-radius:50%">i</span><span style="@mixin paragraph_primary_small;">Счёт в Альфа-Банке подключён — обороты за 12 месяцев подтвердятся автоматически</span></div>
+      </section>
+    </div>
+    <aside class="aside">
+      <div class="card" style="display:flex;flex-direction:column;gap:4px">
+        <span class="lbl">Ваша заявка</span>
+        <b style="@mixin headline_xsmall;margin:6px 0 8px">${product().name}</b>
+        <div class="row"><span class="muted">Сумма</span><b>${rub(amount())}</b></div>
+        <div class="row"><span class="muted">Срок</span><b>${termTxt(Math.min(f.term, product().maxT))}</b></div>
+        <div class="row"><span class="muted">Цель</span><b>${GOALS.find((g) => g.id === f.goal).t}</b></div>
+        <button class="btn accent block" type="button" data-a="toDocs" style="margin-top:16px">Далее: документы</button>
+      </div>
+      <div class="card" style="display:flex;flex-direction:column;gap:10px">
+        <span class="lbl">Готовность анкеты</span>
+        <div style="display:flex;align-items:baseline;gap:8px"><b style="@mixin headline_medium;" data-count="${ready}" data-fmt="n">${ready}</b><b style="@mixin headline_medium;">%</b><span class="muted" style="@mixin paragraph_primary_small;">заполнено автоматически</span></div>
+        <div class="progress"><i style="width:${ready}%"></i></div>
+      </div>
+    </aside>
+  </div></div>`;
+};
+ACT.lookup = () => {
+  if (!/^\d{10}$|^\d{12}$/.test(F().inn)) { fieldErr('#f-inn2', 'ИНН — 10 или 12 цифр'); return; }
+  lookupInn();
+};
+ACT.in_inn2 = (el) => { el.value = el.value.replace(/\D/g, '').slice(0, 12); F().inn = el.value; $('#f-inn2').classList.remove('err'); $('#f-inn2 .hint')?.remove(); };
+ACT.in_money = (el) => { const d = el.value.replace(/\D/g, ''); el.value = d ? (+d).toLocaleString('ru-RU') : ''; F()[el.dataset.k] = el.value; };
+ACT.ch_who = (el) => { F().who = el.value; };
+ACT.toDocs = () => {
+  if (S.company.state !== 'found') { toast('Сначала заполните данные по ИНН', 'Это займёт пару секунд', 'att', { label: 'Заполнить', fn: lookupInn }); return; }
+  go('docs');
+};
+
+/* ================= К3 DOCS ================= */
+const DOCS = [
+  { k: 'passport', t: 'Паспорт ИП', meta: 'passport_smirnova.jpg · 1,2 МБ', ok: 'Распознано: ФИО и дата рождения совпали с ЕГРИП', ext: 'JPG' },
+  { k: 'statement', t: 'Выписка по расчётному счёту', meta: 'Счёт в Альфа-Банке · 12 месяцев', ok: 'Получена автоматически — загружать не нужно', ext: 'API' },
+  { k: 'decl', t: 'Декларация по УСН за 2025 год', meta: 'usn_2025.pdf · 340 КБ', ok: 'Доходы 18 360 000 ₽ — совпадают с анкетой', ext: 'PDF' },
+  { k: 'contract', t: 'Договор с поставщиком', meta: 'Необязательно. Подтверждает цель и может ускорить решение', ok: 'supply_contract.pdf · проверен', ext: 'PDF', optional: true }
+];
+const DOC_BADGE = { ok: ['✓ Проверен', 'b-pos'], checking: ['Проверяется', 'b-info'], none: ['', ''] };
+VIEWS.docs = () => {
+  const d = S.docs;
+  const req = ['passport', 'statement', 'decl'].filter((k) => d[k] === 'ok').length;
+  if (d.decl === 'checking' && !S._declTimer) S._declTimer = setTimeout(() => { S.docs.decl = 'ok'; S._declTimer = null; if (S.route === 'docs') { render(); toast('Декларация проверена', 'Доходы совпадают с анкетой'); } }, 2600);
+  return `<div class="cab">${cabHeader('new')}
+  ${cabTop('Документы', 2, 'Шаг 3 из 8 · проверяем сразу после загрузки', ['company', 'Данные компании'])}
+  <div class="wrap main">
+    <div class="content">
+      <section class="card" style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><span class="lbl">Нужно для этой заявки</span><span class="muted" style="@mixin paragraph_secondary_large;">${req} из 3 обязательных готовы</span></div>
+        ${DOCS.map((x) => {
+          const st = d[x.k];
+          return `<div class="doc" style="${x.optional && st === 'none' ? 'background:#fff;box-shadow:inset 0 0 0 2px #e1e3e8' : ''}">
+            <span class="ico" style="${x.ext === 'API' ? 'color:var(--info)' : ''}">${st === 'none' ? '+' : x.ext}</span>
+            <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:4px"><b style="@mixin action_component_primary;">${x.t}</b><span class="muted" style="@mixin paragraph_secondary_large;">${st === 'ok' && x.optional ? x.ok : x.meta}</span>
+              ${st === 'checking' ? `<div style="display:flex;align-items:center;gap:10px"><div class="progress" style="flex:1;height:6px"><i style="width:0;background:var(--info);animation:loadbar 2.6s var(--e-std) forwards"></i></div><span class="muted" style="@mixin paragraph_secondary_medium;">распознаём</span></div>` : st === 'ok' && !x.optional ? `<span style="@mixin paragraph_secondary_large;">${x.ok}</span>` : ''}
+            </div>
+            ${st === 'none' ? `<button class="btn secondary s40" type="button" data-a="upload" data-v="${x.k}">Загрузить</button>` : `<span class="badge ${DOC_BADGE[st][1]}">${DOC_BADGE[st][0]}</span>`}
+          </div>`;
+        }).join('')}
+      </section>
+      <label class="dz" id="dz" for="file">
+        ${img('docs', '', 'width:120px')}
+        <b style="@mixin action_component_primary;">Перетащите файлы сюда или выберите</b>
+        <span class="muted" style="@mixin paragraph_secondary_large;">PDF, JPG или PNG до 20 МБ. Мы сами поймём, что это за документ</span>
+        <input id="file" type="file" class="sr" data-ch="file" multiple>
+      </label>
+    </div>
+    <aside class="aside">
+      <div class="card" style="display:flex;flex-direction:column;gap:14px">
+        <span class="lbl">Проверка документов</span>
+        ${[['Распознавание', 1], ['Сверка с анкетой', 1], ['Срок действия', 1], ['Выручка в декларации', d.decl === 'ok']].map(([t, ok]) => `<div style="display:flex;justify-content:space-between;align-items:center"><span>${t}</span><span class="badge ${ok ? 'b-pos' : 'b-info'}">${ok ? '✓' : 'идёт'}</span></div>`).join('')}
+        <button class="btn accent block" type="button" data-go="review">Далее: проверка заявки</button>
+        <span class="muted" style="@mixin paragraph_secondary_medium;">Можно идти дальше — документы допроверятся в фоне</span>
+      </div>
+    </aside>
+  </div></div>`;
+};
+ACT.upload = (d) => fakeUpload(d.v);
+function fakeUpload(k) {
+  S.docs[k] = 'checking'; render();
+  setTimeout(() => { S.docs[k] = 'ok'; if (S.route === 'docs') render(); toast('Документ проверен', DOCS.find((x) => x.k === k).t); }, 2600);
+}
+ACT.ch_file = (el) => { if (el.files.length) { toast('Файл получен', el.files[0].name + ' — определяем тип', 'info'); fakeUpload('contract'); } };
+document.addEventListener('dragover', (e) => { const z = e.target.closest?.('#dz'); if (z) { e.preventDefault(); z.classList.add('over'); } });
+document.addEventListener('dragleave', (e) => { const z = e.target.closest?.('#dz'); if (z) z.classList.remove('over'); });
+document.addEventListener('drop', (e) => { const z = e.target.closest?.('#dz'); if (z) { e.preventDefault(); z.classList.remove('over'); const fl = e.dataTransfer.files; toast('Файл получен', (fl[0] ? fl[0].name : 'файл') + ' — определяем тип', 'info'); fakeUpload('contract'); } });
+
+/* ================= К4 REVIEW ================= */
+VIEWS.review = () => {
+  const f = F(), amt = amount(), p = product(), term = Math.min(f.term, p.maxT);
+  const q = quote(amt, term, { collat: p.key === 'sec', discount: f.discount });
+  const base = p.key === 'sec' ? '21,5%' : '23,5%';
+  const ready = f.consents.every(Boolean);
+  const dl = (k) => S.docs[k] === 'ok' ? '<span style="color:var(--pos-t);font-weight:500">✓ проверен</span>' : S.docs[k] === 'checking' ? '<span style="color:var(--info-t);font-weight:500">проверяется</span>' : '<span class="muted">не загружен</span>';
+  return `<div class="cab">${cabHeader('new')}
+  ${cabTop('Проверьте заявку', 3, 'Шаг 4 из 8 · всё можно поправить до отправки', ['docs', 'Документы'])}
+  <div class="wrap main">
+    <div class="content">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px" class="stagger">
+        <section class="card"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="lbl">Кредит</span><button class="linkbtn" type="button" data-go="params">Изменить</button></div>
+          <div class="row"><span class="muted">Продукт</span><b>${p.name}</b></div><div class="row"><span class="muted">Сумма</span><b>${rub(amt)}</b></div><div class="row"><span class="muted">Срок</span><b>${termTxt(term)}</b></div><div class="row"><span class="muted">Цель</span><b>${GOALS.find((g) => g.id === f.goal).t}</b></div></section>
+        <section class="card"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="lbl">Компания</span><button class="linkbtn" type="button" data-go="company">Изменить</button></div>
+          <div class="row"><span class="muted">ИП</span><b>Смирнова А. В.</b></div><div class="row"><span class="muted">ИНН</span><b>${esc(f.inn)}</b></div><div class="row"><span class="muted">Выручка за год</span><b>${esc(f.revenue)} ₽</b></div><div class="row"><span class="muted">Другие платежи</span><b>${esc(f.other)} ₽/мес</b></div></section>
+        <section class="card"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="lbl">Документы</span><button class="linkbtn" type="button" data-go="docs">Изменить</button></div>
+          <div class="row"><span>Паспорт ИП</span>${dl('passport')}</div><div class="row"><span>Выписка по счёту</span>${dl('statement')}</div><div class="row"><span>Декларация УСН 2025</span>${dl('decl')}</div></section>
+        <section class="card" style="background:#212124;color:#fff;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden">
+          <span class="lbl" style="color:rgba(255,255,255,.55)">Снизить ставку</span>
+          ${sw('disc', f.discount, `<b style="font-weight:500">Защита бизнеса и Подписка</b><br><span style="color:rgba(255,255,255,.6)">Ставка 14% вместо ${base}</span>`, 'disc')}
+          ${img('shield', '', 'width:110px;align-self:flex-end;margin-top:-20px')}
+        </section>
+      </div>
+      <section class="card" style="display:flex;flex-direction:column;gap:14px">
+        <span class="lbl">Согласия</span>
+        ${cb('c0', f.consents[0], 'Разрешаю запросить кредитную историю в бюро кредитных историй', 'consent0')}
+        ${cb('c1', f.consents[1], 'Согласен на обработку персональных данных и проверку сведений в ЕГРЮЛ/ЕГРИП и сервисах ФНС', 'consent1')}
+        ${cb('c2', f.consents[2], 'Подтверждаю, что данные в заявке верны', 'consent2')}
+      </section>
+    </div>
+    <aside class="aside">
+      <div class="card" style="display:flex;flex-direction:column;gap:4px">
+        <span class="lbl">Итого</span>
+        <div style="display:flex;flex-direction:column;margin:8px 0 10px"><span class="muted" style="@mixin paragraph_secondary_large;">Платёж в месяц</span><b style="@mixin headline_medium;" class="tnum">${p.key === 'line' ? 'по траншам' : rub(q.pay)}</b></div>
+        <div class="row"><span class="muted">Ставка</span><b>${q.rate}%</b></div>
+        <div class="row"><span class="muted">Переплата</span><b class="tnum">${p.key === 'line' ? 'от выборки' : rub(q.over)}</b></div>
+        <button class="btn accent block" type="button" data-a="submit" ${ready ? '' : 'disabled'} style="margin-top:16px">${ready ? 'Отправить заявку' : 'Отметьте согласия'}</button>
+        <span class="muted" style="@mixin paragraph_secondary_medium;margin-top:8px">Проверка данных и предварительная оценка — несколько минут, решение — в течение дня</span>
+      </div>
+    </aside>
+  </div></div>`;
+};
+['0', '1', '2'].forEach((i) => { ACT['ch_consent' + i] = (el) => { F().consents[+i] = el.checked; render(); }; });
+ACT.ch_disc = (el) => { F().discount = el.checked; render(); };
+ACT.submit = (d, el) => {
+  if (!F().consents.every(Boolean)) return;
+  el.classList.add('loading');
+  setTimeout(() => { submitApp(); go('status'); toast('Заявка отправлена', 'Следим за ней — статус обновится сам', 'pos'); }, 800);
+};
+/* ================= К5 STATUS + outcomes ================= */
+function trackerCard(a) {
+  const st = a.status;
+  const waiting = st === 'expert';
+  const items = STAGES.map((s, i) => {
+    const cls = i < a.stage || (i === 3 && a.stage >= 4) ? 'done' : (i === a.stage && (st === 'review' || waiting) ? 'now' : 'todo');
+    const title = i === 3 && waiting ? 'Решение принимает специалист' : s[0];
+    const text = i === 3 && waiting ? 'Нужна ручная проверка выручки. Обычно до 2 часов' : s[1];
+    return `<li class="${cls}"><span class="dot">${cls === 'done' ? '✓' : ''}</span><div style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0"><b style="@mixin action_component_primary;">${title}</b><span style="@mixin paragraph_secondary_large;color:rgba(255,255,255,.6)">${text}</span></div></li>`;
+  }).join('');
+  return `<section style="background:var(--dark);color:#fff;border-radius:32px;padding:28px;display:flex;flex-direction:column;gap:18px;position:relative;overflow:hidden">
+    ${img('clock', '', 'position:absolute;right:-20px;top:-20px;width:190px')}
+    <div style="display:flex;flex-direction:column;gap:6px;position:relative;max-width:540px">
+      <span style="@mixin paragraph_secondary_large;color:rgba(255,255,255,.55)">${a.product.name} · ${rub(a.amount)} · ${termTxt(a.term)}</span>
+      <b style="@mixin headline_small;">${waiting ? 'Заявку смотрит специалист' : 'Рассматриваем заявку'}</b>
+      <span style="@mixin paragraph_primary_small;color:rgba(255,255,255,.65)">${waiting ? 'Мы сообщим здесь, как только будет решение. Ничего делать не нужно' : 'Статус обновляется сам. Ничего делать не нужно'}</span>
+    </div>
+    <ol class="track" style="position:relative">${items}</ol>
+    ${waiting ? `<div style="display:flex;gap:8px;flex-wrap:wrap;position:relative"><button class="btn white s40" type="button" data-a="role" data-v="bank">Открыть вид банка и принять решение</button></div>` : ''}
+  </section>`;
+}
+function eventsCard(a) {
+  return `<div class="card" style="display:flex;flex-direction:column;gap:12px"><span class="lbl">Лента событий</span><div class="events">${a.events.slice(0, 7).map((e) => `<div><span>${e[0]}</span><span>${esc(e[1])}</span></div>`).join('')}</div></div>`;
+}
+function chatCard() {
+  return `<div class="card" style="display:flex;flex-direction:column;gap:10px"><span class="lbl">Вопрос по заявке</span>
+    <div id="chat" style="display:flex;flex-direction:column;gap:8px">${(S.chat || [['bank', 'Здравствуйте! Заявка в работе. Если понадобится документ, напишу здесь.']]).map((m) => `<div style="align-self:${m[0] === 'me' ? 'flex-end' : 'flex-start'};max-width:90%;background:${m[0] === 'me' ? '#212124' : 'var(--bg2)'};color:${m[0] === 'me' ? '#fff' : 'inherit'};border-radius:${m[0] === 'me' ? '16px 16px 4px 16px' : '16px 16px 16px 4px'};padding:10px 14px;@mixin paragraph_primary_small;animation:fadeup var(--d2) var(--e-out)">${esc(m[1])}</div>`).join('')}</div>
+    <form data-submit="chatSend" style="display:flex;gap:8px;align-items:center;background:var(--bg2);border-radius:99px;padding:6px 6px 6px 16px"><label for="msg" class="sr">Сообщение</label><input id="msg" placeholder="Напишите сообщение" style="flex:1;min-width:0;border:0;background:transparent;@mixin paragraph_primary_small;outline:none"><button class="btn accent" type="submit" aria-label="Отправить" style="width:36px;height:36px;padding:0;border-radius:50%">↑</button></form></div>`;
+}
+ACT.chatSend = (form) => {
+  const v = form.querySelector('input').value.trim();
+  if (!v) return;
+  S.chat = S.chat || [['bank', 'Здравствуйте! Заявка в работе. Если понадобится документ, напишу здесь.']];
+  S.chat.push(['me', v]);
+  render();
+  setTimeout(() => { S.chat.push(['bank', 'Спасибо, передала аналитику. Ответ появится здесь же.']); if (S.route === 'status') render(); }, 1200);
+};
+
+VIEWS.status = () => {
+  const a = S.app;
+  if (!a) return `<div class="cab">${cabHeader('apps')}<div class="wrap" style="padding-block:64px"><div class="card" style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">${img('docs', '', 'width:160px')}<h1 class="h2">Заявок пока нет</h1><p class="muted" style="margin:0">Подберите кредит под задачу — это займёт пару минут</p><button class="btn accent" type="button" data-go="params">Подобрать кредит</button></div></div></div>`;
+  const st = a.status;
+  const stepIdx = st === 'review' || st === 'expert' || st === 'needinfo' ? 4 : 5;
+  const head = `<div class="cab">${cabHeader('apps')}<div class="wrap cab-top">
+    <div class="t"><h1>Заявка ${a.id}</h1><span style="display:flex;gap:10px;align-items:center"><span class="badge ${statusLabel(st)[1]}">${statusLabel(st)[0]}</span><span class="muted" style="@mixin paragraph_primary_small;">отправлена в ${a.at}</span></span></div>
+    ${stepper(stepIdx)}</div>`;
+  let main = '', aside = eventsCard(a) + chatCard();
+  if (st === 'review' || st === 'expert') main = trackerCard(a);
+  else if (st === 'approved') main = approvedView(a);
+  else if (st === 'counter') main = counterView(a);
+  else if (st === 'needinfo') main = needInfoView(a);
+  else if (st === 'refused') main = refusedView(a);
+  else if (st === 'declined') main = `<section class="card" style="display:flex;flex-direction:column;gap:12px"><span class="badge b-grey" style="align-self:flex-start">Вы отказались от предложения</span><h2 class="h2">Заявка закрыта</h2><p class="muted" style="margin:0">Можно подать новую заявку — данные компании уже сохранены</p><button class="btn accent" type="button" data-a="newApp" style="align-self:flex-start">Подать новую заявку</button></section>`;
+  else if (st === 'signing' || st === 'issuing') { S.route = 'sign'; return VIEWS.sign(); }
+  else if (st === 'issued') { S.route = 'done'; return VIEWS.done(); }
+  return `${head}<div class="wrap main"><div class="content">${main}</div><aside class="aside">${aside}</aside></div></div>`;
+};
+ACT.newApp = () => { clearTimeout(pipeTimer); S.app = null; S.docs.extra = undefined; go('params'); };
+
+/* approved */
+function approvedView(a) {
+  const o = a.offer, dif = S.ui.payDif;
+  const r = o.rate / 1200, n = o.term, P = o.amount, ann = annuity(P, o.rate, n);
+  let bal = P, tot = 0, rows = [];
+  for (let i = 0; i < n; i++) { const it = bal * r, pr = dif ? P / n : ann - it; rows.push([it, pr]); tot += it; bal -= pr; }
+  const max = Math.max(...rows.map((x) => x[0] + x[1]));
+  const first = rows[0][0] + rows[0][1];
+  return `<section class="outcome-hero" style="background:var(--dark);color:#fff">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <span class="badge b-pos-s" style="align-self:flex-start">✓ Кредит одобрен${a.decidedBy === 'auto' ? ' автоматически' : ''}</span>
+        <h2 class="h1c">${rub(P)} на ${termTxt(n)}</h2>
+        <span style="color:rgba(255,255,255,.7)">Предложение действует 30 дней. Подписать можно прямо сейчас — онлайн</span>
+        <button class="btn accent" type="button" data-a="toSign" style="align-self:flex-start">Перейти к подписанию</button>
+      </div>${img('shield', 'Щит с галочкой')}
+    </section>
+    <section class="card" style="display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><span class="lbl">Условия</span>${seg(['Равные платежи', 'Убывающие'], dif ? 1 : 0, 'payDif')}</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px">
+        <div class="metric"><span>Сумма</span><b>${rub(P)}</b></div><div class="metric"><span>Ставка</span><b>${o.rate}%</b></div><div class="metric"><span>Срок</span><b>${n} мес</b></div>
+        <div class="metric"><span>${dif ? 'Первый платёж' : 'Платёж в месяц'}</span><b class="tnum">${rub(dif ? first : ann)}</b></div><div class="metric"><span>Переплата</span><b class="tnum">${rub(tot)}</b></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span class="muted" style="@mixin paragraph_secondary_large;"><span style="color:var(--red)">■</span> основной долг <span style="color:var(--grey-mark)">■</span> проценты · наведите на столбец</span>
+        <div class="sched" style="grid-template-columns:repeat(${n},minmax(0,1fr))" role="img" aria-label="График платежей">
+          ${rows.map((x, i) => `<div title="Месяц ${i + 1}: долг ${rub(x[1])}, проценты ${rub(x[0])}"><i style="background:var(--grey-mark);border-radius:3px 3px 0 0;height:${(x[0] / max * 100).toFixed(1)}%"></i><i style="background:var(--red);height:${(x[1] / max * 100).toFixed(1)}%"></i></div>`).join('')}
+        </div>
+      </div>
+    </section>
+    <section class="card" style="display:flex;flex-direction:column;gap:14px"><span class="lbl">Почему одобрили</span>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px">
+        <div class="plate" style="background:var(--pos-m)"><b style="font-weight:500">Стабильная выручка</b><span class="muted" style="display:block;@mixin paragraph_secondary_large;">Обороты ровные 12 месяцев</span></div>
+        <div class="plate" style="background:var(--pos-m)"><b style="font-weight:500">Хорошая кредитная история</b><span class="muted" style="display:block;@mixin paragraph_secondary_large;">Прошлые кредиты без просрочек</span></div>
+        <div class="plate" style="background:var(--pos-m)"><b style="font-weight:500">Бизнесу 7 лет</b><span class="muted" style="display:block;@mixin paragraph_secondary_large;">Работает с 2019 года</span></div>
+      </div></section>`;
+}
+ACT.payDif = (d) => { S.ui.payDif = d.v === '1'; render(); };
+ACT.toSign = () => { S.app.status = 'signing'; addEvent('Клиент перешёл к подписанию'); go('sign'); };
+
+/* counter */
+function counterOptions(a) {
+  const bank = a.offer || { amount: 2e6, term: 24, rate: 14, collat: false };
+  const qb = quote(bank.amount, bank.term, bank);
+  const qa = quote(a.amount, 36, { collat: true });
+  return [
+    { id: 'a', tag: 'Предложение банка', title: mln(bank.amount) + ' на ' + termTxt(bank.term), desc: bank.collat ? 'С залогом товаров в обороте' : 'Без залога — хватит на основную закупку', amount: bank.amount, term: bank.term, collat: bank.collat, pay: qb.pay, rate: qb.rate },
+    { id: 'b', tag: 'Вся сумма', title: mln(a.amount) + ' на 3 года', desc: 'Залог — товары в обороте. Платёж ниже за счёт срока', amount: a.amount, term: 36, collat: true, pay: qa.pay, rate: qa.rate },
+    { id: 'c', tag: 'Гибко', title: 'Деньги частями', desc: 'Лимит ' + mln(a.amount) + ' на 2 года. Берёте под закупки, гасите с выручки', amount: a.amount, term: 24, collat: false, pay: null, rate: 14, line: true }
+  ];
+}
+function counterView(a) {
+  const opts = counterOptions(a), cur = opts.find((o) => o.id === S.ui.counterPick) || opts[0];
+  const asked = quote(a.amount, a.term, a).pay;
+  const cmp = [['Заявка: ' + mln(a.amount) + ' / ' + termTxt(a.term), asked, 'var(--grey-mark)']].concat(opts.filter((o) => o.pay).map((o) => [o.title, o.pay, o.id === cur.id ? 'var(--red)' : '#ffb3a8']));
+  const extras = (a.offer && a.offer.extras) || [];
+  return `<section class="outcome-hero" style="background:var(--att-m)">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <span class="badge b-att-s" style="align-self:flex-start">≈ Другие условия</span>
+        <h2 class="h1c">Готовы выдать кредит — немного иначе</h2>
+        <span style="line-height:24px">Платёж ${rub(asked)} в месяц — высокая нагрузка с учётом сезонной выручки и текущего лизинга. Выберите вариант с платежом ниже</span>
+      </div>${img('sliders', 'Панель с ползунками')}
+    </section>
+    <section class="card" style="display:flex;flex-direction:column;gap:14px">
+      <span class="lbl">Выберите вариант</span>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px">
+        ${opts.map((o) => `<button type="button" class="optcard" aria-pressed="${o.id === cur.id}" data-a="pickOpt" data-v="${o.id}"><span class="badge ${o.id === cur.id ? 'b-neg-s' : 'b-grey'}" style="${o.id === cur.id ? 'background:var(--red)' : 'background:#fff'}">${o.tag}</span><b style="@mixin accent_primary_large;">${o.title}</b><span class="muted" style="@mixin paragraph_secondary_large;">${o.desc}</span><span style="margin-top:auto"><span class="muted" style="display:block;@mixin paragraph_secondary_medium;">${o.pay ? 'Платёж в месяц' : 'Платёж'}</span><b style="@mixin headline_small;" class="tnum">${o.pay ? rub(o.pay) : 'от выборки'}</b></span></button>`).join('')}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px"><span class="muted" style="@mixin paragraph_secondary_large;">Платёж в месяц по сравнению с заявкой</span>
+        ${cmp.map((c) => `<div class="cmp"><span>${c[0]}</span><div class="bar"><i style="width:${(c[1] / asked * 100).toFixed(1)}%;background:${c[2]}"></i></div><b class="tnum" style="text-align:right;font-weight:500">${rub(c[1])}</b></div>`).join('')}
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+        <button class="btn accent" type="button" data-a="acceptOpt">Принять: ${cur.title}</button>
+        <button class="btn secondary" type="button" data-a="declineOffer">Отказаться</button>
+      </div>
+    </section>
+    ${servicesCard('Ещё может помочь бизнесу', extras)}`;
+}
+ACT.pickOpt = (d) => { S.ui.counterPick = d.v; render(); };
+ACT.acceptOpt = () => {
+  const a = S.app, o = counterOptions(a).find((x) => x.id === S.ui.counterPick) || counterOptions(a)[0];
+  a.offer = { amount: o.amount, term: o.term, rate: o.rate, collat: o.collat, line: o.line };
+  a.amount = o.amount; a.term = o.term;
+  a.status = 'signing'; addEvent('Клиент принял: ' + o.title);
+  toast('Условия приняты', o.title, 'pos');
+  go('sign');
+};
+ACT.declineOffer = () => modal(`<h3 style="@mixin headline_small;">Отказаться от предложения?</h3><p class="muted" style="margin:0">Заявка закроется. Отказ не влияет на возможность подать новую</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn accent" type="button" data-a="declineYes">Отказаться</button><button class="btn secondary" type="button" data-a="closeModal">Вернуться</button></div>`);
+ACT.declineYes = () => { S.app.status = 'declined'; addEvent('Клиент отказался от встречного предложения'); closeModal(); render(); toast('Заявка закрыта', 'Можно подать новую в любой момент', 'info'); };
+
+const SERVICES = [
+  ['acq', 'Торговый эквайринг', 'Выручка с карт сразу на счёт — банк лучше видит обороты, следующий лимит может быть выше', 'growth'],
+  ['card', 'Бизнес-карта с кэшбэком', 'Для закупок у поставщиков и командировок', 'briefcase'],
+  ['line', 'Деньги частями до 1 млн ₽', 'Небольшой лимит на сезонную просадку — проценты только за использованное', 'clock'],
+  ['acc', 'Онлайн-бухгалтерия', 'Отчётность и напоминания о налогах', 'calc']
+];
+function servicesCard(title, highlight = []) {
+  S.added = S.added || {};
+  return `<section class="card" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap"><span class="lbl">${title}</span><span class="muted" style="@mixin paragraph_secondary_large;">подобрано по обороту и ОКВЭД 47.71</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px">
+      ${SERVICES.map((s) => `<button type="button" class="svc ${S.added[s[0]] ? 'added' : ''}" data-a="addSvc" data-v="${s[0]}">${highlight.includes(s[0]) ? '<span class="badge b-info" style="align-self:flex-start">Рекомендует банк</span>' : ''}<b style="@mixin action_component_primary;">${s[1]}</b><span class="muted" style="@mixin paragraph_secondary_large;">${s[2]}</span><span style="@mixin action_secondary_large;color:${S.added[s[0]] ? 'var(--pos-t)' : 'var(--red)'};margin-top:auto">${S.added[s[0]] ? '✓ Заявка на подключение отправлена' : 'Подключить →'}</span>${img(s[3])}</button>`).join('')}
+    </div></section>`;
+}
+ACT.addSvc = (d) => { S.added = S.added || {}; if (S.added[d.v]) return; S.added[d.v] = 1; render(); toast('Заявка на подключение отправлена', SERVICES.find((s) => s[0] === d.v)[1]); };
+
+/* need info */
+function needInfoView(a) {
+  const up = S.ui.needUploaded;
+  return `<section class="outcome-hero" style="background:var(--info-m)">
+      <div style="display:flex;flex-direction:column;gap:14px"><span class="badge b-info-s" style="align-self:flex-start">? Нужно уточнить</span><h2 class="h1c">Остался один документ</h2><span style="line-height:24px">Рассмотрение на паузе, пока его нет. Загрузите — и мы продолжим с того же места</span></div>${img('docs', 'Документы с галочкой')}
+    </section>
+    <section class="card" style="display:flex;flex-direction:column;gap:16px">
+      <span class="lbl">Запрос от банка</span>
+      <b style="@mixin headline_small;">Выписка по счёту в другом банке за 6 месяцев</b>
+      <div class="plate" style="display:flex;flex-direction:column;gap:10px;padding:18px">
+        <b style="@mixin action_primary_small;">Зачем это нужно</b>
+        <span style="@mixin paragraph_primary_small;">В анкете выручка 18,4 млн ₽ за год, а по счёту в Альфа-Банке видно 11,2 млн ₽. Выписка подтвердит, что остальная выручка проходит через другой банк</span>
+        <div class="cmp" style="grid-template-columns:130px 1fr 80px"><span>По анкете</span><div class="bar"><i style="width:100%;background:#212124"></i></div><b style="text-align:right">18,4 млн</b></div>
+        <div class="cmp" style="grid-template-columns:130px 1fr 80px"><span>Видно по счёту</span><div class="bar"><i style="width:${up ? 100 : 60.9}%;background:${up ? 'var(--pos)' : 'var(--info)'}"></i></div><b style="text-align:right">${up ? '18,5 млн' : '11,2 млн'}</b></div>
+      </div>
+      ${up ? `<div class="plate" style="background:var(--pos-m);display:flex;gap:14px;align-items:center;flex-wrap:wrap;animation:fadeup var(--d2) var(--e-out)"><span class="badge b-pos-s" style="width:32px;height:32px;padding:0;justify-content:center;border-radius:50%">✓</span><div style="flex:1 1 220px"><b style="font-weight:500">vypiska_6m.pdf загружена</b><span style="display:block;@mixin paragraph_secondary_large;">Поступления 7,3 млн ₽ — вместе с Альфа-Банком 18,5 млн ₽</span></div><button class="btn accent s40" type="button" data-a="resume">Продолжить рассмотрение</button></div>`
+      : `<div class="dz"><b style="font-weight:500">Перетащите выписку или выберите файл</b><span class="muted" style="@mixin paragraph_secondary_large;">PDF или выгрузка 1С, до 20 МБ</span><button class="btn secondary s40" type="button" data-a="needUpload">Выбрать файл</button></div>`}
+    </section>
+    <section class="card" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><div style="flex:1 1 260px"><b style="font-weight:500">Нет такого документа?</b><span class="muted" style="display:block;@mixin paragraph_primary_small;">Уменьшите сумму до 2 млн ₽ — тогда выписка не понадобится</span></div><button class="btn secondary s40" type="button" data-a="lowerTo2">Подать на 2 млн ₽</button></section>`;
+}
+ACT.needUpload = (d, el) => { el.classList.add('loading'); setTimeout(() => { S.ui.needUploaded = true; render(); toast('Выписка распознана', 'Выручка подтверждена'); }, 1300); };
+ACT.resume = () => { S.docs.extra = 'ok'; const a = S.app; a.status = 'review'; a.stage = 2; addEvent('Клиент загрузил выписку из другого банка'); render(); runPipeline(); };
+ACT.lowerTo2 = () => { const a = S.app; a.amount = 2e6; a.status = 'review'; a.stage = 2; addEvent('Клиент уменьшил сумму до 2 млн ₽'); render(); runPipeline(); };
+
+/* refused */
+function refusedView(a) {
+  const q = quote(a.amount, a.term, a);
+  const load = Math.max(58, Math.round(q.dti));
+  return `<section class="card" style="display:flex;flex-direction:column;gap:14px;padding:clamp(24px,4vw,40px)">
+      <span class="badge b-neg" style="align-self:flex-start">✕ Сейчас не можем выдать кредит</span>
+      <h2 class="h1c">Объясняем почему и что можно сделать</h2>
+      <span class="muted" style="max-width:640px;line-height:24px">Это решение по текущей заявке, а не по вашему бизнесу в целом</span>
+    </section>
+    <section class="card" style="display:flex;flex-direction:column;gap:16px">
+      <span class="lbl">Главная причина</span>
+      <b style="@mixin headline_xsmall;">Долговая нагрузка выше допустимой</b>
+      <span style="@mixin paragraph_primary_small;">С новым кредитом платежи по всем обязательствам заняли бы ${load}% денежного потока в сезон низкой выручки. Для этого продукта допустимо до 50%</span>
+      <div role="img" aria-label="Нагрузка ${load}% при допустимых 50%" style="position:relative;padding-bottom:22px">
+        <div class="bar" style="height:18px"><i style="width:${load}%;background:var(--neg)"></i></div>
+        <span class="muted" style="position:absolute;left:50%;top:22px;transform:translateX(-50%);@mixin paragraph_secondary_medium;white-space:nowrap">▲ порог 50%</span>
+        <div style="position:absolute;left:50%;top:0;height:18px;border-left:2px dashed #212124"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px">
+        <div class="plate" style="background:var(--pos-m);@mixin paragraph_secondary_large;"><b style="display:block;font-weight:500">✓ В порядке</b>Кредитная история, регистрация, налоги</div>
+        <div class="plate" style="background:var(--att-m);@mixin paragraph_secondary_large;"><b style="display:block;font-weight:500">! Учли</b>Сезонная просадка выручки летом</div>
+        <div class="plate" style="background:var(--neg-m);@mixin paragraph_secondary_large;"><b style="display:block;font-weight:500">✕ Не прошло</b>Нагрузка с лизингом и новым платежом</div>
+      </div>
+    </section>
+    <section class="card" style="display:flex;flex-direction:column;gap:12px"><span class="lbl">Что можно сделать</span>
+      <div class="plate" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><span class="num">1</span><div style="flex:1 1 220px"><b style="font-weight:500">Уменьшить сумму</b><span class="muted" style="display:block;@mixin paragraph_primary_small;">До 1,5 млн ₽ нагрузка укладывается в норму — заявку можно подать сразу</span></div><button class="btn accent s40" type="button" data-a="retrySmaller">Подать на 1,5 млн ₽</button></div>
+      <div class="plate" style="display:flex;gap:14px;align-items:center"><span class="num">2</span><div><b style="font-weight:500">Перенести обороты в Альфа-Банк</b><span class="muted" style="display:block;@mixin paragraph_primary_small;">Банк увидит выручку полностью — шанс на одобрение выше</span></div></div>
+      <div class="plate" style="display:flex;gap:14px;align-items:center"><span class="num">3</span><div><b style="font-weight:500">Вернуться позже</b><span class="muted" style="display:block;@mixin paragraph_primary_small;">Повторная заявка на ту же сумму — через 90 дней. Напомним в кабинете</span></div></div>
+    </section>
+    ${servicesCard('Доступно уже сейчас', ['line', 'acq'])}
+    <section class="card" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><b style="font-weight:500;flex:1 1 200px">Было понятно, почему так?</b>
+      <div class="chips"><button class="chip" type="button" aria-pressed="${S.ui.vote === 'y'}" data-a="vote" data-v="y">Да, понятно</button><button class="chip" type="button" aria-pressed="${S.ui.vote === 'n'}" data-a="vote" data-v="n">Не очень</button></div></section>`;
+}
+ACT.vote = (d) => { S.ui.vote = d.v; render(); toast('Спасибо, ответ учтён', d.v === 'n' ? 'Менеджер напишет в чат заявки' : ''); };
+ACT.retrySmaller = () => { const a = S.app; a.amount = 1.5e6; a.status = 'review'; a.stage = 0; a.events = []; addEvent('Новая заявка на 1,5 млн ₽'); render(); runPipeline(); toast('Новая заявка отправлена', '1,5 млн ₽ на ' + termTxt(a.term), 'pos'); };
+
+/* ================= П1 SIGN ================= */
+VIEWS.sign = () => {
+  const a = S.app;
+  if (!a || !a.offer) return VIEWS.status();
+  const o = a.offer, pay = o.line ? null : annuity(o.amount, o.rate, o.term);
+  const DOCS2 = [['Кредитный договор', '12 страниц · ключевые условия на первой'], ['График платежей', o.line ? 'Транши и лимит' : o.term + ' платежей по ' + rub(pay)], ['Договор «Защита бизнеса»', 'Условие скидки на ставку'], ['Заявление на зачисление', 'На расчётный счёт ··4521']];
+  const read = S.ui.read, all = read.every(Boolean);
+  return `<div class="cab">${cabHeader('apps')}
+  ${cabTop('Подписание документов', 6, 'Шаг 7 из 8 · онлайн, без визита в офис', ['status', 'Решение по заявке'])}
+  <div class="wrap main">
+    <div class="content">
+      <section class="card" style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><span class="lbl">Документы на подпись</span><span class="muted" style="@mixin paragraph_secondary_large;">Прочитано ${read.filter(Boolean).length} из 4</span></div>
+        <div class="progress"><i style="width:${read.filter(Boolean).length * 25}%"></i></div>
+        ${DOCS2.map((d, i) => `<div class="doc"><span class="ico">PDF</span><div style="flex:1 1 220px"><b style="@mixin action_component_primary;">${d[0]}</b><span class="muted" style="display:block;@mixin paragraph_secondary_large;">${d[1]}</span></div><button class="btn ${read[i] ? 'secondary' : 'primary'} s40" type="button" data-a="openDoc" data-v="${i}">${read[i] ? '✓ Прочитан' : 'Открыть'}</button></div>`).join('')}
+      </section>
+      <section class="card" style="display:flex;flex-direction:column;gap:12px"><span class="lbl">Куда зачислить</span>
+        <label class="cb" style="padding:16px;border-radius:20px;border:2px solid var(--red)"><input type="radio" name="acc" checked><span class="bx" style="border-radius:50%;background:var(--red);border-color:var(--red)">${CHK}</span><span><b style="font-weight:500">Расчётный счёт ··4521</b><span class="muted" style="display:block;@mixin paragraph_secondary_large;">Альфа-Банк · основной</span></span></label>
+      </section>
+    </div>
+    <aside class="aside">
+      <div class="card" style="display:flex;flex-direction:column;gap:4px">
+        <span class="lbl">Итоговые условия</span>
+        <div class="row" style="margin-top:8px"><span class="muted">${o.line ? 'Лимит' : 'Сумма'}</span><b>${rub(o.amount)}</b></div>
+        <div class="row"><span class="muted">Ставка</span><b>${o.rate}%</b></div><div class="row"><span class="muted">Срок</span><b>${o.term} мес</b></div>
+        <div class="row"><span class="muted">Платёж</span><b class="tnum">${pay ? rub(pay) : 'от выборки'}</b></div>
+        <button class="btn accent block" type="button" data-a="signStart" ${all ? '' : 'disabled'} style="margin-top:16px">${all ? 'Подписать электронной подписью' : 'Прочитайте документы'}</button>
+        <span class="muted" style="@mixin paragraph_secondary_medium;margin-top:8px">Подпись подтверждается кодом из приложения Альфа-Бизнес</span>
+      </div>
+    </aside>
+  </div></div>`;
+};
+ACT.openDoc = (d) => {
+  const i = +d.v;
+  const o = S.app.offer;
+  const names = ['Кредитный договор', 'График платежей', 'Договор «Защита бизнеса»', 'Заявление на зачисление'];
+  modal(`<span class="lbl">Документ ${i + 1} из 4</span><h3 style="@mixin headline_small;">${names[i]}</h3>
+    <div class="plate" style="display:flex;flex-direction:column;gap:8px;@mixin paragraph_primary_small;max-height:280px;overflow:auto">
+      <b style="font-weight:500">Ключевые условия</b>
+      <span>Заёмщик: ИП Смирнова Анна Викторовна, ИНН ${esc(F().inn)}</span>
+      <span>Сумма: ${rub(o.amount)} · Ставка: ${o.rate}% годовых · Срок: ${o.term} мес</span>
+      <span>Погашение: ежемесячно, 22-го числа${o.line ? ', по выбранным траншам' : ', равными платежами'}</span>
+      <span>Досрочное погашение: без комиссии, в кабинете</span>
+      <span class="muted">Полный текст документа — в итоговой версии продукта. Это демо-превью</span>
+    </div>
+    <button class="btn accent block" type="button" data-a="markRead" data-v="${i}">Ознакомлен</button>`);
+};
+ACT.markRead = (d) => { S.ui.read[+d.v] = true; closeModal(); setTimeout(render, 120); };
+ACT.signStart = () => modal(`<h3 style="@mixin headline_small;">Подтвердите подпись</h3>
+  <p class="muted" style="margin:0">Введите код из приложения Альфа-Бизнес. В демо подойдёт <b style="color:var(--ink)">123456</b></p>
+  <form data-submit="signConfirm" style="display:flex;flex-direction:column;gap:14px" novalidate>
+    <div class="field" id="f-code"><input id="code" inputmode="numeric" maxlength="6" placeholder=" " autocomplete="one-time-code" data-in="code"><label for="code">Код подтверждения</label></div>
+    <button class="btn accent block" type="submit" id="code-btn" style="margin-top:8px">Подписать</button>
+  </form>`);
+ACT.in_code = (el) => { el.value = el.value.replace(/\D/g, '').slice(0, 6); $('#f-code').classList.remove('err'); $('#f-code .hint')?.remove(); if (el.value.length === 6) ACT.signConfirm(); };
+ACT.signConfirm = () => {
+  const v = $('#code').value;
+  if (v !== '123456') { fieldErr('#f-code', 'Код не подходит. В демо: 123456'); const m = $('.modal'); m.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-8px)' }, { transform: 'translateX(8px)' }, { transform: 'translateX(0)' }], { duration: 260 }); return; }
+  $('#code-btn').classList.add('loading');
+  setTimeout(() => {
+    closeModal();
+    addEvent('Документы подписаны');
+    S.app.status = 'issuing';
+    issue();
+  }, 900);
+};
+function issue() {
+  modal(`<div style="display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;padding-block:8px">
+    ${img('growth', '', 'width:160px;animation:float 2s ease-in-out infinite')}
+    <h3 style="@mixin headline_small;">Перечисляем деньги</h3>
+    <ol class="track" style="width:100%;text-align:left" id="iss">
+      <li class="now" style="background:var(--bg2)"><span class="dot" style="border-color:var(--att)"></span><span>Регистрируем договор</span></li>
+      <li class="todo"><span class="dot" style="border-color:var(--line2)"></span><span>Открываем ссудный счёт</span></li>
+      <li class="todo"><span class="dot" style="border-color:var(--line2)"></span><span>Зачисляем на счёт ··4521</span></li>
+    </ol></div>`);
+  $('#modal .x').remove();
+  let i = 0;
+  const tick = () => {
+    const lis = $$('#iss li');
+    if (!lis.length) return;
+    lis[i].className = 'done'; lis[i].style.background = ''; lis[i].querySelector('.dot').textContent = '✓';
+    i++;
+    if (i < lis.length) { lis[i].className = 'now'; lis[i].style.background = 'var(--bg2)'; lis[i].querySelector('.dot').style.borderColor = 'var(--att)'; setTimeout(tick, 900); }
+    else setTimeout(() => { S.app.status = 'issued'; addEvent('Деньги зачислены'); closeModal(); go('done'); }, 600);
+  };
+  setTimeout(tick, 900);
+}
+
+/* ================= П2 DONE ================= */
+VIEWS.done = () => {
+  const a = S.app;
+  if (!a || a.status !== 'issued') return VIEWS.status();
+  const o = a.offer, pay = o.line ? null : annuity(o.amount, o.rate, o.term);
+  if (!S.ui.confetti) { S.ui.confetti = 1; setTimeout(confetti, 300); }
+  return `<div class="cab">${cabHeader('apps')}
+  <div class="wrap cab-top">${stepper(8, true)}</div>
+  <div class="wrap main">
+    <div class="content">
+      <section class="outcome-hero" style="background:var(--red);color:#fff">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <span class="badge" style="align-self:flex-start;background:#fff;color:var(--red)">✓ Деньги на счёте</span>
+          <b class="big tnum" data-count="${o.amount}">${rub(o.amount)}</b>
+          <span style="color:rgba(255,255,255,.88);line-height:24px">${o.line ? 'Лимит открыт. Транши можно брать в кабинете' : 'Зачислены на расчётный счёт ··4521'} · ${nowHM()}</span>
+          <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn white" type="button" data-a="toAccount">Перейти к счёту</button><button class="btn ghost" type="button" data-go="home">На главную</button></div>
+        </div>${img('growth', 'Растущие столбцы и стрелка вверх')}
+      </section>
+      <section class="card" style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><span class="lbl">Кредит</span><span class="badge b-pos">Действует</span></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:10px">
+          <div class="metric"><span>Остаток долга</span><b class="tnum">${rub(o.amount)}</b></div>
+          <div class="metric"><span>Следующий платёж</span><b class="tnum">${pay ? rub(pay) : 'по траншам'}</b></div>
+          <div class="metric"><span>Дата платежа</span><b>22 ноября</b></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between;@mixin paragraph_secondary_large;" class="muted"><span>Погашено 0 из ${o.term} платежей</span></div><div class="progress"><i style="width:2%;background:var(--red)"></i></div></div>
+        <div class="chips"><button class="btn secondary s40" type="button" data-a="earlyPay">Досрочное погашение</button><button class="btn secondary s40" type="button" data-a="toAccount">Документы</button></div>
+      </section>
+    </div>
+    <aside class="aside">
+      <div class="card" style="display:flex;flex-direction:column;gap:12px"><span class="lbl">Весь путь заявки</span><div class="events">${a.events.slice().reverse().map((e) => `<div><span>${e[0]}</span><span>${esc(e[1])}</span></div>`).join('')}</div></div>
+      <div class="card" style="display:flex;flex-direction:column;gap:10px"><span class="lbl">Оцените опыт</span>
+        <div style="display:flex;gap:6px" role="radiogroup" aria-label="Оценка">${[1, 2, 3, 4, 5].map((n) => `<button type="button" role="radio" aria-checked="${S.ui.stars === n}" aria-label="Оценка ${n}" data-a="star" data-v="${n}" style="width:44px;height:44px;border:0;border-radius:12px;@mixin headline_small;cursor:pointer;background:var(--bg2);color:${n <= S.ui.stars ? 'var(--red)' : '#c4c6cc'};transition:color var(--d1),transform var(--d1)">★</button>`).join('')}</div>
+      </div>
+    </aside>
+  </div></div>`;
+};
+ACT.star = (d) => { S.ui.stars = +d.v; render(); toast('Спасибо за оценку', '★'.repeat(+d.v)); };
+ACT.toAccount = () => toast('Раздел счёта вне прототипа', 'В демо показан кредитный путь', 'info');
+ACT.earlyPay = () => modal(`<h3 style="@mixin headline_small;">Досрочное погашение</h3><p class="muted" style="margin:0">Без комиссии. Можно погасить часть или весь долг в дату платежа</p><div class="field"><input id="early" placeholder=" " value="500 000" data-in="money" data-k="_early"><label for="early">Сумма, ₽</label></div><button class="btn accent block" type="button" data-a="earlyOk">Запланировать</button>`);
+ACT.earlyOk = () => { closeModal(); toast('Досрочное погашение запланировано', 'На 22 ноября'); };
+function confetti() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches || $('.confetti')) return;
+  const c = document.createElement('canvas'); c.className = 'confetti'; document.body.appendChild(c);
+  const ctx = c.getContext('2d'); c.width = innerWidth; c.height = innerHeight;
+  const cols = ['#ef3124', '#a6e82a', '#8b3dff', '#2288fa', '#ffc75a'];
+  const ps = Array.from({ length: 120 }, () => ({ x: Math.random() * c.width, y: -20 - Math.random() * c.height * .4, vx: (Math.random() - .5) * 3, vy: 2 + Math.random() * 3, s: 6 + Math.random() * 6, r: Math.random() * 6, vr: (Math.random() - .5) * .3, c: cols[Math.floor(Math.random() * cols.length)] }));
+  const t0 = performance.now();
+  const f = (t) => {
+    ctx.clearRect(0, 0, c.width, c.height);
+    ps.forEach((p) => { p.x += p.vx; p.y += p.vy; p.vy += .04; p.r += p.vr; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); ctx.restore(); });
+    if (t - t0 < 3200) requestAnimationFrame(f); else c.remove();
+  };
+  requestAnimationFrame(f);
+}
+/* ================= BANK (admin) ================= */
+function rail(active) {
+  const exp = (S.app && S.app.status === 'expert' ? 1 : 0) + 2;
+  const items = [['adm', 'Очередь заявок', exp], ['adm-card', 'Заявка ' + (S.app ? S.app.id.replace('КЗ-2026-', 'КЗ-') : 'КЗ-10431')], ['adm-analytics', 'Аналитика конвейера']];
+  return `<nav class="rail" aria-label="Кабинет сотрудника">
+    <div class="brand"><span>А</span>Кредитный конвейер</div>
+    ${items.map((i) => `<button type="button" class="${active === i[0] ? 'on' : ''}" data-go="${i[0]}">${i[1]}${i[2] ? `<span class="cnt">${i[2]}</span>` : ''}</button>`).join('')}
+    <div class="sep"></div>
+    <button type="button" data-a="role" data-v="client">Вид клиента ↗</button>
+    <div style="margin-top:auto;display:flex;gap:10px;align-items:center;padding:14px 8px 0">
+      <span class="ava" style="background:var(--dark3)">ОП</span>
+      <span style="display:flex;flex-direction:column;@mixin paragraph_secondary_large;"><b style="font-weight:500">Ольга Петрова</b><span style="color:rgba(255,255,255,.55)">Кредитный аналитик</span></span>
+    </div></nav>`;
+}
+const STAGE_BADGE = {
+  'Проверка данных': 'b-info', 'Оценка риска': 'b-att', 'Ждёт эксперта': 'b-neg', 'Нужны документы': 'b-info',
+  'Одобрено': 'b-pos', 'Другие условия': 'b-att', 'Отказ': 'b-grey', 'Подписание': 'b-info', 'Выдано': 'b-pos', 'Клиент отказался': 'b-grey'
+};
+function liveStage(a) {
+  return ({ review: ['Проверка данных', 'Оценка риска', 'Оценка риска', 'Оценка риска'][a.stage] || 'Оценка риска', expert: 'Ждёт эксперта', approved: 'Одобрено', counter: 'Другие условия', needinfo: 'Нужны документы', refused: 'Отказ', signing: 'Подписание', issuing: 'Подписание', issued: 'Выдано', declined: 'Клиент отказался' })[a.status];
+}
+const riskCol = (v) => v == null ? '#dcdde1' : v < 35 ? 'var(--pos)' : v <= 60 ? 'var(--att)' : 'var(--neg)';
+const riskWord = (v) => v == null ? 'считается' : v < 35 ? 'низкий' : v <= 60 ? 'умеренный' : 'высокий';
+function queueRows() {
+  const R = [
+    { id: 'КЗ-10430', client: 'ООО «Северный хлеб»', inn: '7802123456', sum: 12e6, goal: 'Оборудование', stage: 'Ждёт эксперта', risk: 54, sla: '1 ч 50 м', late: true, owner: 'О. Петрова', tag: 'exp' },
+    { id: 'КЗ-10429', client: 'ООО «ТехСнаб»', inn: '5406987654', sum: 30e6, goal: 'Госконтракт', stage: 'Нужны документы', risk: 47, sla: 'ждём клиента', owner: 'И. Орлов', tag: 'docs' },
+    { id: 'КЗ-10428', client: 'ИП Ахмедов Р. Т.', inn: '026512340987', sum: 8e5, goal: 'Кассовый разрыв', stage: 'Одобрено', risk: 22, sla: '—', owner: 'Авто', tag: 'auto' },
+    { id: 'КЗ-10427', client: 'ООО «Грин Логистик»', inn: '7714556677', sum: 45e6, goal: 'Транспорт', stage: 'Ждёт эксперта', risk: 61, sla: '3 ч 05 м', late: true, owner: 'О. Петрова', tag: 'exp' },
+    { id: 'КЗ-10425', client: 'ИП Ковалёва Е. С.', inn: '231098765432', sum: 15e5, goal: 'Рефинансирование', stage: 'Другие условия', risk: 49, sla: '—', owner: 'Авто', tag: 'auto' },
+    { id: 'КЗ-10424', client: 'ИП Лебедев Д. А.', inn: '500112233445', sum: 5e5, goal: 'Оборотные средства', stage: 'Отказ', risk: 81, sla: '—', owner: 'Авто', tag: 'auto' },
+    { id: 'КЗ-10423', client: 'ООО «Мастерская света»', inn: '7811223344', sum: 6e6, goal: 'Оборудование', stage: 'Проверка данных', risk: null, sla: '4 мин', owner: 'Авто', tag: 'auto' }
+  ];
+  if (S.app) {
+    const a = S.app, sc = a.stage >= 2 || a.status !== 'review' ? quote(a.amount, a.term, a).score : null;
+    const stg = liveStage(a);
+    R.unshift({ id: a.id.replace('КЗ-2026-', 'КЗ-'), client: 'ИП Смирнова А. В.', inn: F().inn, sum: a.amount, goal: GOALS.find((g) => g.id === a.goal).t, stage: stg, risk: sc, sla: a.status === 'expert' ? '12 мин' : '—', owner: a.decidedBy && a.decidedBy !== 'auto' ? 'О. Петрова' : (a.status === 'expert' ? 'О. Петрова' : 'Авто'), tag: a.status === 'expert' ? 'exp' : a.status === 'needinfo' ? 'docs' : 'auto', live: true });
+  }
+  return R;
+}
+VIEWS.adm = () => {
+  const all = queueRows(), f = S.adm.filter;
+  const rows = all.filter((r) => f === 'all' || (f === 'late' ? r.late : r.tag === f));
+  const funnel = [['Поступило', 48], ['Данные проверены', 44], ['Оценка риска', 41], ['Решение принято', 38], ['Подписано', 15], ['Выдано', 11]];
+  const FL = [['all', 'Все'], ['exp', 'Ждут эксперта'], ['docs', 'Нужны документы'], ['late', 'Близко к SLA']];
+  return `<div class="adm">${rail('adm')}<main class="ws">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap">
+      <div><h1>Очередь заявок</h1><span class="muted">Сегодня · синтетические данные</span></div>
+      <div class="field" style="min-width:min(100%,280px);border-radius:10px;background:#fff"><input id="q" placeholder=" " data-in="q" value="${esc(S.adm.q || '')}"><label for="q">Поиск: ИНН, клиент, номер</label></div>
+    </div>
+    <div class="kpi stagger">
+      <div><span class="lbl">Новых сегодня</span><b data-count="48" data-fmt="n">48</b><span class="muted" style="@mixin paragraph_secondary_medium;">+6 к среднему за 7 дней</span></div>
+      <div><span class="lbl">В работе</span><b data-count="36" data-fmt="n">36</b><span class="muted" style="@mixin paragraph_secondary_medium;">на 5 этапах</span></div>
+      <div><span class="lbl">Ждут эксперта</span><b style="color:var(--neg-t)">${all.filter((r) => r.tag === 'exp').length}</b><span class="muted" style="@mixin paragraph_secondary_medium;">2 близко к SLA</span></div>
+      <div><span class="lbl">До решения</span><b>2 ч 14 м</b><span class="muted" style="@mixin paragraph_secondary_medium;">медиана</span></div>
+      <div><span class="lbl">Авторешений</span><b>71%</b><span class="muted" style="@mixin paragraph_secondary_medium;">без участия сотрудника</span></div>
+    </div>
+    <div class="agrid">
+      <section class="acard" style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;justify-content:space-between"><span class="lbl">Воронка за сегодня</span><span class="muted" style="@mixin paragraph_secondary_medium;">заявок · доля</span></div>
+        ${funnel.map(([n, v]) => `<div class="hb" title="${n}: ${v}"><span>${n}</span><div class="t"><i style="width:${(v / 48 * 100).toFixed(1)}%;background:var(--red)"></i></div><span style="text-align:right"><b style="font-weight:500">${v}</b> <span class="muted">${Math.round(v / 48 * 100)}%</span></span></div>`).join('')}
+      </section>
+      <section class="acard" style="display:flex;flex-direction:column;gap:14px">
+        <span class="lbl">Решения за сегодня · 38</span>
+        <div style="display:flex;height:28px;gap:2px" role="img" aria-label="Одобрено 18, другие условия 8, нужна информация 5, отказ 7">
+          <i style="flex:18;background:var(--pos);border-radius:6px 0 0 6px"></i><i style="flex:8;background:var(--att)"></i><i style="flex:5;background:var(--info)"></i><i style="flex:7;background:var(--neg);border-radius:0 6px 6px 0"></i></div>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;@mixin paragraph_secondary_large;">
+          <span><span style="color:var(--pos)">■</span> Одобрено <b>18</b> <span class="muted">· 47%</span></span><span><span style="color:var(--att)">■</span> Другие условия <b>8</b> <span class="muted">· 21%</span></span>
+          <span><span style="color:var(--info)">■</span> Нужна информация <b>5</b> <span class="muted">· 13%</span></span><span><span style="color:var(--neg)">■</span> Отказ <b>7</b> <span class="muted">· 18%</span></span></div>
+        <div class="plate" style="background:var(--att-m);@mixin paragraph_secondary_large;">Доля встречных предложений выросла на 6 п. п. за неделю — чаще всего из-за долговой нагрузки</div>
+      </section>
+    </div>
+    <section class="acard" style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div class="chips" role="tablist" aria-label="Фильтр">${FL.map(([id, l]) => `<button type="button" role="tab" class="chip" style="height:34px" aria-pressed="${f === id}" aria-selected="${f === id}" data-a="admFilter" data-v="${id}">${l}</button>`).join('')}</div>
+        <span class="muted" style="@mixin paragraph_secondary_large;">Показано ${rows.length} из ${all.length}</span>
+      </div>
+      <div style="overflow-x:auto"><table class="q"><thead><tr><th>Заявка</th><th>Клиент</th><th>Сумма · цель</th><th>Этап</th><th>Риск-балл</th><th>SLA</th><th>Ответственный</th></tr></thead><tbody id="qbody">
+        ${rows.filter((r) => !S.adm.q || (r.client + r.inn + r.id).toLowerCase().includes(S.adm.q.toLowerCase())).map((r) => `<tr class="${r.live ? 'live' : ''}" data-a="${r.live ? 'openLive' : 'openDemo'}" data-v="${r.id}" tabindex="0">
+          <td><b style="font-weight:500;color:#2a77ef">${r.live ? '<span class="live-dot" aria-hidden="true"></span>' : ''}${r.id}</b>${r.live ? '<span class="muted" style="display:block;@mixin paragraph_secondary_small;">в демо-пути</span>' : ''}</td>
+          <td><b style="font-weight:500;display:block">${r.client}</b><span class="muted" style="@mixin paragraph_secondary_medium;">${r.inn}</span></td>
+          <td><b style="font-weight:500;display:block" class="tnum">${rub(r.sum)}</b><span class="muted" style="@mixin paragraph_secondary_medium;">${r.goal}</span></td>
+          <td><span class="badge ${STAGE_BADGE[r.stage] || 'b-grey'}">${r.stage}</span></td>
+          <td><div class="risk"><div class="m"><i style="width:${r.risk || 0}%;background:${riskCol(r.risk)}"></i></div><b style="font-weight:500;width:22px">${r.risk == null ? '—' : r.risk}</b><span class="muted" style="@mixin paragraph_secondary_medium;">${riskWord(r.risk)}</span></div></td>
+          <td style="${r.late ? 'color:var(--neg-t);font-weight:500' : 'color:var(--ink2)'}">${r.sla}</td><td class="muted">${r.owner}</td></tr>`).join('')}
+      </tbody></table></div>
+    </section></main></div>`;
+};
+ACT.admFilter = (d) => { S.adm.filter = d.v; render(); };
+ACT.in_q = (el) => {
+  S.adm.q = el.value;
+  const q = el.value.toLowerCase();
+  $$('#qbody tr').forEach((tr) => { tr.hidden = q && !tr.textContent.toLowerCase().includes(q); });
+};
+ACT.openLive = () => go('adm-card');
+ACT.openDemo = (d) => toast('Открыта только живая заявка', d.v + ' — пример в очереди. Откройте КЗ-10431', 'info', { label: 'Открыть', fn: () => go('adm-card') });
+document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.matches('tr[data-a]')) e.target.click(); });
+
+/* ---------- card ---------- */
+VIEWS['adm-card'] = () => {
+  ensureApp();
+  const a = S.app, t = S.adm.tab;
+  const q = quote(a.amount, a.term, a), pol = policy(a.amount, a);
+  const stg = liveStage(a);
+  const pipe = ['Приём', 'Полнота', 'Внешние источники', 'Оценка риска', 'Решение', 'Подписание', 'Выдача'];
+  const done = a.status === 'issued' ? 7 : a.status === 'signing' || a.status === 'issuing' ? 5 : ['approved', 'counter', 'refused', 'declined'].includes(a.status) ? 5 : a.status === 'expert' || a.status === 'needinfo' ? 4 : a.stage + 1;
+  const tabs = ['Обзор и риски', 'Документы', 'Решение'];
+  return `<div class="adm">${rail('adm-card')}<main class="ws">
+    <button class="back" type="button" data-go="adm" style="@mixin paragraph_secondary_large;">← Очередь заявок</button>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><h1>${a.id}</h1><span class="badge ${STAGE_BADGE[stg]}">${stg}</span>${a.decidedBy ? `<span class="badge b-grey">Решение: ${a.decidedBy === 'auto' ? 'автоматически' : a.decidedBy}</span>` : ''}</div>
+        <span class="muted">ИП Смирнова Анна Викторовна · ИНН ${esc(F().inn)} · ${rub(a.amount)} на ${termTxt(a.term)} · ${a.collat ? 'с залогом' : 'без залога'} · ${GOALS.find((g) => g.id === a.goal).t.toLowerCase()}</span>
+      </div>
+      <button class="btn secondary s40" type="button" data-a="role" data-v="client">Как видит клиент</button>
+    </div>
+    <section class="acard"><ol class="pipe" aria-label="Этапы">${pipe.map((p, i) => `<li><i style="background:${i < done ? 'var(--pos)' : i === done && done < 7 ? 'var(--att)' : '#dcdde1'}"></i><b style="font-weight:500;${i > done ? 'color:var(--ink3)' : ''}">${p}</b><span class="muted">${i < done ? 'готово' : i === done && done < 7 ? 'сейчас' : '—'}</span></li>`).join('')}</ol></section>
+    <div class="tabs" role="tablist" aria-label="Разделы заявки">${tabs.map((x, i) => `<button type="button" role="tab" aria-selected="${t === i}" data-a="admTab" data-v="${i}">${x}${i === 2 && a.status === 'expert' ? ' <span class="badge b-neg-s" style="height:20px;margin-left:4px">нужно решение</span>' : ''}</button>`).join('')}</div>
+    <div class="fade-swap" style="display:flex;flex-direction:column;gap:16px">${[cardOverview, cardDocs, cardDecision][t](a, q, pol)}</div>
+  </main></div>`;
+};
+ACT.admTab = (d) => { S.adm.tab = +d.v; render(); };
+
+function cardOverview(a, q, pol) {
+  const score = q.score, ang = Math.PI - score / 100 * Math.PI;
+  const nx = (110 + 80 * Math.cos(ang)).toFixed(1), ny = (110 - 80 * Math.sin(ang)).toFixed(1);
+  const dtiPts = score - 29;
+  const FX = [
+    ['Стабильные обороты 12 мес', -8, 'Обороты по счёту без провалов ниже 60% от среднего, кроме сезонного лета.'],
+    ['Нет просрочек в БКИ', -10, 'Два закрытых кредита и текущий лизинг обслуживаются без просрочек.'],
+    ['Бизнесу 7 лет', -5, 'Зарегистрирован в 2019 году, ОКВЭД не менялся — деятельность устойчивая.'],
+    ['Сумма ' + Math.round(a.amount / 18.4e6 * 100) + '% выручки', -2, 'Запрошенная сумма умеренная относительно годовой выручки.'],
+    ['Долговая нагрузка ' + Math.round(q.dti) + '%', dtiPts, 'С новым платежом и лизингом обязательства займут ' + Math.round(q.dti) + '% денежного потока для обслуживания долга.'],
+    ['Сезонность выручки', 4, 'В июне–июле выручка падает до 1,0 млн ₽ — платежеспособность в эти месяцы ниже.']
+  ];
+  const sel = FX[S.adm.factor] || FX[0];
+  const M = [['Н', 1.7], ['Д', 2.4], ['Я', 1.2], ['Ф', 1.3], ['М', 1.6], ['А', 1.6], ['М', 1.5], ['И', 1.1], ['И', 1.0], ['А', 1.3], ['С', 1.7], ['О', 2.0]];
+  const conf = S.docs.extra === 'ok' ? 100 : 61;
+  return `<div class="agrid">
+    <section class="acard" style="display:flex;flex-direction:column;gap:10px;align-items:center">
+      <span class="lbl" style="align-self:flex-start">Риск-балл</span>
+      <svg viewBox="0 0 220 130" width="260" height="154" role="img" aria-label="Риск-балл ${score} из 100, ${riskWord(score)}">
+        <path d="M20 110 A90 90 0 0 1 200 110" fill="none" stroke="#0cc44d" stroke-width="16" pathLength="100" stroke-dasharray="34.5 100"></path>
+        <path d="M20 110 A90 90 0 0 1 200 110" fill="none" stroke="#fa9313" stroke-width="16" pathLength="100" stroke-dasharray="0 35.5 24 100"></path>
+        <path d="M20 110 A90 90 0 0 1 200 110" fill="none" stroke="#ff4837" stroke-width="16" pathLength="100" stroke-dasharray="0 60.5 39.5 100"></path>
+        <line x1="110" y1="110" x2="${nx}" y2="${ny}" stroke="#212124" stroke-width="4" stroke-linecap="round" style="transform-origin:110px 110px;animation:needle var(--d3) var(--e-spring)"></line>
+        <circle cx="110" cy="110" r="8" fill="#212124"></circle>
+        <text x="20" y="128" font-size="10" fill="#77777f" text-anchor="middle">0</text><text x="200" y="128" font-size="10" fill="#77777f" text-anchor="middle">100</text>
+      </svg>
+      <div style="display:flex;align-items:baseline;gap:8px"><b style="@mixin headline_large;" data-count="${score}" data-fmt="n">${score}</b><span class="badge ${score < 35 ? 'b-pos' : score <= 60 ? 'b-att' : 'b-neg'}">${riskWord(score)}</span></div>
+      <span class="muted" style="@mixin paragraph_secondary_medium;text-align:center">Ниже — лучше. До 35 низкий, 35–60 умеренный, выше 60 высокий</span>
+    </section>
+    <section class="acard" style="display:flex;flex-direction:column;gap:12px">
+      <span class="lbl">Характеристики заёмщика</span>
+      <div class="kv" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))">
+        <div><span>Выручка за 12 мес</span><b>18,4 млн ₽</b></div><div><span>Подтверждено</span><b style="color:${conf < 80 ? 'var(--att-t)' : 'var(--pos-t)'}">${conf}%</b></div>
+        <div><span>Долговая нагрузка</span><b style="color:${q.dti > 50 ? 'var(--neg-t)' : q.dti > 40 ? 'var(--att-t)' : 'var(--pos-t)'}">${Math.round(q.dti)}%</b></div><div><span>Возраст бизнеса</span><b>7 лет</b></div>
+        <div><span>Платёж по заявке</span><b class="tnum">${rub(q.pay)}</b></div><div><span>Просрочки в БКИ</span><b style="color:var(--pos-t)">0</b></div>
+      </div>
+    </section>
+  </div>
+  <div class="agrid">
+    <section class="acard" style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><span class="lbl">Что повлияло на оценку</span><span class="muted" style="@mixin paragraph_secondary_medium;">база 50 → итог ${score} · нажмите на фактор</span></div>
+      <div style="display:grid;grid-template-columns:180px 1fr 36px;gap:10px;@mixin paragraph_secondary_small;" class="muted"><span></span><span style="display:grid;grid-template-columns:1fr 1fr"><span style="text-align:right;padding-right:6px">◀ снижает риск</span><span style="padding-left:6px">повышает ▶</span></span><span></span></div>
+      ${FX.map(([n, v], i) => `<button type="button" class="factor" aria-pressed="${S.adm.factor === i}" data-a="factor" data-v="${i}"><span style="@mixin paragraph_secondary_large;">${n}</span><span class="dv"><span>${v < 0 ? `<i style="width:${Math.abs(v) * 10}%;background:var(--pos)"></i>` : ''}</span><span>${v > 0 ? `<i style="width:${Math.min(100, v * 10)}%;background:var(--neg)"></i>` : ''}</span></span><b style="text-align:right;color:${v < 0 ? 'var(--pos-t)' : 'var(--neg-t)'}">${v > 0 ? '+' : '−'}${Math.abs(v)}</b></button>`).join('')}
+      <div class="plate fade-swap" style="@mixin paragraph_secondary_large;"><b style="font-weight:500">${sel[0]}.</b> ${sel[2]}</div>
+    </section>
+    <section class="acard" style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between"><span class="lbl">Обороты по месяцам, млн ₽</span><span class="muted" style="@mixin paragraph_secondary_medium;">┄ среднее 1,53</span></div>
+      <div class="months" role="img" aria-label="Выручка по месяцам: минимум 1,0 млн в июле, максимум 2,4 млн в декабре">
+        <div style="position:absolute;left:0;right:0;bottom:63.75%;border-top:1px dashed #898991"></div>
+        ${M.map(([m, v], i) => `<i title="${m}: ${String(v).replace('.', ',')} млн ₽" style="height:${(v / 2.4 * 100).toFixed(1)}%;background:${v < 1.2 ? 'var(--att)' : 'var(--info)'};animation-delay:${i * 30}ms"></i>`).join('')}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;@mixin paragraph_secondary_small;text-align:center" class="muted">${M.map((m) => `<span>${m[0]}</span>`).join('')}</div>
+      <div class="plate" style="background:var(--att-m);@mixin paragraph_secondary_large;">Сезонная просадка в июне–июле до 1,0 млн ₽ — платёж ${rub(q.pay)} в эти месяцы займёт ${Math.round(q.pay / 1e6 * 100)}% выручки</div>
+    </section>
+  </div>
+  <div class="agrid">
+    <section class="acard"><span class="lbl">Внешние и внутренние источники</span>
+      <div class="chk"><span><b style="font-weight:500">ЕГРИП</b><br><span class="muted" style="@mixin paragraph_secondary_medium;">Действующий ИП с 14.03.2019</span></span><span class="badge b-pos">✓ ок</span></div>
+      <div class="chk"><span><b style="font-weight:500">ФНС «Прозрачный бизнес»</b><br><span class="muted" style="@mixin paragraph_secondary_medium;">Задолженности нет</span></span><span class="badge b-pos">✓ ок</span></div>
+      <div class="chk"><span><b style="font-weight:500">Бюро кредитных историй</b><br><span class="muted" style="@mixin paragraph_secondary_medium;">2 кредита закрыты, лизинг 38 тыс ₽/мес, просрочек 0</span></span><span class="badge b-pos">✓ ок</span></div>
+      <div class="chk"><span><b style="font-weight:500">Обороты по счёту</b><br><span class="muted" style="@mixin paragraph_secondary_medium;">${conf === 100 ? 'Подтверждено выпиской из другого банка' : '11,2 млн против 18,4 млн в анкете'}</span></span><span class="badge ${conf === 100 ? 'b-pos' : 'b-att'}">${conf === 100 ? '✓ ок' : '! расхождение'}</span></div>
+    </section>
+    <section class="acard"><span class="lbl">Правила банка (стоп-факторы)</span>
+      <div class="chk"><span>Бизнес работает от 12 месяцев</span><span class="badge b-pos">✓ 7 лет</span></div>
+      <div class="chk"><span>Нет налоговой задолженности</span><span class="badge b-pos">✓</span></div>
+      <div class="chk"><span>Нет просрочек более 30 дней за 2 года</span><span class="badge b-pos">✓</span></div>
+      <div class="chk"><span>Долговая нагрузка не выше 50%</span><span class="badge ${pol.dtiOk ? (q.dti > 42 ? 'b-att' : 'b-pos') : 'b-neg'}">${pol.dtiOk ? '✓' : '✕'} ${Math.round(q.dti)}%</span></div>
+      <div class="chk"><span>Подтверждённая выручка покрывает сумму без залога</span><span class="badge ${pol.revOk ? 'b-pos' : 'b-neg'}">${pol.revOk ? '✓' : '✕ ' + conf + '%'}</span></div>
+    </section>
+  </div>
+  <section class="acard" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px;align-items:center;background:var(--dark);color:#fff">
+    <div style="display:flex;flex-direction:column;gap:8px"><span class="lbl" style="color:rgba(255,255,255,.55)">Рекомендация конвейера</span>
+      <b style="@mixin headline_xsmall;">${pol.pass ? 'Одобрить на запрошенных условиях' : 'Запросить выписку или предложить 2 млн ₽ без неё'}</b>
+      <span style="color:rgba(255,255,255,.65);@mixin paragraph_secondary_large;">${pol.pass ? 'Все правила политики выполнены, риск ' + riskWord(score) : 'Риск ' + riskWord(score) + ', но правило подтверждённой выручки не выполнено. Решение за аналитиком'}</span></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"><button class="btn white s40" type="button" data-a="admTab" data-v="1">Документы</button><button class="btn accent s40" type="button" data-a="admTab" data-v="2">К решению</button></div>
+  </section>`;
+}
+ACT.factor = (d) => { S.adm.factor = +d.v; render(); };
+
+function cardDocs() {
+  const ex = S.docs.extra === 'ok';
+  const D = [
+    { t: 'Паспорт ИП', meta: 'passport_smirnova.jpg', base: S.docs.passport, f: [['ФИО', 'Смирнова Анна Викторовна', 'ЕГРИП: Смирнова А. В.', 'ok'], ['Дата рождения', '12.05.1986', 'ЕГРИП: 12.05.1986', 'ok'], ['Срок действия', 'до 2031', '—', 'ok']] },
+    { t: 'Выписка по счёту ··4521', meta: 'получена по API · 12 мес', base: S.docs.statement, f: [['Поступления за 12 мес', '11,2 млн ₽', 'Анкета: 18,4 млн ₽', ex ? 'ok' : 'warn'], ['Средний остаток', '640 тыс ₽', '—', 'ok'], ['Платежи по лизингу', '38 тыс ₽/мес', 'Анкета: 38 тыс ₽', 'ok']] },
+    { t: 'Декларация УСН за 2025', meta: 'usn_2025.pdf', base: S.docs.decl, f: [['ИНН', esc(F().inn), 'Анкета: ' + esc(F().inn), 'ok'], ['Доходы за год', '18 360 000 ₽', 'Анкета: 18,4 млн ₽', 'ok'], ['Отметка ФНС о приёме', 'есть', '—', 'ok']] },
+    { t: ex ? 'Выписка из другого банка' : 'Договор с поставщиком', meta: ex ? 'vypiska_6m.pdf · от клиента' : (S.docs.contract === 'none' ? 'не загружен · необязательный' : 'supply_contract.pdf'), base: ex ? 'ok' : S.docs.contract, f: ex ? [['Поступления за 6 мес', '7,3 млн ₽', 'Разница с анкетой: 7,2 млн ₽', 'ok']] : [['Контрагент', S.docs.contract === 'none' ? '—' : 'ООО «Текстиль-Опт»', 'Цель: закупка товара', S.docs.contract === 'none' ? 'none' : 'ok']] }
+  ];
+  const st = (i) => S.adm.docOk[i] || D[i].base === 'ok' ? 'ok' : D[i].base === 'checking' ? 'wait' : D[i].base === 'none' ? 'none' : 'wait';
+  const B = { ok: ['Подтверждён', 'b-pos'], wait: ['На проверке', 'b-info'], none: ['Нет', 'b-grey'] };
+  const R = { ok: ['совпадает', 'b-pos'], warn: ['расхождение', 'b-att'], none: ['нет данных', 'b-grey'] };
+  const cur = D[S.adm.docSel], ci = S.adm.docSel;
+  const okN = D.filter((x, i) => st(i) === 'ok').length;
+  return `<div style="display:flex;justify-content:flex-end;gap:10px;align-items:center"><span class="muted" style="@mixin paragraph_secondary_large;">Подтверждено</span><b>${okN}/4</b><div class="progress" style="width:140px"><i style="width:${okN * 25}%"></i></div></div>
+  <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+    <div style="flex:1 1 280px;display:flex;flex-direction:column;gap:8px">
+      ${D.map((x, i) => `<button type="button" class="docsel" aria-pressed="${i === ci}" data-a="docSel" data-v="${i}"><span style="flex:1;min-width:0"><b style="font-weight:500;display:block">${x.t}</b><span class="muted" style="@mixin paragraph_secondary_medium;">${x.meta}</span></span><span class="badge ${B[st(i)][1]}">${B[st(i)][0]}</span></button>`).join('')}
+      ${!ex ? `<div class="acard" style="display:flex;flex-direction:column;gap:6px"><span class="lbl">Запросить у клиента</span><span style="@mixin paragraph_secondary_large;">Выписка из другого банка за 6 мес — подтвердит 7,2 млн ₽ выручки</span><button class="btn secondary s40" type="button" data-a="quickInfo" style="align-self:flex-start;margin-top:6px">Отправить запрос</button></div>` : ''}
+    </div>
+    <div style="flex:999 1 520px;min-width:0;display:flex;flex-direction:column;gap:16px">
+      <section class="acard fade-swap" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:20px">
+        <div style="background:var(--bg2);border-radius:16px;padding:18px;display:flex;justify-content:center">
+          <div style="width:100%;max-width:240px;aspect-ratio:1/1.35;background:#fff;border-radius:6px;box-shadow:0 6px 20px rgba(30,43,68,.12);padding:18px 16px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden" role="img" aria-label="Превью документа">
+            <b style="@mixin paragraph_secondary_small;text-align:center">${cur.t}</b>
+            ${[60, 100, 84, 52, 90, 100, 70, 80].map((w, i) => `<div style="height:8px;border-radius:4px;width:${w}%;background:${i === 2 || i === 4 ? 'rgba(34,136,250,.3)' : i === 5 ? 'rgba(250,147,19,.35)' : 'var(--bg3)'}"></div>`).join('')}
+            <div style="position:absolute;left:0;right:0;height:40px;background:linear-gradient(transparent,rgba(34,136,250,.25),transparent);animation:scan 2.4s linear infinite"></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px"><span class="lbl">Распознано</span><b style="@mixin accent_primary_large;">${cur.t}</b><span class="muted" style="@mixin paragraph_secondary_large;">${cur.meta}</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="badge b-pos">Качество скана 96%</span><span class="badge b-info">Тип определён автоматически</span></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:auto">${st(ci) === 'ok' ? '<span class="badge b-pos" style="height:40px;padding:0 16px">✓ Подтверждён</span>' : cur.base === 'none' ? '<span class="muted" style="@mixin paragraph_secondary_large;">Клиент не загружал документ</span>' : `<button class="btn accent s40" type="button" data-a="docApprove">Подтвердить</button>`}<button class="btn secondary s40" type="button" data-a="quickInfo">Запросить заново</button></div></div>
+      </section>
+      <section class="acard"><span class="lbl">Сверка полей</span><div style="overflow-x:auto"><table class="q" style="min-width:540px"><thead><tr><th>Поле</th><th>В документе</th><th>Анкета / реестр</th><th>Итог</th></tr></thead><tbody>
+        ${cur.f.map((r) => `<tr style="cursor:default"><td class="muted">${r[0]}</td><td><b style="font-weight:500">${r[1]}</b></td><td>${r[2]}</td><td><span class="badge ${R[r[3]][1]}">${R[r[3]][0]}</span></td></tr>`).join('')}
+      </tbody></table></div></section>
+    </div></div>`;
+}
+ACT.docSel = (d) => { S.adm.docSel = +d.v; render(); };
+ACT.docApprove = () => { S.adm.docOk[S.adm.docSel] = true; render(); toast('Документ подтверждён', 'Сверка полей сохранена'); };
+ACT.quickInfo = () => { S.adm.tab = 2; S.adm.dtype = 'info'; render(); };
+
+function cardDecision(a) {
+  const s = S.adm;
+  const final = ['approved', 'counter', 'needinfo', 'refused', 'signing', 'issuing', 'issued', 'declined'].includes(a.status);
+  const T = [['approve', 'Одобрить', 'var(--pos)'], ['counter', 'Другие условия', 'var(--att)'], ['info', 'Запросить информацию', 'var(--info)'], ['refuse', 'Отказать', 'var(--neg)']];
+  const offer = s.dtype === 'approve' || s.dtype === 'counter';
+  if (s.dtype === 'approve' && !s._approveInit) { s.amount = a.amount; s.term = a.term; s._approveInit = 1; }
+  const q = quote(s.amount, s.term, { collat: s.collat, discount: s.protect });
+  const pol = policy(s.amount, { collat: s.collat, term: s.term, discount: s.protect });
+  const terms = s.collat ? [12, 24, 36, 60, 120] : [12, 24, 36, 48, 60];
+  const prev = {
+    approve: ['var(--pos-m)', 'b-pos-s', '✓ Кредит одобрен', rub(s.amount) + ' на ' + termTxt(s.term), 'Ставка ' + q.rate + '%, платёж ' + rub(q.pay) + ' в месяц. Подписать можно онлайн'],
+    counter: ['var(--att-m)', 'b-att-s', '≈ Другие условия', 'Готовы выдать ' + rub(s.amount), 'Срок ' + termTxt(s.term) + ', платёж ' + rub(q.pay) + '. Клиент сможет принять или отказаться'],
+    info: ['var(--info-m)', 'b-info-s', '? Нужно уточнить', 'Остался один документ', 'Выписка из другого банка за 6 месяцев — подтвердит выручку'],
+    refuse: ['var(--neg-m)', 'b-neg-s', '✕ Сейчас не можем выдать', 'Объясняем почему и что можно сделать', 'Долговая нагрузка выше допустимой. Доступно: деньги частями до 1 млн ₽, эквайринг']
+  }[s.dtype];
+  const lock = final ? `<div class="plate" style="background:var(--pos-m);display:flex;gap:12px;align-items:center;flex-wrap:wrap"><b style="font-weight:500;flex:1 1 240px">Решение отправлено клиенту: ${statusLabel(a.status)[0].toLowerCase()}</b><button class="btn secondary s40" type="button" data-a="role" data-v="client">Посмотреть как клиент</button></div>` : '';
+  return `${lock}
+  <div class="dtype" role="tablist" aria-label="Тип решения">${T.map(([id, l, c]) => `<button type="button" role="tab" aria-selected="${s.dtype === id}" data-a="dtype" data-v="${id}" style="border-color:${s.dtype === id ? c : 'transparent'}"><span class="d" style="background:${c}"></span>${l}</button>`).join('')}</div>
+  <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+    <div style="flex:999 1 520px;min-width:0;display:flex;flex-direction:column;gap:16px" class="fade-swap">
+      ${offer ? `<section class="acard" style="display:flex;flex-direction:column;gap:18px">
+        <span class="lbl">Параметры предложения</span>
+        <div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between;align-items:baseline"><label for="dam">Сумма</label><b style="@mixin headline_small;" class="tnum" data-o="dam">${rub(s.amount)}</b></div>
+          <input id="dam" class="rng" type="range" min="500000" max="5000000" step="100000" value="${s.amount}" data-in="dam" data-ch="dam">
+          <div style="display:flex;justify-content:space-between;@mixin paragraph_secondary_medium;" class="muted"><span>500 тыс ₽</span><span>запрошено ${mln(a.amount)}</span><span>5 млн ₽</span></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><span>Срок</span><div class="chips">${terms.map((t) => `<button type="button" class="chip" style="height:34px" aria-pressed="${s.term === t}" data-a="dterm" data-v="${t}">${termTxt(t)}</button>`).join('')}</div></div>
+        ${sw('dcol', s.collat, '<b style="font-weight:500">Залог товаров в обороте</b><br><span class="muted" style="@mixin paragraph_secondary_medium;">Срок до 10 лет, сумма сверх подтверждённой выручки</span>', 'dcol')}
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));gap:10px">
+          <div class="metric"><span>Платёж</span><b class="tnum" data-o="dpay">${rub(q.pay)}</b></div><div class="metric"><span>Ставка</span><b>${q.rate}%</b></div>
+          <div class="metric"><span>Нагрузка</span><b data-o="ddti" style="color:${q.dti > 50 ? 'var(--neg-t)' : q.dti > 42 ? 'var(--att-t)' : 'var(--pos-t)'}">${Math.round(q.dti)}%</b></div>
+          <div class="metric"><span>Риск-балл</span><b data-o="dscore" style="color:${q.score < 35 ? 'var(--pos-t)' : q.score <= 60 ? 'var(--att-t)' : 'var(--neg-t)'}">${q.score}</b></div></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between;@mixin paragraph_secondary_medium;" class="muted"><span>Долговая нагрузка с учётом лизинга</span><span>лимит политики 50%</span></div>
+          <div class="bar" style="position:relative;height:14px"><i data-ow="dbar" style="width:${Math.min(100, q.dti).toFixed(1)}%;background:${q.dti > 50 ? 'var(--neg)' : q.dti > 42 ? 'var(--att)' : 'var(--pos)'}"></i><span style="position:absolute;top:0;bottom:0;left:50%;border-left:2px dashed #212124"></span></div></div>
+        <div class="plate" data-o="dpol" style="@mixin action_secondary_large;background:${pol.pass ? 'var(--pos-m)' : 'var(--neg-m)'};color:${pol.pass ? 'var(--pos-t)' : 'var(--neg-t)'}">${pol.pass ? '✓ Все правила политики выполнены' : !pol.dtiOk ? '✕ Нагрузка выше 50% — уменьшите сумму или увеличьте срок' : '✕ Сумма выше подтверждённой выручки — нужен залог или выписка'}</div>
+      </section>
+      <section class="acard" style="display:flex;flex-direction:column;gap:12px"><span class="lbl">Дополнительные услуги в предложении</span>
+        ${sw('dpro', s.protect, '<b style="font-weight:500">Защита бизнеса и Подписка</b><br><span class="muted" style="@mixin paragraph_secondary_medium;">Скидка на ставку: 14% вместо ' + (s.collat ? '21,5%' : '23,5%') + '</span>', 'dpro')}
+        ${sw('dacq', s.acq, '<b style="font-weight:500">Торговый эквайринг</b><br><span class="muted" style="@mixin paragraph_secondary_medium;">Закроет разрыв в подтверждённой выручке</span>', 'dacq')}
+        ${sw('dline', s.line, '<b style="font-weight:500">Деньги частями до 1 млн ₽</b><br><span class="muted" style="@mixin paragraph_secondary_medium;">На сезонную просадку июня–июля</span>', 'dline')}
+      </section>` : s.dtype === 'info' ? `<section class="acard" style="display:flex;flex-direction:column;gap:14px"><span class="lbl">Запрос информации</span>
+        <div class="field"><select id="rq"><option>Выписка из другого банка за 6 месяцев</option><option>Бухгалтерская отчётность</option><option>Договор с поставщиком</option></select><label for="rq">Документ</label></div>
+        <div class="field"><textarea id="rqt" placeholder=" ">В анкете выручка 18,4 млн ₽ за год, а по счёту в Альфа-Банке видно 11,2 млн ₽. Выписка подтвердит остальную выручку.</textarea><label for="rqt">Объяснение для клиента</label></div>
+        <div class="plate" style="background:var(--info-m);@mixin paragraph_secondary_large;">Заявка встанет на паузу. SLA не тикает, пока ждём клиента</div></section>`
+      : `<section class="acard" style="display:flex;flex-direction:column;gap:14px"><span class="lbl">Отказ</span>
+        <div class="field"><select id="rr"><option>Долговая нагрузка выше допустимой</option><option>Не подтверждена выручка</option><option>Стоп-факторы политики банка</option></select><label for="rr">Причина (клиент увидит понятными словами)</label></div>
+        <div class="field"><textarea id="rrc" placeholder=" ">Нагрузка 58% в сезон низкой выручки. Клиент лоялен — предложить лимит до 1 млн.</textarea><label for="rrc">Внутренний комментарий</label></div>
+        <span class="lbl">Альтернативы для клиента</span>
+        ${cb('ra1', true, 'Деньги частями до 1 млн ₽', 'noop')}${cb('ra2', true, 'Торговый эквайринг', 'noop')}${cb('ra3', false, 'Госпрограммы поддержки МСП', 'noop')}
+      </section>`}
+    </div>
+    <div style="flex:1 1 300px;display:flex;flex-direction:column;gap:16px">
+      <section class="acard" style="display:flex;flex-direction:column;gap:12px"><span class="lbl">Как увидит клиент</span>
+        <div class="fade-swap" style="display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:16px;background:${prev[0]}"><span class="badge ${prev[1]}" style="align-self:flex-start">${prev[2]}</span><b style="@mixin accent_primary_large;" data-o="pt">${prev[3]}</b><span style="@mixin paragraph_secondary_large;" data-o="px">${prev[4]}</span></div>
+      </section>
+      <section class="acard" style="display:flex;flex-direction:column;gap:10px">
+        <div class="field"><textarea id="dcm" placeholder=" " rows="2"></textarea><label for="dcm">Комментарий к решению</label></div>
+        <button class="btn accent block s48" type="button" data-a="sendDecision" ${offer && !pol.pass && s.dtype === 'approve' ? 'disabled' : ''}>${final ? 'Отправить новое решение' : 'Отправить решение клиенту'}</button>
+        ${offer && !pol.pass && s.dtype === 'approve' ? '<span style="@mixin paragraph_secondary_medium;color:var(--neg-t)">Одобрение недоступно: не выполнены правила политики. Используйте «Другие условия» или измените параметры</span>' : ''}
+        <span class="muted" style="@mixin paragraph_secondary_medium;">Сумма выше 10 млн ₽ или риск выше 60 — нужно второе согласование</span>
+      </section>
+    </div>
+  </div>`;
+}
+ACT.dtype = (d) => { S.adm.dtype = d.v; if (d.v === 'approve') { S.adm._approveInit = 0; } render(); };
+ACT.dterm = (d) => { S.adm.term = +d.v; render(); };
+ACT.ch_dcol = (el) => { S.adm.collat = el.checked; if (!el.checked && S.adm.term > 60) S.adm.term = 60; render(); };
+ACT.ch_dpro = (el) => { S.adm.protect = el.checked; render(); };
+ACT.ch_dacq = (el) => { S.adm.acq = el.checked; };
+ACT.ch_dline = (el) => { S.adm.line = el.checked; };
+ACT.ch_noop = () => {};
+ACT.in_dam = (el) => {
+  const s = S.adm; s.amount = +el.value;
+  const q = quote(s.amount, s.term, { collat: s.collat, discount: s.protect });
+  const set = (k, v) => { const n = $(`[data-o="${k}"]`); if (n) n.textContent = v; };
+  set('dam', rub(s.amount)); set('dpay', rub(q.pay)); set('ddti', Math.round(q.dti) + '%'); set('dscore', q.score);
+  const bar = $('[data-ow="dbar"]'); if (bar) { bar.style.width = Math.min(100, q.dti).toFixed(1) + '%'; bar.style.background = q.dti > 50 ? 'var(--neg)' : q.dti > 42 ? 'var(--att)' : 'var(--pos)'; }
+  if (s.dtype === 'approve') set('pt', rub(s.amount) + ' на ' + termTxt(s.term)); else if (s.dtype === 'counter') set('pt', 'Готовы выдать ' + rub(s.amount));
+};
+ACT.ch_dam = () => render();
+ACT.sendDecision = (d, el) => {
+  const s = S.adm;
+  el.classList.add('loading');
+  setTimeout(() => {
+    const extras = [s.acq ? 'acq' : null, s.line ? 'line' : null].filter(Boolean);
+    decide(s.dtype, { amount: s.amount, term: s.term, collat: s.collat, discount: s.protect, extras });
+    const lbl = { approve: 'одобрение', counter: 'встречное предложение', info: 'запрос документа', refuse: 'отказ' }[s.dtype];
+    render();
+    toast('Решение отправлено', 'Клиент видит: ' + lbl, 'pos', { label: 'Вид клиента', fn: () => go('status') });
+  }, 700);
+};
+
+/* ---------- analytics ---------- */
+VIEWS['adm-analytics'] = () => {
+  const per = S.adm.period, mul = per === 7 ? 1 : per === 30 ? 4.2 : 12.6;
+  const n = (v) => Math.round(v * mul).toLocaleString('ru-RU');
+  const base = [['Поступило', 312], ['Анкета полная', 288], ['Данные проверены', 279], ['Оценка риска', 274], ['Решение принято', 266], ['Предложение принято', 98], ['Выдано', 72]];
+  const TM = [['Проверка полноты', 2, 5], ['Внешние источники', 4, 10], ['Оценка риска', 3, 10], ['Решение: авто', 1, 5], ['Решение: эксперт', 95, 120], ['Подписание клиентом', 38, 0]];
+  const W = [['нед 39', 54, 22, 13, 19], ['нед 40', 58, 24, 11, 20], ['нед 41', 61, 28, 14, 21], ['нед 42', 59, 31, 12, 20]];
+  const H = [4, 9, 21, 34, 27, 18, 12, 8, 5, 2];
+  const R = [['Долговая нагрузка', 41], ['Выручка не подтверждена', 23], ['Кредитная история', 14], ['Стоп-факторы политики', 12], ['Не хватает документов', 10]];
+  const X = [['Защита бизнеса', 64], ['Деньги частями', 31], ['Эквайринг', 22], ['Онлайн-бухгалтерия', 12]];
+  const myScore = S.app ? quote(S.app.amount, S.app.term, S.app).score : 38;
+  return `<div class="adm">${rail('adm-analytics')}<main class="ws">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap"><div><h1>Аналитика конвейера</h1><span class="muted">Малый и микробизнес · синтетические данные</span></div>
+      ${seg(['7 дней', '30 дней', '90 дней'], [7, 30, 90].indexOf(per), 'period', 'white')}</div>
+    <div class="kpi">
+      <div><span class="lbl">Заявок</span><b class="tnum">${n(312)}</b><span class="muted" style="@mixin paragraph_secondary_medium;">за период</span></div>
+      <div><span class="lbl">Конверсия в выдачу</span><b>23%</b><span class="muted" style="@mixin paragraph_secondary_medium;">от поступивших</span></div>
+      <div><span class="lbl">До решения</span><b>2 ч 14 м</b><span class="muted" style="@mixin paragraph_secondary_medium;">медиана</span></div>
+      <div><span class="lbl">Авторешений</span><b>71%</b><span class="muted" style="@mixin paragraph_secondary_medium;">без эксперта</span></div>
+      <div><span class="lbl">Выдано</span><b class="tnum">${(Math.round(72 * mul * 2.6 * 10) / 10).toLocaleString('ru-RU')} млн ₽</b><span class="muted" style="@mixin paragraph_secondary_medium;">объём кредитов</span></div>
+    </div>
+    <div class="agrid">
+      <section class="acard" style="display:flex;flex-direction:column;gap:10px"><span class="lbl">Прохождение этапов</span>
+        ${base.map(([nm, v]) => `<div class="hb" title="${nm}: ${n(v)}"><span>${nm}</span><div class="t"><i style="width:${(v / 312 * 100).toFixed(1)}%;background:var(--red)"></i></div><span style="text-align:right"><b>${n(v)}</b> <span class="muted">${Math.round(v / 312 * 100)}%</span></span></div>`).join('')}
+        <span class="muted" style="@mixin paragraph_secondary_medium;">Больше всего теряем между решением и подписанием — клиенты не принимают встречные условия</span></section>
+      <section class="acard" style="display:flex;flex-direction:column;gap:10px"><div style="display:flex;justify-content:space-between"><span class="lbl">Время на этапе, мин · медиана</span><span class="muted" style="@mixin paragraph_secondary_medium;">┆ SLA</span></div>
+        ${TM.map(([nm, v, sla]) => `<div class="hb" title="${nm}: ${v} мин${sla ? ', SLA ' + sla : ''}"><span>${nm}</span><div class="t"><i style="width:${(v / 120 * 100).toFixed(1)}%;background:${v > 60 ? 'var(--att)' : 'var(--info)'}"></i>${sla ? `<span style="position:absolute;top:0;bottom:0;left:${(sla / 120 * 100).toFixed(1)}%;border-left:2px dashed #212124"></span>` : ''}</div><b style="text-align:right">${v} мин</b></div>`).join('')}
+        <span class="muted" style="@mixin paragraph_secondary_medium;">Ручное решение эксперта — узкое место: 95 мин при SLA 120</span></section>
+    </div>
+    <div class="agrid">
+      <section class="acard" style="display:flex;flex-direction:column;gap:12px"><span class="lbl">Решения по неделям</span>
+        <div class="leg"><span><span style="color:var(--pos)">■</span> Одобрено</span><span><span style="color:var(--att)">■</span> Другие условия</span><span><span style="color:var(--info)">■</span> Нужна информация</span><span><span style="color:var(--neg)">■</span> Отказ</span></div>
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:minmax(0,1fr);gap:16px;height:200px">
+          ${W.map(([l, a1, c, i, r]) => `<div title="${l}: одобрено ${a1}, другие условия ${c}, информация ${i}, отказ ${r}" style="display:flex;flex-direction:column;justify-content:flex-end;gap:2px;height:100%;transform-origin:bottom;animation:growy var(--d3) var(--e-out) both">
+            <i style="background:var(--neg);height:${r / 1.4}%;border-radius:4px 4px 0 0"></i><i style="background:var(--info);height:${i / 1.4}%"></i><i style="background:var(--att);height:${c / 1.4}%"></i><i style="background:var(--pos);height:${a1 / 1.4}%"></i></div>`).join('')}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;@mixin paragraph_secondary_medium;text-align:center" class="muted">${W.map((w) => `<span>${w[0]} · <b style="color:var(--ink)">${w[1] + w[2] + w[3] + w[4]}</b></span>`).join('')}</div></section>
+      <section class="acard" style="display:flex;flex-direction:column;gap:12px"><span class="lbl">Распределение риск-балла</span>
+        <div class="leg"><span><span style="color:var(--pos)">■</span> низкий до 35</span><span><span style="color:var(--att)">■</span> умеренный 35–60</span><span><span style="color:var(--neg)">■</span> высокий выше 60</span></div>
+        <div class="months" style="grid-template-columns:repeat(10,minmax(0,1fr));gap:2px;height:200px" role="img" aria-label="Гистограмма риск-балла">
+          ${H.map((v, i) => `<i title="Риск ${i * 10}–${i * 10 + 10}: ${v}% заявок" style="height:${(v / 34 * 100).toFixed(1)}%;background:${i < 3 ? 'var(--pos)' : i < 6 ? 'var(--att)' : 'var(--neg)'};${Math.floor(myScore / 10) === i ? 'outline:2px solid #212124;outline-offset:2px;' : ''}animation-delay:${i * 30}ms"></i>`).join('')}</div>
+        <div style="display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:2px;@mixin paragraph_secondary_small;text-align:center" class="muted">${H.map((v, i) => `<span>${i * 10}</span>`).join('')}</div>
+        <span class="muted" style="@mixin paragraph_secondary_medium;">Обведён диапазон заявки ${S.app ? S.app.id : 'КЗ-10431'} (балл ${myScore})</span></section>
+    </div>
+    <div class="agrid">
+      <section class="acard" style="display:flex;flex-direction:column;gap:10px"><span class="lbl">Причины встречных предложений и отказов</span>
+        ${R.map(([nm, v]) => `<div class="hb"><span>${nm}</span><div class="t"><i style="width:${(v / 41 * 100).toFixed(1)}%;background:var(--att)"></i></div><b style="text-align:right">${v}%</b></div>`).join('')}</section>
+      <section class="acard" style="display:flex;flex-direction:column;gap:10px"><span class="lbl">Доп. услуги: подключили после предложения</span>
+        ${X.map(([nm, v]) => `<div class="hb"><span>${nm}</span><div class="t"><i style="width:${v}%;background:var(--violet)"></i></div><b style="text-align:right">${v}%</b></div>`).join('')}</section>
+    </div></main></div>`;
+};
+ACT.period = (d) => { S.adm.period = [7, 30, 90][+d.v]; render(); };
+
+/* ================= boot ================= */
+function boot() {
+  const h = (location.hash || '').replace('#', '');
+  const map = { admin: 'adm', bank: 'adm', analytics: 'adm-analytics', apply: 'params' };
+  S.route = map[h] || (VIEWS[h] ? h : 'home');
+  S.role = S.route.startsWith('adm') ? 'bank' : 'client';
+  render(true);
+}
+boot();
+
+</script>
+</body>
+</html>

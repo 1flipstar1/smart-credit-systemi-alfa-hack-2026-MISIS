@@ -9,13 +9,14 @@ import '@alfalab/core-components/vars/typography-vars.css';
 import '@alfalab/core-components/vars/border-radius.css';
 import '@alfalab/core-components/vars/gaps.css';
 import '@alfalab/core-components/themes/site.css';
+import './fonts.css';
 import './layout.css';
 
 function App() {
     return (
         <main>
             <section className='system-note' aria-labelledby='system-title'>
-                <Typography.Title id='system-title' tag='h1' view='small' defaultMargins={false}>
+                <Typography.Title id='system-title' tag='h1' view='small' font='styrene' defaultMargins={false}>
                     Одна система. Разные сценарии.
                 </Typography.Title>
                 <Typography.Text tag='p' view='primary-medium' color='secondary' defaultMargins={false}>

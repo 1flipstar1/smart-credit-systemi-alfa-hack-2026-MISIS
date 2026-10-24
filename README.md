@@ -19,3 +19,5 @@ npm run dev
 Правила дизайн-системы — AGENTS.md. Каталог API — docs/core-components/COMPONENTS.md, параметры — docs/core-components/api. npm run ds:catalog обновляет справочник.
 
 Исторические исследования и исходные референсы сохранены. Архивный build_study.py запускать не следует.
+
+Кредитный прототип: `output/prototype/alfa-credit-cabinet.html`. Его исходник — `src/prototype.html`; он также генерируется через `npm run build`. Правила типографики, источники шрифтов и браузерные проверки описаны в [docs/typography.md](docs/typography.md).
