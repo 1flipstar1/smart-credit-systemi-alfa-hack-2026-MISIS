@@ -40,15 +40,40 @@ class ApplicationEvent(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
 
 
+class CreditProductCategory(Base):
+    __tablename__ = "credit_product_categories"
+
+    code: Mapped[str] = mapped_column(String(64), primary_key=True)
+    title: Mapped[str] = mapped_column(String(200))
+    description: Mapped[str] = mapped_column(Text, default="")
+    sort_order: Mapped[int] = mapped_column(Integer, default=0)
+
+
 class CreditProduct(Base):
     __tablename__ = "credit_products"
 
     code: Mapped[str] = mapped_column(String(64), primary_key=True)
     name: Mapped[str] = mapped_column(String(200))
+    # Calculator bounds used to validate requests.
     min_amount: Mapped[float] = mapped_column(Float, default=10000)
     max_amount: Mapped[float] = mapped_column(Float, default=10000000)
     max_term_months: Mapped[int] = mapped_column(Integer, default=120)
     active: Mapped[bool] = mapped_column(Boolean, default=True)
+    category: Mapped[str] = mapped_column(String(64), default="", index=True)
+    sort_order: Mapped[int] = mapped_column(Integer, default=0)
+    description: Mapped[str] = mapped_column(Text, default="")
+    # Published conditions; NULL means the bank sets them individually.
+    rate_from: Mapped[float | None] = mapped_column(Float, nullable=True)
+    rate_note: Mapped[str] = mapped_column(String(200), default="")
+    amount_to: Mapped[float | None] = mapped_column(Float, nullable=True)
+    term_to_months: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    term_note: Mapped[str] = mapped_column(String(200), default="")
+    source_url: Mapped[str] = mapped_column(String(500), default="")
+    # Calculator parameters the client cabinet opens the product with.
+    preset_goal: Mapped[str] = mapped_column(String(32), default="oborot")
+    preset_amount: Mapped[float] = mapped_column(Float, default=1000000)
+    preset_term_months: Mapped[int] = mapped_column(Integer, default=24)
+    preset_secured: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
 class ScoringPrediction(Base):

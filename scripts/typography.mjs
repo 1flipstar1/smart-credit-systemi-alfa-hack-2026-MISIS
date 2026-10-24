@@ -6,6 +6,9 @@ const source = fs.readFileSync('node_modules/@alfalab/core-components-vars/typog
 const mixins = new Map([...source.matchAll(/@define-mixin ([\w-]+)\s*\{([^}]+)\}/g)]
     .map(([, name, body]) => [name, body.trim().replace(/\s+/g, ' ')]));
 
+// The browser audit uses this exact installed scale, including font families.
+export const typographyProfiles = [...mixins].map(([name, css]) => ({name, css}));
+
 export function expandTypography(source) {
     return source.replace(/@mixin ([\w-]+);/g, (_, name) => {
         if (!mixins.has(name)) throw new Error(`Unknown Core Components typography mixin: ${name}`);

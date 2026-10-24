@@ -1,0 +1,30 @@
+/* Composition only. Control appearance, theme and typography come from Core Components. */
+.credit-section-title { text-align: center; }
+.credit-steps { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.credit-step { position: relative; display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.credit-step:not(:last-child)::after { content: ''; position: absolute; top: 24px; left: calc(50% + 48px); width: calc(100% - 72px); height: 1px; background: var(--color-light-neutral-300); }
+.credit-step-marker { position: relative; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
+.credit-step-marker svg { position: absolute; inset: 0; width: 48px; height: 48px; transform: rotate(-90deg); fill: none; stroke-width: 1.6; stroke-linecap: round; }
+.credit-step-track { stroke: var(--color-light-neutral-300); stroke-dasharray: 2 3; }
+.credit-step-arc { stroke: var(--color-light-accent-primary); }
+.credit-step-card { flex: 1; width: 100%; min-height: 176px; margin-top: 16px; padding: 32px; border-radius: var(--border-radius-32); background: var(--color-light-base-bg-secondary); text-align: center; display: flex; flex-direction: column; gap: 12px; }
+.credit-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+.credit-kinds { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 16px; }
+.credit-kind { display: flex; flex-direction: column; gap: 16px; padding: 28px; background: var(--color-light-base-bg-secondary); border-radius: var(--border-radius-24); min-width: 0; }
+.credit-conditions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 12px; border-radius: var(--border-radius-16); background: var(--color-light-base-bg-primary); }
+.credit-conditions dd { margin: 4px 0 0; }
+.credit-individual { padding: 16px; border-radius: var(--border-radius-16); background: var(--color-light-base-bg-primary); }
+.credit-kind-action { margin-top: auto; padding-top: 4px; }
+.credit-kind-match { background: var(--color-light-base-bg-primary-inverted); }
+.credit-catalog-note { margin-top: 16px; }
+.credit-lead-section { padding-top: 40px; }
+.credit-lead-band { background: var(--color-light-base-bg-secondary); border-radius: var(--border-radius-32); padding: clamp(24px,5vw,64px); display: flex; justify-content: center; }
+.credit-lead-form { width: 100%; max-width: 460px; background: var(--color-light-base-bg-primary); border-radius: var(--border-radius-24); padding: 32px; display: flex; flex-direction: column; gap: 16px; }
+@media (max-width: 720px) {
+    .credit-steps { grid-template-columns: 1fr; gap: 24px; }
+    .credit-step:not(:last-child)::after { display: none; }
+    .credit-step-card { padding: 24px; min-height: 0; }
+    .credit-kind { padding: 24px; }
+    .credit-conditions { padding: 12px; gap: 8px; }
+    .credit-lead-band, .credit-lead-form { padding: 24px; }
+}

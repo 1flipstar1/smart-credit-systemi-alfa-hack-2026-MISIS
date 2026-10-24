@@ -75,3 +75,27 @@ def test_update_draft_only_before_submit():
 
     client.post(f"/api/applications/{app_id}/submit")
     assert client.put(f"/api/applications/{app_id}", json=payload).status_code == 409
+
+
+def test_product_catalog_and_summary():
+    from app.db.catalog import PRODUCTS, seed_catalog
+    from app.db.database import SessionLocal
+
+    with SessionLocal() as db:
+        seed_catalog(db)
+        seed_catalog(db)  # idempotent
+    client = TestClient(app)
+
+    products = client.get("/api/products").json()
+    assert len(products) == len(PRODUCTS)
+    overdraft = client.get("/api/products/overdraft").json()
+    assert overdraft["rate_from"] == 13 and overdraft["amount_to"] == 20e6
+    assert overdraft["preset"]["goal"] == "gap"
+    assert client.get("/api/products/unknown").status_code == 404
+    assert {p["category"] for p in client.get("/api/products?category=line").json()} == {"line"}
+
+    summary = {s["code"]: s for s in client.get("/api/products/summary").json()}
+    assert summary["line"]["rate_from"] == 13
+    assert summary["secured"]["amount_to"] == 150e6
+    assert summary["other"]["rate_from"] is None
+    assert sum(s["products_count"] for s in summary.values()) == len(PRODUCTS)

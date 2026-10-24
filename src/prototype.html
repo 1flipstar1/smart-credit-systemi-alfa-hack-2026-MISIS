@@ -119,12 +119,7 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .task.ai{background:var(--red);color:#fff;box-shadow:0 12px 32px rgba(239,49,36,.28)}.task.ai span{color:rgba(255,255,255,.86)}.task.ai .go{color:#fff}.task.ai:hover{background:var(--red-h)}
 .task.ai .ai-tag{align-self:flex-start;display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:99px;background:rgba(255,255,255,.2);color:#fff;@mixin action_secondary_medium;letter-spacing:0}
 .task.ai img{width:144px;height:144px}
-.steps4{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px}
-.step4{display:flex;flex-direction:column;align-items:center;gap:16px}
 .num{width:34px;height:34px;border-radius:50%;border:2px dashed var(--red);display:flex;align-items:center;justify-content:center;@mixin action_secondary_large;}
-.num.full{background:var(--red);color:#fff;border-style:solid}
-.step4 .box{width:100%;background:var(--bg2);border-radius:24px;padding:24px;text-align:center;min-height:132px}
-.step4 b{display:block;@mixin headline_xsmall;margin-bottom:8px}
 .banner{background:var(--dark);border-radius:var(--r-xl);padding:clamp(24px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:32px;align-items:center;color:#fff;overflow:hidden}
 .mini{background:var(--dark2);border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:14px}
 .segbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
@@ -140,8 +135,6 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .trow.head:hover{background:var(--bg2)}
 .trow b{@mixin action_component_primary;}
 .fade-swap{animation:fadeup var(--d2) var(--e-out)}
-.formband{background:var(--bg2);border-radius:var(--r-xl);padding:clamp(24px,5vw,64px);display:flex;justify-content:center}
-.formcard{width:100%;max-width:460px;background:#fff;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:16px}
 .footer{background:var(--dark);color:#fff;border-radius:var(--r-sheet) var(--r-sheet) 0 0;margin-top:-48px;position:relative}
 .footer .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:32px;@mixin paragraph_primary_small;padding-block:64px 48px}
 .footer .cols div{display:flex;flex-direction:column;gap:8px}
@@ -171,7 +164,7 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .field select{cursor:pointer}
 .field textarea{resize:vertical;min-height:84px}
 .field label{position:absolute;left:12px;top:17px;@mixin paragraph_component_primary;color:var(--ink2);pointer-events:none;transform-origin:left top;transition:transform var(--d2) var(--e-std),color var(--d2)}
-.field input:focus+label,.field input:not(:placeholder-shown)+label,.field select+label,.field textarea+label{transform:translateY(-9px) scale(.75)}
+.field input:focus+label,.field input:not(:placeholder-shown)+label,.field select+label,.field textarea+label{@mixin paragraph_secondary_medium;transform:translateY(-9px)}
 .field::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line2);transition:height var(--d1),background var(--d1)}
 .field:focus-within::after{height:2px;background:#212124}
 .field.err::after{height:2px;background:var(--neg)}
@@ -212,7 +205,6 @@ input[type=range].rng{-webkit-appearance:none;appearance:none;width:100%;height:
 .acc-item.open .acc-body{grid-template-rows:1fr}
 .acc-body>div{overflow:hidden}
 .acc-body p{margin:0;padding:0 24px 20px;@mixin paragraph_primary_small;color:var(--ink2)}
-
 /* ---------- cards & badges ---------- */
 .card{background:#fff;border-radius:28px;padding:28px}
 .plate{background:var(--bg2);border-radius:var(--r-m);padding:14px 16px}
@@ -299,7 +291,7 @@ input[type=range].rng{-webkit-appearance:none;appearance:none;width:100%;height:
 .rail button{display:flex;align-items:center;gap:10px;min-height:40px;padding:0 12px;border-radius:10px;color:rgba(255,255,255,.72);background:none;border:0;@mixin action_component_secondary;cursor:pointer;text-align:left;transition:background var(--d1),color var(--d1)}
 .rail button:hover{background:var(--dark2);color:#fff}
 .rail button.on{background:var(--dark3);color:#fff}
-.rail .cnt{margin-left:auto;@mixin paragraph_secondary_medium;background:var(--red);color:#fff;border-radius:99px;padding:0 7px;line-height:20px}
+.rail .cnt{margin-left:auto;@mixin paragraph_secondary_medium;background:var(--red);color:#fff;border-radius:99px;padding:0 7px;min-height:20px;display:inline-flex;align-items:center}
 .rail .sep{height:1px;background:var(--dark3);margin:10px 4px}
 .ws{flex:999 1 640px;min-width:0;padding:24px clamp(16px,2.5vw,32px) 64px;display:flex;flex-direction:column;gap:16px}
 .ws h1{@mixin headline_small;}
@@ -324,10 +316,10 @@ table.q tr.live td{background:#fff8f7}
 .risk{display:flex;align-items:center;gap:8px}
 .risk .m{width:64px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
 .risk .m i{display:block;height:100%}
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line2);position:relative}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line2);position:relative;overflow-x:clip}
 .tabs button{background:none;border:0;padding:12px 4px;margin-right:20px;@mixin action_component_primary;color:var(--ink2);cursor:pointer;transition:color var(--d1)}
 .tabs button[aria-selected="true"]{color:var(--ink)}
-.tabs .ul{position:absolute;bottom:-1px;height:2px;background:var(--red);transition:transform var(--d2) var(--e-std),width var(--d2) var(--e-std)}
+.tabs .ul{position:absolute;left:0;bottom:-1px;height:2px;background:var(--red);transition:transform var(--d2) var(--e-std),width var(--d2) var(--e-std)}
 .pipe{list-style:none;margin:0;padding:0;display:flex;gap:6px;overflow-x:auto}
 .pipe li{flex:1 0 120px;display:flex;flex-direction:column;gap:6px;@mixin paragraph_secondary_medium;}
 .pipe i{display:block;height:6px;border-radius:3px;background:#dcdde1;transition:background var(--d3)}
@@ -406,7 +398,7 @@ table.q tr.live td{background:#fff8f7}
   .h2,.cab-top h1{@mixin headline-mobile_medium;}
   .ws h1{@mixin headline-mobile_small;}
   .kpi b{@mixin headline-mobile_medium;}
-  .param b,.task b,.step4 b,.metric b{@mixin headline-mobile_xsmall;}
+  .param b,.task b,.metric b{@mixin headline-mobile_xsmall;}
 }
 
 p{margin:0}
@@ -417,6 +409,7 @@ p{margin:0}
 <div class="demobar" id="demobar"></div>
 <div id="view" aria-live="polite"></div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
+<!-- CORE_SECTIONS -->
 <script>
 const IMG=/* CREDIT_ILLUSTRATIONS */{};
 'use strict';
@@ -450,6 +443,24 @@ const HINTS = {
   tender: 'Понадобится номер контракта или извещения о закупке.',
   other: 'Расскажите о задаче в чате — помощник подскажет продукт.'
 };
+/* Каталог кредитов (alfabank.ru/sme/profits/). При подключённом API берётся из БД (/api/products),
+   без API — встроенная при сборке копия credit_cabinet_backend/app/db/credit_catalog.json */
+const CATALOG = /* CREDIT_CATALOG */{ categories: [], products: [] };
+function offerProducts() {
+  return Array.isArray(BE.products) && BE.products.every((p) => p.category) ? BE.products : CATALOG.products;
+}
+function offerSummary() {
+  if (Array.isArray(BE.summary)) return BE.summary;
+  // Same rule as GET /api/products/summary: the best published value per category.
+  const ps = offerProducts();
+  return CATALOG.categories.map((c) => {
+    const items = ps.filter((p) => p.category === c.code);
+    const vals = (k) => items.map((p) => p[k]).filter((v) => v != null);
+    const rates = vals('rate_from'), amounts = vals('amount_to'), terms = vals('term_to_months');
+    return { ...c, products_count: items.length, products: items.map((p) => p.name),
+      rate_from: rates.length ? Math.min(...rates) : null, amount_to: amounts.length ? Math.max(...amounts) : null, term_to_months: terms.length ? Math.max(...terms) : null };
+  }).filter((c) => c.products_count);
+}
 const STAGES = [
   ['Проверка полноты', 'Анкета и документы заполнены'],
   ['Внешние источники', 'ЕГРИП, ФНС и бюро кредитных историй'],
@@ -461,8 +472,8 @@ const CASH_FLOW = 445000, LEASE = 38000;
 
 /* ================= state ================= */
 const fresh = () => ({
-  route: 'home', role: 'client', biz: 'ip', tblTab: 0, faq: -1, logged: false,
-  form: { goal: 'oborot', ai: 4, term: 24, sec: false, discount: true, consents: [true, true, false], inn: '772512345678', phone: '', email: 'smirnova@example.ru', who: 'Собственник бизнеса', revenue: '18 400 000', costs: '1 120 000', other: '38 000' },
+  route: 'home', role: 'client', biz: 'ip', faq: -1, logged: false,
+  form: { goal: 'oborot', offer: '', offerCode: '', ai: 4, term: 24, sec: false, discount: true, consents: [true, true, false], inn: '772512345678', phone: '', email: 'smirnova@example.ru', who: 'Собственник бизнеса', revenue: '18 400 000', costs: '1 120 000', other: '38 000' },
   company: { state: 'found' },
   docs: { passport: 'ok', statement: 'ok', decl: 'checking', contract: 'none' },
   app: null, be: { draftId: null }, uploads: [],
@@ -533,27 +544,35 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal
 
 /* ================= router & render ================= */
 const VIEWS = {};
-let leaving = false;
+const ROUTE_ALIASES = { admin: 'adm', bank: 'adm', analytics: 'adm-analytics', apply: 'params' };
+const resolveRoute = (route) => ROUTE_ALIASES[route] || (VIEWS[route] ? route : 'home');
+const historyEntry = (y = window.scrollY) => ({ ...history.state, creditCabinet: true, route: S.route, y });
+// Address, state and screen change together; animations never delay a navigation.
 function go(route, opts = {}) {
-  if (route === S.route && !opts.force) { render(); return; }
-  const v = $('#view');
-  const swap = () => {
-    S.route = route;
-    S.role = route.startsWith('adm') ? 'bank' : 'client';
-    render(true);
-    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
-  };
-  if (leaving) return swap();
-  leaving = true;
-  v.classList.add('leave');
-  setTimeout(() => { v.classList.remove('leave'); leaving = false; swap(); }, 150);
+  route = resolveRoute(route);
+  if (route === S.route && !opts.force) return;
+  closeModal(true);
+  if (!opts.fromHistory) {
+    history.replaceState(historyEntry(), '', '#' + S.route);
+    history.pushState({ creditCabinet: true, route, y: 0 }, '', '#' + route);
+  }
+  S.route = route;
+  S.role = route.startsWith('adm') ? 'bank' : 'client';
+  render(true);
+  const heading = $('#view h1');
+  if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
+  window.scrollTo({ top: opts.y || 0, behavior: 'instant' });
 }
 function render(isNew) {
   const v = $('#view');
   const fn = VIEWS[S.route] || VIEWS.home;
+  window.CreditSections.unmount();
   v.innerHTML = fn();
+  window.CreditSections.mount({ categories: offerSummary(), lead: {inn: F().inn, phone: F().phone},
+    onLeadChange: (field, value) => { F()[field] = value; save(); },
+    onLeadSubmit: () => queueMicrotask(() => ACT.leadSubmit()) });
   // Views may redirect (status → sign/done); keep the address in sync so a reload reopens this screen.
-  if (location.hash.slice(1) !== S.route) history.replaceState(null, '', '#' + S.route);
+  if (location.hash.slice(1) !== S.route) history.replaceState(historyEntry(), '', '#' + S.route);
   if (isNew) { v.style.animation = 'none'; void v.offsetWidth; v.style.animation = ''; v.classList.add('entering'); clearTimeout(render._t); render._t = setTimeout(() => v.classList.remove('entering'), 900); }
   renderDemoBar();
   after();
@@ -746,7 +765,7 @@ const BE_STAGE = { draft: 'Черновик', review: 'Ждёт эксперта
 const DOC_STATUS = { queued: ['В очереди', 'b-info'], processing: ['Распознаём', 'b-info'], recognized: ['✓ Распознан', 'b-pos'], manual_review: ['Ручная проверка', 'b-att'], failed: ['Ошибка', 'b-neg'] };
 
 const BE = {
-  base: '', online: false, products: null, queue: null, analytics: null, gen: 0,
+  base: '', online: false, products: null, summary: null, queue: null, analytics: null, gen: 0,
   async init() {
     const q = new URLSearchParams(location.search).get('api');
     const bases = q != null ? [q.replace(/\/$/, '')] : location.protocol.startsWith('http') ? ['', 'http://localhost:8000'] : ['http://localhost:8000'];
@@ -757,7 +776,10 @@ const BE = {
       } catch (e) { /* try next base */ }
     }
     if (this.online) {
-      try { this.products = await this.req('GET', '/api/products'); } catch (e) { /* default product code */ }
+      try {
+        [this.products, this.summary] = await Promise.all([this.req('GET', '/api/products'), this.req('GET', '/api/products/summary')]);
+        if (S.route === 'home') render();
+      } catch (e) { /* built-in catalog */ }
       setInterval(bePoll, 3000);
       bePoll();
     }
@@ -784,7 +806,8 @@ const live = () => BE.online && S.app && S.app.backendId;
 function bePayload(amt = amount(), term) {
   const f = F(), p = product(f, amt);
   return {
-    product_code: (BE.products && BE.products[0] && BE.products[0].code) || 'business_standard',
+    // Продукт из каталога, если клиент выбрал его; иначе — общий код подбора по задаче.
+    product_code: f.offerCode || 'business_standard',
     amount: amt, term_months: term || Math.min(f.term, p.maxT),
     goal: GOALS.find((g) => g.id === f.goal).t + ' · ' + p.name,
     inn: /^\d{10}$|^\d{12}$/.test(f.inn) ? f.inn : '',
@@ -1002,14 +1025,6 @@ const ICO = {
 };
 
 VIEWS.home = () => {
-  const tbl = S.tblTab === 0 ? [
-    ['Ставка', 'от 23,5%', 'от 21,5%'], ['Ставка со скидкой<span style="display:block;@mixin paragraph_secondary_medium;color:var(--ink2);margin-top:4px">при Защите бизнеса и Подписке</span>', 'от 14%', 'от 14%'],
-    ['Сумма', 'от 300 000 ₽ до 30 млн ₽', 'от 500 000 ₽ до 150 млн ₽'], ['Срок', 'от 1 до 5 лет', 'от 1 до 10 лет'], ['Главное отличие', 'Без поручителей для ИП', 'Разные виды залогов']
-  ] : [
-    ['Как работает', 'Лимит на срок договора', 'Транши по заявке в кабинете'], ['Проценты', 'Только на выбранную сумму', 'Только на выбранную сумму'],
-    ['Лимит', 'устанавливаем за 1 день', 'после оценки'], ['Подходит для', 'Кассовых разрывов', 'Закупок по графику']
-  ];
-  const tblHead = S.tblTab === 0 ? ['Без залога', 'С залогом'] : ['Возобновляемая линия', 'Невозобновляемая линия'];
   const faq = [
     ['Какие документы нужны для заявки?', 'Регистрационные данные подтянем по ИНН. Если для решения понадобится что-то ещё, запросим это прямо в кабинете.'],
     ['Чем предварительная оценка отличается от решения?', 'Оценка показывает уровень риска. Итоговое решение учитывает ещё продукт, сумму, срок и результаты проверок.'],
@@ -1054,14 +1069,8 @@ VIEWS.home = () => {
       </div>
     </section>
 
-    <section class="sec">
-      <h2 class="h2" style="text-align:center;margin-bottom:8px">Как получить кредит</h2>
-      <p class="muted" style="text-align:center;margin:0 0 40px">Весь путь — в одном кабинете, без звонков и визитов в офис</p>
-      <div class="steps4">
-        ${[['Выберите задачу', 'Подскажем продукт, сумму и срок'], ['Подтвердите данные', 'Заполним анкету по ИНН из ЕГРЮЛ и ЕГРИП'], ['Получите решение', 'Одобрение, другие условия или уточняющий вопрос'], ['Подпишите онлайн', 'Деньги придут на расчётный счёт']]
-          .map((s, i) => `<div class="step4"><span class="num ${i === 3 ? 'full' : ''}">${i + 1}</span><div class="box"><b>${s[0]}</b><span class="muted" style="@mixin paragraph_primary_small;">${s[1]}</span></div></div>`).join('')}
-      </div>
-    </section>
+    <section class="sec" id="credit-howto"></section>
+    <section class="credit-lead-section" id="credit-lead"></section>
 
     <section class="sec"><div class="banner">
       <div style="display:flex;flex-direction:column;gap:20px">
@@ -1078,31 +1087,15 @@ VIEWS.home = () => {
       <div style="display:flex;justify-content:center">${img('clock', 'Красный секундомер', 'width:min(100%,426px)')}</div>
     </div></section>
 
-    <section class="sec">
-      <div class="sec-h"><h2 class="h2">Виды кредитов и условия</h2>${seg(['Кредит одной суммой', 'Деньги частями'], S.tblTab, 'tblTab')}</div>
-      <div style="overflow-x:auto"><div class="table fade-swap" id="tbl">
-        <div class="trow head"><span></span><span>${tblHead[0]}</span><span>${tblHead[1]}</span></div>
-        ${tbl.map((r) => `<div class="trow"><b>${r[0]}</b><span>${r[1]}</span><span>${r[2]}</span></div>`).join('')}
-      </div></div>
-    </section>
-
-    <section class="sec"><div class="formband">
-      <form class="formcard" data-submit="leadSubmit" novalidate>
-        <h3 style="@mixin headline_small;">Заявка на кредит</h3>
-        <p class="muted" style="margin:0;@mixin paragraph_primary_small;">Укажите ИНН — остальное заполним сами и покажем предварительное решение</p>
-        <div class="field" id="f-inn"><input id="lead-inn" inputmode="numeric" maxlength="12" placeholder=" " value="${esc(F().inn)}" data-in="inn" autocomplete="off"><label for="lead-inn">ИНН компании или ИП</label></div>
-        <div class="field" id="f-phone" style="margin-top:8px"><input id="lead-phone" type="tel" placeholder=" " value="${esc(F().phone)}" data-in="phone" autocomplete="off"><label for="lead-phone">Телефон</label></div>
-        <button class="btn accent block" type="submit" id="lead-btn" style="margin-top:12px">Продолжить</button>
-        <span class="muted" style="@mixin paragraph_secondary_medium;">Нажимая «Продолжить», вы даёте согласие на обработку персональных данных</span>
-      </form>
-    </div></section>
+    <section class="sec" id="credit-kinds"></section>
 
     <section class="sec">
       <h2 class="h2" style="margin-bottom:24px">Вопросы и ответы</h2>
-      <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="faq-list" style="display:flex;flex-direction:column;gap:8px">
         ${faq.map((q, i) => `<div class="acc-item ${S.faq === i ? 'open' : ''}"><button type="button" aria-expanded="${S.faq === i}" data-a="faq" data-v="${i}">${q[0]}${CHEV}</button><div class="acc-body"><div><p>${q[1]}</p></div></div></div>`).join('')}
       </div>
     </section>
+
   </div></main>
 
   <footer class="footer"><div class="wrap cols">
@@ -1114,43 +1107,30 @@ VIEWS.home = () => {
 };
 ACT.soon = () => toast('Раздел вне прототипа', 'В демо работает «Малому бизнесу и ИП»', 'info');
 ACT.biz = (d) => { S.biz = d.v === '0' ? 'ip' : 'ooo'; render(); };
-ACT.tblTab = (d) => { S.tblTab = +d.v; render(); };
 ACT.faq = (d, el) => {
   const i = +d.v;
   S.faq = S.faq === i ? -1 : i;
-  $$('.acc-item').forEach((it, k) => { it.classList.toggle('open', k === S.faq); $('button', it).setAttribute('aria-expanded', k === S.faq); });
+  $$('.faq-list .acc-item').forEach((it, k) => { it.classList.toggle('open', k === S.faq); $('button', it).setAttribute('aria-expanded', k === S.faq); });
 };
-ACT.pickTask = (d) => { F().goal = d.v; if (d.v === 'equip') F().sec = true; go('params'); };
+ACT.pickTask = (d) => { F().goal = d.v; F().offer = F().offerCode = ''; if (d.v === 'equip') F().sec = true; go('params'); };
+ACT.pickOffer = (d) => {
+  const o = offerProducts().find((p) => p.code === d.v);
+  if (!o) return;
+  const ai = AMOUNTS.findIndex((v) => v >= o.preset.amount);
+  Object.assign(F(), { goal: o.preset.goal, sec: o.preset.secured, ai: ai < 0 ? AMOUNTS.length - 1 : ai, term: o.preset.term_months, offer: o.name, offerCode: o.code });
+  go('params');
+};
 ACT.login = () => modal(`
   <h3 style="@mixin headline_small;">Вход в кабинет</h3>
   <p class="muted" style="margin:0">В прототипе вход демонстрационный: данные не запрашиваются и никуда не отправляются</p>
   <div class="plate" style="display:flex;gap:12px;align-items:center"><span class="ava">АС</span><div><b style="font-weight:500">ИП Смирнова А. В.</b><span class="muted" style="display:block;@mixin paragraph_secondary_large;">Демо-клиент · ИНН 772512345678</span></div></div>
   <button class="btn accent block" type="button" data-a="doLogin">Войти как демо-клиент</button>`);
 ACT.doLogin = (d, el) => { el.classList.add('loading'); setTimeout(() => { S.logged = true; closeModal(); render(); toast('Вы вошли', 'Демо-клиент ИП Смирнова А. В.'); }, 700); };
-ACT.in_inn = (el) => { el.value = el.value.replace(/\D/g, '').slice(0, 12); F().inn = el.value; $('#f-inn').classList.remove('err'); $('#f-inn .hint')?.remove(); };
-ACT.in_phone = (el) => {
-  let d = el.value.replace(/\D/g, '');
-  if (d.startsWith('8')) d = '7' + d.slice(1);
-  if (d && !d.startsWith('7')) d = '7' + d;
-  d = d.slice(0, 11);
-  const p = d.slice(1);
-  let out = d ? '+7' : '';
-  if (p.length) out += ' (' + p.slice(0, 3);
-  if (p.length >= 3) out += ') ' + p.slice(3, 6);
-  if (p.length >= 6) out += '-' + p.slice(6, 8);
-  if (p.length >= 8) out += '-' + p.slice(8, 10);
-  el.value = out; F().phone = out;
-  $('#f-phone').classList.remove('err'); $('#f-phone .hint')?.remove();
-};
 function fieldErr(id, msg) { const f = $(id); f.classList.add('err'); if (!$('.hint', f)) f.insertAdjacentHTML('beforeend', `<span class="hint">${msg}</span>`); }
 ACT.leadSubmit = () => {
-  let ok = true;
-  if (!/^\d{10}$|^\d{12}$/.test(F().inn)) { fieldErr('#f-inn', 'ИНН — 10 цифр для ООО или 12 для ИП'); ok = false; }
-  if (F().phone.replace(/\D/g, '').length !== 11) { fieldErr('#f-phone', 'Введите номер полностью'); ok = false; }
-  if (!ok) return;
-  $('#lead-btn').classList.add('loading');
   S.company.state = 'loading';
-  setTimeout(() => { go('company'); setTimeout(lookupInn, 50); }, 500);
+  go('company');
+  setTimeout(lookupInn, 50);
 };
 
 /* ================= К1 PARAMS ================= */
@@ -1167,7 +1147,7 @@ VIEWS.params = () => {
       <section class="card" style="display:flex;flex-direction:column;gap:16px">
         <span class="lbl">Цель финансирования</span>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:10px">
-          ${GOALS.map((g) => `<button type="button" class="goal" aria-pressed="${f.goal === g.id}" data-a="goal" data-v="${g.id}">${img(g.img)}<span style="display:flex;flex-direction:column;gap:2px"><b style="@mixin action_component_primary;line-height:20px">${g.t}</b><span class="muted" style="@mixin paragraph_secondary_medium;">${g.d}</span></span></button>`).join('')}
+          ${GOALS.map((g) => `<button type="button" class="goal" aria-pressed="${f.goal === g.id}" data-a="goal" data-v="${g.id}">${img(g.img)}<span style="display:flex;flex-direction:column;gap:2px"><b style="@mixin paragraph_component_primary;">${g.t}</b><span class="muted" style="@mixin paragraph_secondary_medium;">${g.d}</span></span></button>`).join('')}
         </div>
       </section>
       <section class="card" style="display:flex;flex-direction:column;gap:24px">
@@ -1192,6 +1172,7 @@ VIEWS.params = () => {
       <div class="card" style="display:flex;flex-direction:column;gap:4px">
         <span class="lbl">Подходит лучше всего</span>
         <b style="@mixin headline_xsmall;margin:6px 0 8px" class="fade-swap">${p.name}</b>
+        ${f.offer ? `<span class="badge b-info" style="height:auto;padding:6px 10px;white-space:normal;align-self:flex-start;margin-bottom:8px">Вы выбрали: ${esc(f.offer)}</span>` : ''}
         <div class="row"><span class="muted">Ставка</span><b>от ${q.rate}%</b></div>
         <div class="row"><span class="muted">Платёж в месяц</span><b class="tnum" data-o="pay">${p.key === 'line' ? 'по траншам' : rub(q.pay)}</b></div>
         <div class="row"><span class="muted">Переплата</span><b class="tnum" data-o="over">${p.key === 'line' ? 'от выборки' : rub(q.over)}</b></div>
@@ -1203,7 +1184,7 @@ VIEWS.params = () => {
     </aside>
   </div></div>`;
 };
-ACT.goal = (d) => { F().goal = d.v; if (d.v === 'equip') F().sec = true; render(); };
+ACT.goal = (d) => { F().goal = d.v; F().offer = F().offerCode = ''; if (d.v === 'equip') F().sec = true; render(); };
 ACT.term = (d) => { F().term = +d.v; render(); };
 ACT.sec = (d) => { F().sec = d.v === '1'; render(); };
 ACT.in_amt = (el) => {
@@ -1230,7 +1211,7 @@ VIEWS.company = () => {
   const found = st === 'found';
   const body = st === 'loading' ? `<div style="display:flex;flex-direction:column;gap:12px" aria-busy="true"><span class="muted" style="@mixin paragraph_secondary_large;">Запрашиваем ЕГРИП и сервисы ФНС…</span><div class="kv">${Array(6).fill('<div><span class="skel" style="width:40%;height:10px"></span><span class="skel" style="width:80%;margin-top:6px"></span></div>').join('')}</div></div>`
     : found ? `<div class="stagger" style="display:flex;flex-direction:column;gap:14px">
-        <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="badge b-pos">✓ ЕГРИП: действующий</span><span class="badge b-pos">✓ «Прозрачный бизнес»: нет налоговой задолженности</span><span class="badge b-info">Обновлено сегодня</span></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="badge b-pos">✓ ЕГРИП: действующий</span><span class="badge b-pos" title="ФНС «Прозрачный бизнес»">✓ ФНС: нет налоговой задолженности</span><span class="badge b-info">Обновлено сегодня</span></div>
         <div class="kv">
           <div><span>Наименование</span><b>ИП Смирнова Анна Викторовна</b></div><div><span>ОГРНИП</span><b>319774600123456</b></div>
           <div><span>Дата регистрации</span><b>14.03.2019 · 7 лет</b></div><div><span>Основной ОКВЭД</span><b>47.71 Розничная торговля одеждой</b></div>
@@ -1530,7 +1511,7 @@ function counterView(a) {
       <div style="display:flex;flex-direction:column;gap:14px">
         <span class="badge b-att-s" style="align-self:flex-start">≈ Другие условия</span>
         <h2 class="h1c">Готовы выдать кредит — немного иначе</h2>
-        <span style="line-height:24px">Платёж ${rub(asked)} в месяц — высокая нагрузка с учётом сезонной выручки и текущего лизинга. Выберите вариант с платежом ниже</span>
+        <span style="@mixin paragraph_primary_medium;">Платёж ${rub(asked)} в месяц — высокая нагрузка с учётом сезонной выручки и текущего лизинга. Выберите вариант с платежом ниже</span>
       </div>${img('sliders', 'Панель с ползунками')}
     </section>
     <section class="card" style="display:flex;flex-direction:column;gap:14px">
@@ -1581,7 +1562,7 @@ ACT.addSvc = (d) => { S.added = S.added || {}; if (S.added[d.v]) return; S.added
 function needInfoView(a) {
   const up = S.ui.needUploaded;
   return `<section class="outcome-hero" style="background:var(--info-m)">
-      <div style="display:flex;flex-direction:column;gap:14px"><span class="badge b-info-s" style="align-self:flex-start">? Нужно уточнить</span><h2 class="h1c">Остался один документ</h2><span style="line-height:24px">Рассмотрение на паузе, пока его нет. Загрузите — и мы продолжим с того же места</span></div>${img('docs', 'Документы с галочкой')}
+      <div style="display:flex;flex-direction:column;gap:14px"><span class="badge b-info-s" style="align-self:flex-start">? Нужно уточнить</span><h2 class="h1c">Остался один документ</h2><span style="@mixin paragraph_primary_medium;">Рассмотрение на паузе, пока его нет. Загрузите — и мы продолжим с того же места</span></div>${img('docs', 'Документы с галочкой')}
     </section>
     <section class="card" style="display:flex;flex-direction:column;gap:16px">
       <span class="lbl">Запрос от банка</span>
@@ -1611,7 +1592,7 @@ function refusedView(a) {
   return `<section class="card" style="display:flex;flex-direction:column;gap:14px;padding:clamp(24px,4vw,40px)">
       <span class="badge b-neg" style="align-self:flex-start">✕ Сейчас не можем выдать кредит</span>
       <h2 class="h1c">Объясняем почему и что можно сделать</h2>
-      <span class="muted" style="max-width:640px;line-height:24px">Это решение по текущей заявке, а не по вашему бизнесу в целом</span>
+      <span class="muted" style="max-width:640px;@mixin paragraph_primary_medium;">Это решение по текущей заявке, а не по вашему бизнесу в целом</span>
     </section>
     <section class="card" style="display:flex;flex-direction:column;gap:16px">
       <span class="lbl">Главная причина</span>
@@ -1755,7 +1736,7 @@ VIEWS.done = () => {
         <div style="display:flex;flex-direction:column;gap:14px">
           <span class="badge" style="align-self:flex-start;background:#fff;color:var(--red)">✓ Деньги на счёте</span>
           <b class="big tnum" data-count="${o.amount}">${rub(o.amount)}</b>
-          <span style="color:rgba(255,255,255,.88);line-height:24px">${o.line ? 'Лимит открыт. Транши можно брать в кабинете' : 'Зачислены на расчётный счёт ··4521'} · ${nowHM()}</span>
+          <span style="color:rgba(255,255,255,.88);@mixin paragraph_primary_medium;">${o.line ? 'Лимит открыт. Транши можно брать в кабинете' : 'Зачислены на расчётный счёт ··4521'} · ${nowHM()}</span>
           <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn white" type="button" data-a="toAccount">Перейти к счёту</button><button class="btn ghost" type="button" data-go="home">На главную</button></div>
         </div>${img('growth', 'Растущие столбцы и стрелка вверх')}
       </section>
@@ -1960,7 +1941,7 @@ function cardOverview(a, q, pol) {
         <path d="M20 110 A90 90 0 0 1 200 110" fill="none" stroke="#ff4837" stroke-width="16" pathLength="100" stroke-dasharray="0 60.5 39.5 100"></path>
         <line x1="110" y1="110" x2="${nx}" y2="${ny}" stroke="#212124" stroke-width="4" stroke-linecap="round" style="transform-origin:110px 110px;animation:needle var(--d3) var(--e-spring)"></line>
         <circle cx="110" cy="110" r="8" fill="#212124"></circle>
-        <text x="20" y="128" font-size="10" fill="#77777f" text-anchor="middle">0</text><text x="200" y="128" font-size="10" fill="#77777f" text-anchor="middle">100</text>
+        <text x="20" y="128" style="@mixin paragraph_secondary_small;" fill="#77777f" text-anchor="middle">0</text><text x="200" y="128" style="@mixin paragraph_secondary_small;" fill="#77777f" text-anchor="middle">100</text>
       </svg>
       <div style="display:flex;align-items:baseline;gap:8px"><b style="@mixin headline_large;" data-count="${score}" data-fmt="n">${score}</b><span class="badge ${score < 35 ? 'b-pos' : score <= 60 ? 'b-att' : 'b-neg'}">${riskWord(score)}</span></div>
       <span class="muted" style="@mixin paragraph_secondary_medium;text-align:center">Ниже — лучше. До 35 низкий, 35–60 умеренный, выше 60 высокий</span>
@@ -2215,14 +2196,24 @@ VIEWS['adm-analytics'] = () => {
 ACT.period = (d) => { S.adm.period = [7, 30, 90][+d.v]; render(); };
 
 /* ================= boot ================= */
+history.scrollRestoration = 'manual';
+function restoreHistory() {
+  const route = resolveRoute(location.hash.slice(1));
+  if (route !== S.route) go(route, { fromHistory: true, y: history.state?.y || 0 });
+}
+window.addEventListener('popstate', restoreHistory);
+window.addEventListener('hashchange', restoreHistory);
+window.addEventListener('scroll', () => {
+  // Also remember scrolling before browser Back (which does not call go).
+  if (resolveRoute(location.hash.slice(1)) === S.route) history.replaceState(historyEntry(), '');
+}, { passive: true });
 function boot() {
   restore();
-  const h = (location.hash || '').replace('#', '');
-  const map = { admin: 'adm', bank: 'adm', analytics: 'adm-analytics', apply: 'params' };
-  S.route = map[h] || (VIEWS[h] ? h : h ? 'home' : VIEWS[S.route] ? S.route : 'home');
+  S.route = resolveRoute(location.hash.slice(1));
   S.role = S.route.startsWith('adm') ? 'bank' : 'client';
   if (S.app && S.app.status === 'issuing') S.app.status = 'issued';
   render(true);
+  history.replaceState(historyEntry(0), '', '#' + S.route);
   BE.init().then(runPipeline);
 }
 boot();

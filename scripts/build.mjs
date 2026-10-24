@@ -1,6 +1,7 @@
 ﻿import fs from 'node:fs';
 import {build} from 'esbuild';
 import {expandTypography} from './typography.mjs';
+import {writeIllustrationGallery} from './illustration-gallery.mjs';
 const out='output/bank-ui-study';
 fs.mkdirSync(out,{recursive:true});
 const result=await build({entryPoints:['src/app.tsx'],bundle:true,write:false,minify:true,outdir:'build',loader:{'.woff2':'dataurl','.woff':'dataurl','.ttf':'dataurl','.svg':'dataurl'},define:{'process.env.NODE_ENV':'"production"'}});
@@ -14,9 +15,17 @@ const vars = fs.readFileSync('node_modules/@alfalab/core-components-vars/typogra
 const illustrationManifest = JSON.parse(fs.readFileSync('src/assets/illustrations/manifest.json','utf8'));
 const illustrations = Object.fromEntries(Object.entries(illustrationManifest.assets).map(([key, file]) =>
     [key, `data:image/webp;base64,${fs.readFileSync(`src/assets/illustrations/${file}`).toString('base64')}`]));
+const catalog = JSON.parse(fs.readFileSync('credit_cabinet_backend/app/db/credit_catalog.json','utf8'));
+const sections = await build({entryPoints:['src/credit-sections.tsx'],bundle:true,write:false,minify:true,outdir:'build',define:{'process.env.NODE_ENV':'"production"'}});
+const sectionsJs = sections.outputFiles.find(f=>f.path.endsWith('.js')).text.replaceAll('</script','<\\/script')
+    .replace(/\/\*![\s\S]*?\*\//g, comment => comment.replaceAll('\t','    ').replace(/[ \t]+$/gm,''));
+const sectionsCss = sections.outputFiles.find(f=>f.path.endsWith('.css'))?.text || '';
 const prototype = expandTypography(fs.readFileSync('src/prototype.html','utf8')
-    .replace('/* CREDIT_ILLUSTRATIONS */{}', JSON.stringify(illustrations)))
-    .replace('/* CORE_TYPOGRAPHY */', `${fontCss}\n${vars}`);
+    .replace('/* CREDIT_ILLUSTRATIONS */{}', () => JSON.stringify(illustrations))
+    .replace('/* CREDIT_CATALOG */{ categories: [], products: [] }', () => JSON.stringify(catalog).replaceAll('<','\\u003c')))
+    .replace('/* CORE_TYPOGRAPHY */', () => `${fontCss}\n${vars}`)
+    .replace('<!-- CORE_SECTIONS -->', () => `<style>${sectionsCss}</style><script>${sectionsJs}</script>`);
 fs.mkdirSync('output/prototype',{recursive:true});
 fs.writeFileSync('output/prototype/alfa-credit-cabinet.html',prototype);
+writeIllustrationGallery(fontCss, vars);
 console.log('Built standalone credit cabinet with official typography mixins and embedded Styrene UI');
