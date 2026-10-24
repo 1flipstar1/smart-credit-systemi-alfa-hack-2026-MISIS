@@ -1,0 +1,5 @@
+{
+  "generator": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit. Simplify the AI illustration from input image 1 into a MINIMAL banking promo illustration, using input image 2 only as a style reference (especially the simple rounded app badges). Final object: ONE substantial softly rounded square violet tile with a very subtle blue edge and large raised white \"AI\" letters centered. Gentle 3/4 tilt, sculptural depth, soft satin material, restrained broad highlights. Remove ALL chip pins, neural network spheres, connecting rods, red backing layer, extra layers and decorative elements. No complex iridescent gradients, no chrome rim, no glow. Keep the image unmistakably about artificial intelligence through the AI lettering. Bold simple silhouette readable at 72px, polished modern Alfa promo style, minimal object count and restrained material contrast. Square framing, fully inside canvas with 10 percent clear margin. Actual transparent alpha background: alpha zero around the object, no black film, no floor or backdrop, no watermark. Exact only text: \"AI\".",
+  "output": "originals-satin/ai-selection-minimal.png"
+}

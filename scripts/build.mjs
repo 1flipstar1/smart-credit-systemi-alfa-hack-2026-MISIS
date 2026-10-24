@@ -11,9 +11,9 @@ console.log('Built standalone Core Components information block');
 const fonts = await build({entryPoints:['src/fonts.css'],bundle:true,write:false,minify:true,loader:{'.woff2':'dataurl'}});
 const fontCss = fonts.outputFiles[0].text;
 const vars = fs.readFileSync('node_modules/@alfalab/core-components-vars/typography-vars.css','utf8');
-const illustrationManifest = JSON.parse(fs.readFileSync('src/assets/credit-minimal/manifest.json','utf8'));
+const illustrationManifest = JSON.parse(fs.readFileSync('src/assets/illustrations/manifest.json','utf8'));
 const illustrations = Object.fromEntries(Object.entries(illustrationManifest.assets).map(([key, file]) =>
-    [key, `data:image/webp;base64,${fs.readFileSync(`src/assets/credit-minimal/${file}`).toString('base64')}`]));
+    [key, `data:image/webp;base64,${fs.readFileSync(`src/assets/illustrations/${file}`).toString('base64')}`]));
 const prototype = expandTypography(fs.readFileSync('src/prototype.html','utf8')
     .replace('/* CREDIT_ILLUSTRATIONS */{}', JSON.stringify(illustrations)))
     .replace('/* CORE_TYPOGRAPHY */', `${fontCss}\n${vars}`);

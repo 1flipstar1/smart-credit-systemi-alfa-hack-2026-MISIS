@@ -1,0 +1,7 @@
+{
+  "generator": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit. Edit this existing banking 3D illustration very subtly. ONLY reduce material gloss a little: about 20 percent softer, less intense specular highlights, slightly more satin finish, softer studio reflections. This is a restrained polish adjustment, NOT fully matte. Keep the exact same objects, count, silhouettes, positions, framing, camera, perspective, proportions, colors and saturation, symbols, overall lighting direction and transparent alpha background. Keep metallic details recognizable as brushed metal, glass recognizable as glass. Remove excessive bloom outside silhouettes. No redesign, no added objects, no text. Preserve the whole composition with original margins.",
+  "inputs": "originals/*.png",
+  "outputs": "originals-satin/*.png",
+  "assistantAlphaCorrection": "Use case: background-extraction. Remove ALL background and colored glow surrounding the three chat bubbles. Return a clean cutout on truly fully transparent alpha (alpha zero outside objects), no black film or semitransparent rectangle. Preserve all three bubbles and their white dots exactly: red large bubble behind, blue lower left, mint green right; preserve positions, shapes, framing, colors, and the slightly reduced satin gloss. Keep soft reflections only ON the objects. No added shadows outside silhouettes, no redesign."
+}

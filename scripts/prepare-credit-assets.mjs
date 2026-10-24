@@ -3,15 +3,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {chromium} from 'playwright';
 
-const root = 'output/credit-minimal';
-const dest = 'src/assets/credit-minimal';
+const root = 'output/illustrations';
+const dest = 'src/assets/illustrations';
 const source = JSON.parse(fs.readFileSync(`${root}/generation.json`, 'utf8'));
 fs.mkdirSync(dest, {recursive:true});
 const browser = await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
 const page = await browser.newPage();
 try {
     for (const item of source.images) {
-        const url = `data:image/png;base64,${fs.readFileSync(`${root}/originals/${item.name}.png`).toString('base64')}`;
+        const url = `data:image/png;base64,${fs.readFileSync(`${root}/${item.original || `originals/${item.name}.png`}`).toString('base64')}`;
         const result = await page.evaluate(async ({url, size}) => {
             const image = new Image();
             image.src = url;
@@ -26,7 +26,7 @@ try {
             let transparent = 0;
             for (let i=3; i<pixels.length; i+=4) if (pixels[i] === 0) transparent++;
             return {url:canvas.toDataURL('image/webp', 0.9), width:canvas.width, height:canvas.height, transparent};
-        }, {url, size:item.name === 'hero' ? 1000 : 512});
+        }, {url, size:item.name === 'case' ? 1000 : 512});
         if (!result.transparent) throw Error(`Missing transparency: ${item.name}`);
         fs.writeFileSync(`${dest}/${item.name}.webp`, Buffer.from(result.url.split(',')[1], 'base64'));
         item.delivery = {file:`${item.name}.webp`, width:result.width, height:result.height, transparentPixels:result.transparent};
@@ -34,8 +34,7 @@ try {
 } finally {
     await browser.close();
 }
-fs.writeFileSync(`${dest}/manifest.json`, JSON.stringify({generator:'built-in image_gen', assets:source.assets}, null, 2));
 fs.writeFileSync(`${root}/generation.json`, JSON.stringify(source, null, 2));
 const cards = source.images.map(item => `<figure><div><img src="../../${dest}/${item.name}.webp" alt="${item.name}"></div><figcaption>${item.name}</figcaption></figure>`).join('');
-fs.writeFileSync(`${root}/index.html`, `<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Минималистичные иллюстрации</title><style>body{margin:32px;background:#f3f4f5;color:#28282b;font:16px system-ui}h1{font-size:28px}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}figure{margin:0;background:white;border-radius:24px;padding:20px}figure div{height:220px;display:grid;place-items:center}figure:first-child div{background:#171719;border-radius:16px}img{width:100%;height:100%;object-fit:contain}figcaption{margin-top:12px}</style><h1>Минималистичные иллюстрации кредитного кабинета</h1><p>Матовые формы · красный, графитовый и светло-серый · минимум деталей</p><main>${cards}</main></html>`);
+fs.writeFileSync(`${root}/index.html`, `<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Иллюстрации кредитного кабинета</title><style>body{margin:32px;background:#f3f4f5;color:#28282b;font:16px system-ui}h1{font-size:28px}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}figure{margin:0;background:white;border-radius:24px;padding:20px}figure div{height:220px;display:grid;place-items:center}figure:first-child div{background:#171719;border-radius:16px}img{width:100%;height:100%;object-fit:contain}figcaption{margin-top:12px}</style><h1>Иллюстрации кредитного кабинета</h1><p>Объёмные формы · красные акценты · стекло и металл · по промореференсам и интерфейсам банка</p><main>${cards}</main></html>`);
 console.log(`Prepared ${source.images.length} illustrations, preserved transparency, generated gallery`);
